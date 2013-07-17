@@ -1,0 +1,90 @@
+package components.storage;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+
+
+import base.workspace.Variable;
+import api.CSenseErrors;
+import api.CSenseException;
+import api.CSenseSource;
+import api.IOutPort;
+import api.Task;
+import messages.RawMessage;
+import messages.TypeInfo;
+
+/**
+ * 
+ * @author Austin
+ * 
+ */
+public class FromDiskComponent<T extends RawMessage> extends CSenseSource<T> {
+    private static final String TAG = "fromDisk";
+
+    public IOutPort<T> out = newOutputPort(this, "out");
+    
+    // options to pass the file name
+    protected final Variable fileNameVar;
+    protected final String fileName;
+    
+    // state
+    protected File file = null;    
+    protected FileInputStream fileInputStream = null;
+    protected FileChannel channel = null;
+
+    public FromDiskComponent(TypeInfo<T> type, Variable fileNameVar) throws CSenseException {
+	super(type);
+	this.fileName = null;
+	this.fileNameVar = fileNameVar;    
+    }
+    
+    public FromDiskComponent(TypeInfo<T> type, String fileName) throws CSenseException {
+	super(type);
+	this.fileName = fileName;
+	this.fileNameVar = null;
+    }
+
+    @Override
+    public void doEvent(Task t) throws CSenseException {
+	try {
+	    //if (channel.position() < channel.size()) {
+	    T message = getNextMessageToWriteInto();
+	    int r = channel.read(message.buffer());
+	    if (r != -1 ) {
+		message.flip();
+		out.push(message);
+		getScheduler().schedule(this, asTask());	    
+	    } else {	    
+		compatibility.Log.d(TAG, "eof");
+		channel.close();
+		fileInputStream.close();
+		//T message = getNextMessageToWriteInto();
+		message.eof();
+		out.push(message);
+	    }	    
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+    }
+
+    @Override
+    public void onCreate() throws CSenseException {
+	try {
+	    super.onCreate();
+	    if (fileNameVar != null) file = new File((String) fileNameVar.getValue());
+	    else if (fileName != null) file = new File(fileName);
+	    else throw new CSenseException(CSenseErrors.CONFIGURATION_ERROR, "File name not initialized");
+	    
+	    if (file == null) throw new CSenseException(CSenseErrors.CONFIGURATION_ERROR, "File was not specified [" + fileNameVar + "]");
+	    fileInputStream = new FileInputStream(file);
+	    channel = fileInputStream.getChannel();
+	    getScheduler().schedule(this, asTask());
+	} catch (FileNotFoundException e) {
+	    throw new CSenseException(e);
+	} 
+    }
+
+}

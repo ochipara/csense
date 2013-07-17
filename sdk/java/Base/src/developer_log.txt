@@ -1,0 +1,27 @@
+
+Changes to version 1.03
+
+- the push/onPush operations were modified to allow for results to be returned
+
+Component's management
+
+A component may be in one of the following states:
+INIT 		- the initial component 
+CREATED 	- the created component after initialization is performed
+READY 		- the component is started and is ready to process information
+RUNNING 	- the is currently running
+
+A component will call the following functions 
+INIT 		=> onCreate() 					=> CREATED
+CREATED  	=> onStart() 					=> READY
+READY		=> prior to call to doInput()	=> RUNNING			
+RUNNING		=> completion of doInput()		=> READY
+
+
+Clarified how push works:
+Push will succeed when there is enough data to save on the port. The buffers on the input ports are useful in that data is available
+on multiple ports.
+
+
+Programmer's guide
+If your component cannot handle pushes at any point within its execution, add a queue to buffer its inputs
