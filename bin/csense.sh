@@ -1,0 +1,2 @@
+#!/bin/sh
+java -cp $CSENSE_SDK/sdk/java/CSenseTool/bin:$CSENSE_SDK/sdk/java/Base/bin:$CSENSE_SDK/sdk/java/CSenseCompiler/bin:$CSENSE_SDK/lib/log4j-1.2.17.jar:$CSENSE_SDK/lib/commons-io-2.4.jar:$CSENSE_SDK/lib/matlabcontrol-4.1.0.jar edu.uiowa.csense.pm.CSense $*

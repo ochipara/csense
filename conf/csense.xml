@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<csense xmlns="edu.uiowa.csense.compiler">
+    <tools>
+        <tool xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="androidTool" name="android-tools">
+            <sdkTools>/Users/ochipara/android-sdks/tools</sdkTools>
+            <ndkBuild>/Users/ochipara/android-sdks/android-ndk/ndk-build</ndkBuild>
+            <target>android-15</target>
+            <rusage>/Users/ochipara/Working/CSense/csense-git/sdk/java/baseAndroid/jni/getrusage</rusage>
+        </tool>
+        <tool xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="swigTool" name="swig">
+            <swig>/opt/local/bin/swig</swig>
+        </tool>
+        <tool xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="compilerTool" name="csense-compiler">
+            <directory>/Users/ochipara/Working/CSense/csense-git/sdk/java/CSenseCompiler</directory>
+        </tool>
+        <tool xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="lpSolveTool" name="lpsolve">
+            <lpsolve>/Users/ochipara/Working/tools/lp_solve/lp_solve</lpsolve>
+        </tool>
+    </tools>
+    <versions>
+        <version platform="android" version="v4">
+            <packages>
+                <package>edu.uiowa.csense.runtime.v4</package>
+            </packages>
+            <component>edu.uiowa.csense.runtime.v4.CSenseComponent</component>
+            <source>edu.uiowa.csense.runtime.v4.CSenseSource</source>
+            <messagePool>edu.uiowa.csense.runtime.v4.MessagePoolAtomic</messagePool>
+            <scheduler>edu.uiowa.csense.runtime.v4.CSenseScheduler</scheduler>
+            <taskQueue>edu.uiowa.csense.runtime.v4.CBQTaskManager</taskQueue>
+            <eventQueue>edu.uiowa.csense.runtime.v4.CPQTimerEventManager</eventQueue>
+            <idleLock>edu.uiowa.csense.runtime.v4.AndroidIdleLock</idleLock>
+        </version>
+    </versions>
+</csense>
