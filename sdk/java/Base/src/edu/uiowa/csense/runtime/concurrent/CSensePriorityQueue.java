@@ -1,4 +1,4 @@
-package base.concurrent;
+package edu.uiowa.csense.runtime.concurrent;
 
 import java.util.PriorityQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -95,6 +95,7 @@ public class CSensePriorityQueue<T> {
 			}
 		    }
 		}
+		_emptySignaled = false;
 	    }
 	}	
     }

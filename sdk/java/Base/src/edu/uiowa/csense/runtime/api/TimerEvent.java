@@ -1,4 +1,4 @@
-package api;
+package edu.uiowa.csense.runtime.api;
 
 public class TimerEvent extends Task implements Comparable<TimerEvent> {
     private long _time;

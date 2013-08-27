@@ -1,4 +1,4 @@
-package components.storage;
+package edu.uiowa.csense.components.storage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,23 +11,20 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.TreeMap;
 
-import base.Utility;
+import edu.uiowa.csense.profiler.Utility;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.FilenameType;
+import edu.uiowa.csense.runtime.types.RawFrame;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 
-import api.CSenseException;
-import api.CSenseRuntimeException;
-import api.CSenseSource;
-import api.IInPort;
-import api.IOutPort;
-import api.IResult;
-import api.Message;
-import messages.RawMessage;
-import messages.TypeInfo;
-import messages.fixed.FilenameType;
-
-public abstract class FileOutputComponent<T extends RawMessage> extends CSenseSource<FilenameType> {    
-    public final IInPort<T> in;
-    public final IOutPort<T> out;
-    public final IOutPort<FilenameType> outPath;
+public abstract class FileOutputComponent<T extends RawFrame> extends CSenseSource<FilenameType> {    
+    public final InputPort<T> in;
+    public final OutputPort<T> out;
+    public final OutputPort<FilenameType> outPath;
 
     private long _fileSizeLimitInBytes;
     private long _spaceLimitInBytes;
@@ -210,8 +207,8 @@ public abstract class FileOutputComponent<T extends RawMessage> extends CSenseSo
     }
 
     @Override
-    public void doInput() throws CSenseException {
-	T msg = in.getMessage();
+    public void onInput() throws CSenseException {
+	T msg = in.getFrame();
 	while (msg.hasRemaining()) {
 	    try {
 		if (msg.position() == 0) {
@@ -230,13 +227,13 @@ public abstract class FileOutputComponent<T extends RawMessage> extends CSenseSo
 		}
 
 		if (_outChannel.size() + msg.remaining() <= _fileSizeLimitInBytes)
-		    _outChannel.write(msg.buffer());
+		    _outChannel.write(msg.getBuffer());
 		else {
 		    int bytesToWrite = (int) (_fileSizeLimitInBytes - _outChannel.size());
 		    int limit = msg.limit();
 		    int offset = msg.remaining() - bytesToWrite;
 		    msg.limit(limit - offset);
-		    int bytes = _outChannel.write(msg.buffer());
+		    int bytes = _outChannel.write(msg.getBuffer());
 		    msg.limit(limit);
 		    advanceTimestamp(msg, bytes);
 		}
@@ -279,7 +276,7 @@ public abstract class FileOutputComponent<T extends RawMessage> extends CSenseSo
     }
 
     @Override
-    public Message onPoll(IOutPort<? extends Message> port) throws CSenseException {
+    public Frame onPoll(OutputPort<? extends Frame> port) throws CSenseException {
 	File file = getOldestOutputFile();
 	if (file == null) in.poll();
 	_polled = true;

@@ -1,4 +1,4 @@
-package base;
+package edu.uiowa.csense.profiler;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -6,8 +6,8 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
-import api.CSenseException;
-import api.CSenseRuntimeException;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
 
 public class StatisticsLogger {
 	private final String _filename;

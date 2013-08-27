@@ -1,4 +1,4 @@
-package components.network.desktop;
+package edu.uiowa.csense.components.network.desktop;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,12 +10,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import components.network.HTMLFormMessage;
-
-import api.CSenseComponent;
-import api.CSenseException;
-import api.IInPort;
-import api.IOutPort;
+import edu.uiowa.csense.components.network.HTMLFormMessage;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.v4.CSenseComponent;
 
 /**
  * This allows you to upload a form
@@ -24,8 +23,8 @@ import api.IOutPort;
  * 
  */
 public class HTMLFormUpload extends CSenseComponent {
-    public final IInPort<HTMLFormMessage> in = newInputPort(this, "in");
-    public final IOutPort<HTMLFormMessage> out = newOutputPort(this, "out");
+    public final InputPort<HTMLFormMessage> in = newInputPort(this, "in");
+    public final OutputPort<HTMLFormMessage> out = newOutputPort(this, "out");
 
     // state for the uploader
     protected final URI _uri;
@@ -55,10 +54,10 @@ public class HTMLFormUpload extends CSenseComponent {
     }
 
     @Override
-    public void doInput() throws CSenseException {
+    public void onInput() throws CSenseException {
 	while (true) {
 	    if (_form == null) {
-		_form = in.getMessage();
+		_form = in.getFrame();
 	    }
 
 	    debug("connected");

@@ -1,4 +1,4 @@
-package components.matlab;
+package edu.uiowa.csense.components.matlab;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,27 +6,25 @@ import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 
-
 import com.jmatio.io.MatFileFilter;
 import com.jmatio.io.MatFileReader;
 import com.jmatio.types.MLArray;
 import com.jmatio.types.MLDouble;
 import com.jmatio.types.MLSingle;
 
-import messages.RawMessage;
-import messages.TypeInfo;
-import messages.fixed.DoubleMatrix;
-import messages.fixed.DoubleVector;
-import messages.fixed.FloatMatrix;
-import messages.fixed.FloatVector;
-import api.CSenseErrors;
-import api.CSenseException;
-import api.CSenseSource;
-import api.IOutPort;
-import api.Task;
+import edu.uiowa.csense.runtime.api.CSenseError;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.Frame;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.types.DoubleVector;
+import edu.uiowa.csense.runtime.types.FloatVector;
+import edu.uiowa.csense.runtime.types.RawFrame;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 
-public class FromMatFile<T extends RawMessage> extends CSenseSource<T> {
-    public IOutPort<T> out = newOutputPort(this, "out");
+public class FromMatFile<T extends RawFrame> extends CSenseSource<T> {
+    public OutputPort<T> out = newOutputPort(this, "out");
     protected MLDouble _doubles = null;
     protected MLSingle _floats = null;
     protected TypeInfo<T> _type;
@@ -53,7 +51,7 @@ public class FromMatFile<T extends RawMessage> extends CSenseSource<T> {
 	    reader = new MatFileReader(f, filter);
 	    MLArray data = reader.getContent().get(variableName);
 	    if (data == null)
-		throw new CSenseException(CSenseErrors.ERROR,
+		throw new CSenseException(CSenseError.ERROR,
 			"Could not find variable [" + variableName
 				+ "] to load from file");
 	    int[] dims = data.getDimensions();
@@ -79,7 +77,7 @@ public class FromMatFile<T extends RawMessage> extends CSenseSource<T> {
     @Override
     public void doEvent(Task t) throws CSenseException {
 	T msg = getNextMessageToWriteInto();
-	ByteBuffer byteBuffer = msg.buffer();
+	ByteBuffer byteBuffer = msg.getBuffer();
 	byteBuffer.position(0);
 	if ((_type.getJavaType() == DoubleVector.class) || (_type.getJavaType() == DoubleMatrix.class)) {
 	    DoubleBuffer doubleBuffer = byteBuffer.asDoubleBuffer();
@@ -125,7 +123,7 @@ public class FromMatFile<T extends RawMessage> extends CSenseSource<T> {
 		getScheduler().stop();
 	    }	    
 	} else {	
-	    throw new CSenseException(CSenseErrors.ERROR,
+	    throw new CSenseException(CSenseError.ERROR,
 		    "Don't know how to handle type " + _type.getJavaType());
 	}
     }
@@ -135,7 +133,7 @@ public class FromMatFile<T extends RawMessage> extends CSenseSource<T> {
 	getScheduler().schedule(this, asTask());
     }
 
-    public static <T extends RawMessage> FromMatFile<T> create(
+    public static <T extends RawFrame> FromMatFile<T> create(
 	    TypeInfo<T> type, String filename, String variableName)
 	    throws CSenseException {
 	return new FromMatFile<T>(type, filename, variableName);

@@ -1,4 +1,4 @@
-package base;
+package edu.uiowa.csense.profiler;
 
 public class RouteEntry {
     private String _station;

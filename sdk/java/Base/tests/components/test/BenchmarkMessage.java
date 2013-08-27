@@ -1,11 +1,10 @@
 package components.test;
 
-import messages.TypeInfo;
-import api.CSenseException;
-import api.IMessagePool;
-import api.Message;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
-public class BenchmarkMessage extends Message {
+public class BenchmarkMessage extends Frame {
     protected long startTime = 0;
     protected long endTime = 0;
     protected long count = 0;
@@ -18,8 +17,8 @@ public class BenchmarkMessage extends Message {
 	this.count = count;
     }
 
-    public BenchmarkMessage(IMessagePool<? extends Message> pool,
-	    TypeInfo<? extends Message> type) throws CSenseException {
+    public BenchmarkMessage(FramePool<? extends Frame> pool,
+	    TypeInfo<? extends Frame> type) throws CSenseException {
 	super(pool, type);
     }
 

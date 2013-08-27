@@ -5,23 +5,23 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.BasicConfigurator;
 
 import com.google.caliper.Param;
 import com.google.caliper.SimpleBenchmark;
 
-import api.CSense;
-import api.CSenseException;
-import api.IComponent;
-import api.IScheduler;
-import base.Statistics;
-import base.StatisticsLogger;
-import components.basic.SyncQueue;
-import components.basic.TapComponent;
 import components.test.BenchmarkMessage;
 import components.test.BenchmarkSource;
 import components.test.BenchmarkStats;
 import components.test.BenchmarkWorker;
+import edu.uiowa.csense.components.basic.SyncQueue;
+import edu.uiowa.csense.components.basic.TapComponent;
+import edu.uiowa.csense.profiler.Statistics;
+import edu.uiowa.csense.profiler.StatisticsLogger;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.IComponent;
+import edu.uiowa.csense.runtime.api.IScheduler;
 
 public class ChainBenchmark extends SimpleBenchmark {
     private class TestResult {

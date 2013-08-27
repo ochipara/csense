@@ -1,6 +1,4 @@
-package components.network;
-
-import base.*;
+package edu.uiowa.csense.components.network;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,6 +8,8 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Map;
+
+import edu.uiowa.csense.profiler.*;
 
 /**
  * This is a non-blocking server that attempts to read two streams of data for
@@ -23,7 +23,7 @@ import java.util.Map;
  * @param <T>
  *            - Type of messages this component will create
  */
-public class ServerComponent<T extends Message> extends SourceComponent<T> {
+public class ServerComponent<T extends Frame> extends SourceComponent<T> {
     public final Map<String, OutPort<T>> PORTS_OUT = this
 	    .<T> setupOutputPorts("out");
     private ServerSocketChannel _channel;
@@ -125,8 +125,8 @@ public class ServerComponent<T extends Message> extends SourceComponent<T> {
 
 		// create a byte buffer that can hold the message we're about to
 		// read from the socket
-		Message tmpMessage = getNextMessageToWriteInto();
-		ByteBuffer buffToWriteInto = tmpMessage.buffer();
+		Frame tmpMessage = getNextMessageToWriteInto();
+		ByteBuffer buffToWriteInto = tmpMessage.getBuffer();
 		do {
 		    try {
 			// Utility.errorStatement(ServerComponent.class,
@@ -198,7 +198,7 @@ public class ServerComponent<T extends Message> extends SourceComponent<T> {
     }
 
     @Override
-    protected boolean mayPull(OutPort<? extends Message> port) {
+    protected boolean mayPull(OutPort<? extends Frame> port) {
 	return _channel != null;
     }
 }

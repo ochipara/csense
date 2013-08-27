@@ -1,4 +1,4 @@
-package compatibility;
+package edu.uiowa.csense.runtime.compatibility;
 
 public class Environment {
     public static EnvironmentInterface environment = null;

@@ -1,14 +1,14 @@
-package api;
+package edu.uiowa.csense.runtime.v4;
 
-import api.CSense;
-import api.CSenseErrors;
-import api.CSenseException;
-import api.CSenseOptions;
-import api.IMessagePool;
-import api.ISource;
-import api.Message;
-import messages.TypeInfo;
-import base.Debug;
+import edu.uiowa.csense.profiler.Debug;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseToolkit;
+import edu.uiowa.csense.runtime.api.Frame;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.api.ISource;
+import edu.uiowa.csense.runtime.api.Options;
+import edu.uiowa.csense.runtime.api.concurrent.IState;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
 
 /**
@@ -24,31 +24,23 @@ import base.Debug;
  * @author Austin, Farley
  * 
  */
-public class CSenseSource<T extends Message> extends CSenseComponent implements ISource<T> {
+public class CSenseSource<T extends Frame> extends CSenseComponent implements ISource<T> {
     protected TypeInfo<T> _type;
-    protected IMessagePool<T> _pool = null;
+    protected FramePool _pool = null;
 
     private volatile boolean _logging;
 
     public CSenseSource(TypeInfo<T> type) throws CSenseException {
-	super();
+	super();	
 	_type = type;
-    }
-
-    public void setupMessagePoolFromTypeInfo(int capacity)
-	    throws CSenseException {
-	if (_pool != null) {
-	    throw new CSenseException(CSenseErrors.CONFIGURATION_ERROR, "Component intialized twice");
-	}
-
-	_pool = CSense.csense.newMessagePool(_type, capacity);
+	_pool = CSenseToolkit.getImplementation().newFramePool(type, Options.INIT_MSG_POOL_CAPACITY);
 	_pool.setSource(this);	
+
     }
     
     @Override
     public void onCreate() throws CSenseException {	
 	super.onCreate();
-	setupMessagePoolFromTypeInfo(CSenseOptions.INIT_MSG_POOL_CAPACITY);
     }
     
     /**
@@ -60,7 +52,7 @@ public class CSenseSource<T extends Message> extends CSenseComponent implements 
      */
     @Override
     public T getNextMessageToWriteInto() {
-	T m = _pool.get();
+	T m =  (T) _pool.get();
 	if (m == null) {
 	    error("message pool is empty");
 	    return null;
@@ -71,7 +63,7 @@ public class CSenseSource<T extends Message> extends CSenseComponent implements 
     
     @Override
     public T getNextMessageToWriteIntoAndBlock() throws InterruptedException {
-	T m = _pool.getAndBlock();
+	T m = (T) _pool.getAndBlock();
 	if (m == null) {
 	    return null;
 	}
@@ -82,6 +74,7 @@ public class CSenseSource<T extends Message> extends CSenseComponent implements 
     @Override
     public void onStop() throws CSenseException {
 	_pool = null;
+	transitionTo(IState.STATE_STOPPED);
     }
    
     @Override

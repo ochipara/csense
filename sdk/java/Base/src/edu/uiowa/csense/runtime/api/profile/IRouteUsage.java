@@ -1,4 +1,4 @@
-package api;
+package edu.uiowa.csense.runtime.api.profile;
 
 public interface IRouteUsage {
     public boolean add(String station, 

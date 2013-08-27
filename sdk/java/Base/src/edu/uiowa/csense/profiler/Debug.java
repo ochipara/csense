@@ -1,4 +1,4 @@
-package base;
+package edu.uiowa.csense.profiler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,13 +10,13 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import compatibility.Log;
-import compatibility.ThreadCPUUsage;
 
-import api.CSense;
-import api.CSenseRuntimeException;
-import api.IComponent;
-import api.IMessage;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
+import edu.uiowa.csense.runtime.api.CSenseToolkit;
+import edu.uiowa.csense.runtime.api.IComponent;
+import edu.uiowa.csense.runtime.api.Frame;
+import edu.uiowa.csense.runtime.compatibility.Log;
+import edu.uiowa.csense.runtime.compatibility.ThreadCPUUsage;
 
 public class Debug {    
     private static class Trace {
@@ -80,8 +80,8 @@ public class Debug {
 
 	private void save() throws IOException {
 	    if(_header.length() == 0) {
-		_header.append("components=").append(CSense.components.size()).append("\n");
-		for(Map.Entry<String, IComponent> entry: CSense.components.entrySet()) {
+		_header.append("components=").append(CSenseToolkit.components.size()).append("\n");
+		for(Map.Entry<String, IComponent> entry: CSenseToolkit.components.entrySet()) {
 		    _header.append(entry.getKey()).append("=").append(entry.getValue().getId()).append("\n");
 		}
 
@@ -281,24 +281,24 @@ public class Debug {
 	_storage.get().log(eid, c.getId(), mid);
     }
     
-    public static void log(int eid, IComponent c, IMessage m) {
+    public static void log(int eid, IComponent c, Frame m) {
 	if(!isTracing()) return;
 	_storage.get().log(eid, c.getId(), m.getId());
     }
     
-    public static void logMessageSource(IComponent c, IMessage m) {
+    public static void logMessageSource(IComponent c, Frame m) {
 	log(TRACE_MSG_SRC, c, m);
     }
     
-    public static void logMessagePush(IComponent c, IMessage m) {
+    public static void logMessagePush(IComponent c, Frame m) {
 	log(TRACE_MSG_PUSH, c, m);
     }
     
-    public static void logMessageInput(IComponent c, IMessage m) {
+    public static void logMessageInput(IComponent c, Frame m) {
 	log(TRACE_MSG_INPUT, c, m);
     }
     
-    public static void logMessagePushReturn(IComponent c, IMessage m) {
+    public static void logMessagePushReturn(IComponent c, Frame m) {
 	log(TRACE_MSG_PUSH_RETURN, c, m);
     }
     
@@ -306,7 +306,7 @@ public class Debug {
 	log(TRACE_MSG_PUSH_RETURN, c, mid);
     }
     
-    public static void logMessageReturn(IComponent c, IMessage m) {
+    public static void logMessageReturn(IComponent c, Frame m) {
 	log(TRACE_MSG_RETURN, c, m);
     }    
     

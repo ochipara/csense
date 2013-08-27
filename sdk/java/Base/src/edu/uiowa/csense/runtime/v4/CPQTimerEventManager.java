@@ -1,7 +1,8 @@
-package base.concurrent;
+package edu.uiowa.csense.runtime.v4;
 
-import api.IEventManager;
-import api.TimerEvent;
+import edu.uiowa.csense.runtime.api.TimerEvent;
+import edu.uiowa.csense.runtime.api.concurrent.IEventManager;
+import edu.uiowa.csense.runtime.concurrent.CSensePriorityQueue;
 
 public class CPQTimerEventManager implements IEventManager {
     private final CSensePriorityQueue<TimerEvent> _timerTasks;

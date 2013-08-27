@@ -1,4 +1,4 @@
-package edu.uiowa.csense.tools;
+package edu.uiowa.csense.pm;
 
 public class CSenseToolException extends Exception {
     /**

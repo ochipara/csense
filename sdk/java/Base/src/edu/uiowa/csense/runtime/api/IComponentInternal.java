@@ -1,13 +1,13 @@
-package api;
+package edu.uiowa.csense.runtime.api;
 
-import api.concurrent.IComponentState;
+import edu.uiowa.csense.runtime.api.concurrent.IState;
 
 public interface IComponentInternal extends IComponent {
     public IComponentInternal getUnderlyingComponent();
 
     // internal state management
     @Override
-    public IComponentState getState();
+    public IState getState();
 
     // component life-cycle management
     /**

@@ -1,4 +1,4 @@
-package api;
+package edu.uiowa.csense.runtime.api;
 
 /**
  * This is the base class that each implementation of CSense will have to
@@ -14,7 +14,7 @@ package api;
  * 
  * @param <T>
  */
-public interface IInPort<T extends Message> extends IPort {
+public interface InputPort<T extends Frame> extends Port {
 
     /**
      * Links to the next component
@@ -22,16 +22,16 @@ public interface IInPort<T extends Message> extends IPort {
      * @param port
      * @throws CSenseException
      */
-    public void link(IOutPort<T> port) throws CSenseException;
+    public void link(OutputPort<? extends Frame> port) throws CSenseException;
 
     /**
      * Receives an incoming push from the previous component
      * 
      * @param m
-     * @return returns a code indicating sucess of the operation.
+     * @return returns a code indicating success of the operation.
      * @throws CSenseException
      */
-    public IResult onPush(T m) throws CSenseException;
+    public int onPush(Frame m) throws CSenseException;
 
     /**
      * Clears the pending message
@@ -43,30 +43,26 @@ public interface IInPort<T extends Message> extends IPort {
      * 
      * @return
      */
-    public boolean hasMessage();
+    public boolean hasFrame();
 
     /**
      * Returns the message
      * 
      * @return
      */
-    public T getMessage();
+    public T getFrame();
     
     /**
      * Request a poll from the previous component
      * 
-     * @return
+     * @return error or success
      * @throws CSenseException
      */
-    public T poll() throws CSenseException;
+    public int poll() throws CSenseException;
 
     /**
      * 
      * @return
      */
     public boolean getSupportsPoll();
-
-    public void setMultiplier(int multiplier);
-
-    public int geMultiplier();
 }

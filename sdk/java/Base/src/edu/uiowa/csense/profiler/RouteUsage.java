@@ -1,9 +1,9 @@
-package base;
+package edu.uiowa.csense.profiler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import api.IRouteUsage;
+import edu.uiowa.csense.runtime.api.profile.IRouteUsage;
 
 public class RouteUsage implements IRouteUsage {
     private class UsageEntry {

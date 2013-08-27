@@ -1,21 +1,25 @@
-package edu.uiowa.csense.tools.project;
+package edu.uiowa.csense.pm.project;
 
 import java.io.File;
 import java.io.IOException;
 
-import edu.uiowa.csense.tools.CSenseToolException;
-import edu.uiowa.csense.tools.Command;
-import edu.uiowa.csense.tools.Environment;
-
-import project.targets.EclipseUtils;
+import edu.uiowa.csense.compiler.configuration.EclipseUtils;
+import edu.uiowa.csense.compiler.configuration.ToolkitConfiguration;
+import edu.uiowa.csense.pm.CSenseToolException;
+import edu.uiowa.csense.pm.Command;
 
 public class NewJavaProject extends Command {
-    public static final String PROJECT = "java";
+    public static final String PROJECT = "eclipse";
 
     @Override
-    public void processCommand(String[] args, int argStart, Environment env) throws CSenseToolException {
+    public void processCommand(String[] args, int argStart, ToolkitConfiguration sdk) throws CSenseToolException {
+	if (argStart == args.length) {
+	    System.err.println("Specify the name of the eclipse project");
+	    return;
+	}
+	
 	String projectName = args[argStart];	
-	File directory = new File("code/java/" + projectName);
+	File directory = new File(projectName);
 	
 	System.out.println("Creating project " + projectName + " in " + directory);
 	if (args.length != argStart + 1) {
@@ -39,8 +43,14 @@ public class NewJavaProject extends Command {
     }
 
     @Override
-    protected String getShortDescription() {
-	return null;
+    public final String shortDescription() {
+	return "create eclipse project";
+    }
+
+
+    @Override
+    public final String description() {
+	return "creates a new eclipse project";
     }
 
 }

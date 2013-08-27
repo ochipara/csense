@@ -10,8 +10,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import api.CSenseException;
-import base.Statistics;
+import edu.uiowa.csense.profiler.Statistics;
+import edu.uiowa.csense.runtime.api.CSenseException;
 
 public class StatisticsTest {
     static private final String FILENAME = ".testStatistics.xml";

@@ -12,15 +12,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import api.CSense;
-import api.CSenseException;
-import api.IScheduler;
-import messages.RawMessage;
-import messages.TypeInfo;
-import base.Utility;
-import compatibility.Log;
-import components.basic.QueueComponent;
-import components.basic.TapComponent;
+import edu.uiowa.csense.components.basic.TapComponent;
+import edu.uiowa.csense.profiler.Utility;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.IScheduler;
+import edu.uiowa.csense.runtime.compatibility.Log;
+import edu.uiowa.csense.runtime.types.RawFrame;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
 public class SchedulingActiveComponentTest {
     private class TestResult {
@@ -138,19 +136,19 @@ public class SchedulingActiveComponentTest {
 		.newScheduler("runTestActivePushProducersConsumer");
 	System.gc();
 
-	ActiveProducerComponent<RawMessage> p = new ActiveProducerComponent<RawMessage>(
-		new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, true,
+	ActiveProducerComponent<RawFrame> p = new ActiveProducerComponent<RawFrame>(
+		new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, true,
 			false), PERIOD);
-	QueueComponent<RawMessage> q = new SynchronousQueueComponent<RawMessage>(
+	QueueComponent<RawFrame> q = new SynchronousQueueComponent<RawFrame>(
 		32, 2, true);
-	ConsumerComponent<RawMessage> c = new ConsumerComponent<RawMessage>(1,
+	ConsumerComponent<RawFrame> c = new ConsumerComponent<RawFrame>(1,
 		true) {
 	    @Override
 	    protected boolean isTerminated() {
 		return consumption() == terminatedMessageConsumptions;
 	    }
 	};
-	TapComponent<RawMessage> tap = new TapComponent<RawMessage>();
+	TapComponent<RawFrame> tap = new TapComponent<RawFrame>();
 	assertNotNull(c.getInputPort("in0"));
 
 	try {
@@ -244,24 +242,24 @@ public class SchedulingActiveComponentTest {
      */
     // @Test
     public void testTwoActivePushProducersOneConsumer() throws CSenseException {
-	ActiveProducerComponent<RawMessage> p1 = new ActiveProducerComponent<RawMessage>(
-		new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, true,
+	ActiveProducerComponent<RawFrame> p1 = new ActiveProducerComponent<RawFrame>(
+		new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, true,
 			false), 100);
-	ActiveProducerComponent<RawMessage> p2 = new ActiveProducerComponent<RawMessage>(
-		new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, true,
+	ActiveProducerComponent<RawFrame> p2 = new ActiveProducerComponent<RawFrame>(
+		new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, true,
 			false), 250);
-	QueueComponent<RawMessage> q1 = new SynchronousQueueComponent<RawMessage>(
+	QueueComponent<RawFrame> q1 = new SynchronousQueueComponent<RawFrame>(
 		15, 2, true);
-	QueueComponent<RawMessage> q2 = new SynchronousQueueComponent<RawMessage>(
+	QueueComponent<RawFrame> q2 = new SynchronousQueueComponent<RawFrame>(
 		15, 2, true);
-	ConsumerComponent<RawMessage> c = new ConsumerComponent<RawMessage>(2,
+	ConsumerComponent<RawFrame> c = new ConsumerComponent<RawFrame>(2,
 		true) {
 	    @Override
 	    protected boolean isTerminated() {
 		return consumption() == CONSUMPTION;
 	    }
 	};
-	TapComponent<RawMessage> tap = new TapComponent<RawMessage>();
+	TapComponent<RawFrame> tap = new TapComponent<RawFrame>();
 	assertNotNull(c.getInputPort("in0"));
 
 	try {

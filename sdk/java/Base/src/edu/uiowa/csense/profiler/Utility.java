@@ -1,4 +1,4 @@
-package base;
+package edu.uiowa.csense.profiler;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.StringTokenizer;
 
-import compatibility.Log;
+import edu.uiowa.csense.runtime.compatibility.Log;
 
 public class Utility {
 	private static ThreadLocal<StringBuilder> LocalStringBuilder = new ThreadLocal<StringBuilder>() {

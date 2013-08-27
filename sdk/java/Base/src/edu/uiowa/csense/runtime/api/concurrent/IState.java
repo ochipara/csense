@@ -1,6 +1,6 @@
-package api.concurrent;
+package edu.uiowa.csense.runtime.api.concurrent;
 
-import api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseException;
 
 /**
  * This API is used by the scheduler to manage its concurrency. The components
@@ -9,8 +9,13 @@ import api.CSenseException;
  * 
  * @author ochipara
  */
-public interface IComponentState {
-
+public interface IState {
+    public final static int STATE_INIT = 0;
+    public final static int STATE_CREATED = 1;
+    public final static int STATE_READY = 2;
+    public final static int STATE_RUNNING = 3;
+    public final static int STATE_STOPPED = 4;
+    
     /**
      * Updates the state of the component to the new state.
      * 

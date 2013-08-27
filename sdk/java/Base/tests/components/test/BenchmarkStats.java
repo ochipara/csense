@@ -2,14 +2,14 @@ package components.test;
 
 import java.text.DecimalFormat;
 
-import api.CSenseComponent;
-import api.CSenseException;
-import api.IInPort;
-import api.IOutPort;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.v4.CSenseComponent;
 
 public class BenchmarkStats extends CSenseComponent {
-    IInPort<BenchmarkMessage> in;
-    IOutPort<BenchmarkMessage> out;
+    InputPort<BenchmarkMessage> in;
+    OutputPort<BenchmarkMessage> out;
 
     protected final DecimalFormat dformat = new DecimalFormat("#.#######");
     protected long _drops = 0;
@@ -65,8 +65,8 @@ public class BenchmarkStats extends CSenseComponent {
     }
 
     @Override
-    public void doInput() throws CSenseException {
-	BenchmarkMessage m = in.getMessage();
+    public void onInput() throws CSenseException {
+	BenchmarkMessage m = in.getFrame();
 	m.setEndTime(_end = System.nanoTime());
 	if (m.getCount() != _expectedCount) {
 	    error("counts do not match", _expectedCount, "but got",

@@ -1,21 +1,19 @@
 package base.test;
 
 import static org.junit.Assert.*;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
-import api.CSense;
-import api.CSenseException;
-import api.IScheduler;
-import messages.RawMessage;
-import messages.TypeInfo;
-import compatibility.Log;
-import components.basic.QueueComponent;
-import components.basic.TapComponent;
+import edu.uiowa.csense.components.basic.TapComponent;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.IScheduler;
+import edu.uiowa.csense.runtime.compatibility.Log;
+import edu.uiowa.csense.runtime.types.RawFrame;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
 public class SchedulerTest {
     private final int CONSUMPTION = 10;
@@ -55,22 +53,22 @@ public class SchedulerTest {
      */
     @Test
     public void testPushProducerConsumer() throws CSenseException {
-	ProducerComponent<RawMessage> p1 = new ProducerComponent<RawMessage>(
-		new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, true, true),
+	ProducerComponent<RawFrame> p1 = new ProducerComponent<RawFrame>(
+		new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, true, true),
 		100);
-	ProducerComponent<RawMessage> p2 = new ProducerComponent<RawMessage>(
-		new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, true, true),
+	ProducerComponent<RawFrame> p2 = new ProducerComponent<RawFrame>(
+		new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, true, true),
 		250);
-	QueueComponent<RawMessage> q1 = new QueueComponent<RawMessage>(10, 1);
-	QueueComponent<RawMessage> q2 = new QueueComponent<RawMessage>(10, 1);
-	ConsumerComponent<RawMessage> c = new ConsumerComponent<RawMessage>(2,
+	QueueComponent<RawFrame> q1 = new QueueComponent<RawFrame>(10, 1);
+	QueueComponent<RawFrame> q2 = new QueueComponent<RawFrame>(10, 1);
+	ConsumerComponent<RawFrame> c = new ConsumerComponent<RawFrame>(2,
 		false) {
 	    @Override
 	    protected boolean isTerminated() {
 		return consumption() == CONSUMPTION;
 	    }
 	};
-	TapComponent<RawMessage> tap = new TapComponent<RawMessage>();
+	TapComponent<RawFrame> tap = new TapComponent<RawFrame>();
 	assertNotNull(c.getInputPort("in0"));
 	assertNotNull(c.getInputPort("in1"));
 
@@ -106,24 +104,24 @@ public class SchedulerTest {
      */
     @Test
     public void testPushProducerPullConsumer() throws CSenseException {
-	ProducerComponent<RawMessage> p1 = new ProducerComponent<RawMessage>(
-		new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, true, true),
+	ProducerComponent<RawFrame> p1 = new ProducerComponent<RawFrame>(
+		new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, true, true),
 		100);
-	ProducerComponent<RawMessage> p2 = new ProducerComponent<RawMessage>(
-		new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, true, true),
+	ProducerComponent<RawFrame> p2 = new ProducerComponent<RawFrame>(
+		new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, true, true),
 		250);
-	QueueComponent<RawMessage> q1 = new QueueComponent<RawMessage>(10, 1,
+	QueueComponent<RawFrame> q1 = new QueueComponent<RawFrame>(10, 1,
 		true);
-	QueueComponent<RawMessage> q2 = new QueueComponent<RawMessage>(10, 1,
+	QueueComponent<RawFrame> q2 = new QueueComponent<RawFrame>(10, 1,
 		true);
-	ConsumerComponent<RawMessage> c = new ConsumerComponent<RawMessage>(2,
+	ConsumerComponent<RawFrame> c = new ConsumerComponent<RawFrame>(2,
 		true) {
 	    @Override
 	    protected boolean isTerminated() {
 		return consumption() == CONSUMPTION;
 	    }
 	};
-	TapComponent<RawMessage> tap = new TapComponent<RawMessage>();
+	TapComponent<RawFrame> tap = new TapComponent<RawFrame>();
 	assertNotNull(c.getInputPort("in0"));
 	assertNotNull(c.getInputPort("in1"));
 
@@ -158,20 +156,20 @@ public class SchedulerTest {
      */
     @Test
     public void testPullProducerPullConsumer() throws CSenseException {
-	ProducerComponent<RawMessage> p1 = new ProducerComponent<RawMessage>(
-		new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, true,
+	ProducerComponent<RawFrame> p1 = new ProducerComponent<RawFrame>(
+		new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, true,
 			false));
-	ProducerComponent<RawMessage> p2 = new ProducerComponent<RawMessage>(
-		new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, true,
+	ProducerComponent<RawFrame> p2 = new ProducerComponent<RawFrame>(
+		new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, true,
 			false));
-	ConsumerComponent<RawMessage> c = new ConsumerComponent<RawMessage>(2,
+	ConsumerComponent<RawFrame> c = new ConsumerComponent<RawFrame>(2,
 		true) {
 	    @Override
 	    protected boolean isTerminated() {
 		return consumption() == CONSUMPTION;
 	    }
 	};
-	TapComponent<RawMessage> tap = new TapComponent<RawMessage>();
+	TapComponent<RawFrame> tap = new TapComponent<RawFrame>();
 	assertNotNull(c.getInputPort("in0"));
 	assertNotNull(c.getInputPort("in1"));
 
@@ -201,22 +199,22 @@ public class SchedulerTest {
     @Test
     public void testPushProducerPullConsumerWithMISOQueueInBetween()
 	    throws CSenseException {
-	ProducerComponent<RawMessage> p1 = new ProducerComponent<RawMessage>(
-		new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, true,
+	ProducerComponent<RawFrame> p1 = new ProducerComponent<RawFrame>(
+		new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, true,
 			false), 100);
-	ProducerComponent<RawMessage> p2 = new ProducerComponent<RawMessage>(
-		new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, true,
+	ProducerComponent<RawFrame> p2 = new ProducerComponent<RawFrame>(
+		new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, true,
 			false), 250);
-	QueueComponent<RawMessage> q = new QueueComponent<RawMessage>(15, 2,
+	QueueComponent<RawFrame> q = new QueueComponent<RawFrame>(15, 2,
 		true);
-	ConsumerComponent<RawMessage> c = new ConsumerComponent<RawMessage>(1,
+	ConsumerComponent<RawFrame> c = new ConsumerComponent<RawFrame>(1,
 		true) {
 	    @Override
 	    protected boolean isTerminated() {
 		return consumption() == CONSUMPTION;
 	    }
 	};
-	TapComponent<RawMessage> tap = new TapComponent<RawMessage>();
+	TapComponent<RawFrame> tap = new TapComponent<RawFrame>();
 	assertNotNull(c.getInputPort("in0"));
 
 	try {

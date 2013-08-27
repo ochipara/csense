@@ -1,11 +1,11 @@
-package base.concurrent;
+package edu.uiowa.csense.runtime.v4;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import api.concurrent.IIdleLock;
+import edu.uiowa.csense.runtime.api.concurrent.IIdleLock;
 
 public class ReentrantIdleLock implements IIdleLock {
     private final Lock _lock = new ReentrantLock();

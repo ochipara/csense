@@ -1,35 +1,25 @@
-package messages.fixed;
+package edu.uiowa.csense.runtime.types;
 
-import java.nio.ByteBuffer;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.FramePool;
 
-import api.CSenseException;
-import api.IMessage;
-import api.IMessagePool;
-import messages.RawMessage;
-import messages.TypeInfo;
-
-public abstract class Vector<T> extends RawMessage {
+public abstract class Vector<T> extends RawFrame {
     /**
-	 * 
-	 */
-    private TypeInfo<? extends Vector<T>> _vectorType;
+     * 
+     */
+    private TypeInfo<? extends Vector<T>> vectorType;
 
-    public Vector(IMessagePool<? extends Vector<T>> pool, TypeInfo<? extends Vector<T>> type) throws CSenseException {
+    public Vector(FramePool pool, TypeInfo<? extends Vector<T>> type) throws CSenseException {
 	super(pool, type);
-	_vectorType = type;
-    }
-
-    public Vector(IMessagePool<? extends Vector<T>> pool, TypeInfo<? extends Vector<T>>  type, IMessage parent, ByteBuffer bb) throws CSenseException {
-	super(pool, type, parent, bb);
-	_vectorType = type;
+	vectorType = type;
     }
 
     /**
      * 
      * @return the number of elements in the vector
      */
-    public int getNumberOfElements() {
-	return _vectorType.getNumberOfElements();
+    public final int size() {
+	return vectorType.getNumberOfElements();
     }
 
     /**
@@ -38,45 +28,4 @@ public abstract class Vector<T> extends RawMessage {
      * @return the type information associated with this type
      */
     public abstract TypeInfo<? extends Vector<T>> getTypeInfo();
-
-    public abstract void slice(int lower, int upper);
-
-    public abstract T get();
-
-    public abstract void put(T val);
-
-    public abstract T get(int index);
-
-    public abstract void put(int index, T val);
-
-    //
-    @Override
-    public abstract Vector<T> flip();
-
-    @Override
-    public abstract Vector<T> clear();
-
-    @Override
-    public abstract Vector<T> position(int position);
-
-    @Override
-    public abstract int capacity();
-
-    @Override
-    public abstract int position();
-
-    @Override
-    public abstract int remaining();
-
-    @Override
-    public abstract int limit();
-
-    public abstract String displayValues();
-    public abstract String debugValues();
-
-    @Override
-    public void initialize() {
-	super.initialize();
-    }
-
 }

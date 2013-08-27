@@ -1,19 +1,17 @@
-package components.storage;
+package edu.uiowa.csense.components.storage;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
-import api.CSenseException;
-import api.CSenseSource;
-import api.IOutPort;
-import api.Message;
-import messages.TypeInfo;
-import messages.fixed.CharVector;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.CharVector;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 
 public class SessionId extends CSenseSource<CharVector> {
-    public IOutPort<CharVector> out = newOutputPort(this, "out");
+    public OutputPort<CharVector> out = newOutputPort(this, "out");
     private static String _session;
     private static final int SIZE = 32;
 
@@ -38,7 +36,7 @@ public class SessionId extends CSenseSource<CharVector> {
     }
 
     @Override
-    public Message onPoll(IOutPort port) throws CSenseException {
+    public Frame onPoll(OutputPort port) throws CSenseException {
 	CharVector msg = getNextMessageToWriteInto();
 	msg.position(0);
 	msg.put(_session);

@@ -1,15 +1,17 @@
-package components.audio;
+package edu.uiowa.csense.components.audio;
 
-import messages.fixed.DoubleVector;
-import api.CSenseComponent;
-import api.CSenseException;
-import api.IInPort;
-import api.IOutPort;
+import java.nio.DoubleBuffer;
+
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.DoubleVector;
+import edu.uiowa.csense.runtime.v4.CSenseComponent;
 
 public class EnergyFilter extends CSenseComponent {
-    public IInPort<DoubleVector> in = newInputPort(this, "in");
-    public IOutPort<DoubleVector> above = newOutputPort(this, "above");
-    public IOutPort<DoubleVector> below = newOutputPort(this, "below");
+    public final InputPort<DoubleVector> in = newInputPort(this, "in");
+    public final OutputPort<DoubleVector> above = newOutputPort(this, "above");
+    public final OutputPort<DoubleVector> below = newOutputPort(this, "below");
     final double _threshold;
     final int _window;
     int _counter;
@@ -23,16 +25,16 @@ public class EnergyFilter extends CSenseComponent {
     }
 
     @Override
-    public void doInput() throws CSenseException {
-	DoubleVector v = in.getMessage();
+    public void onInput() throws CSenseException {
+	DoubleVector v = in.getFrame();		
 
 	if (_counter == 0) {
 	    v.position(0);
 	    s = 0;
-	    for (int i = 0; i < v.getNumberOfElements(); i++) {
+	    for (int i = 0; i < v.size(); i++) {
 		s = s + Math.abs(v.get(i));
 	    }
-	    s = s / v.getNumberOfElements();	
+	    s = s / v.size();	
 	    if (s >= _threshold) {
 		_counter = _window;
 	    }

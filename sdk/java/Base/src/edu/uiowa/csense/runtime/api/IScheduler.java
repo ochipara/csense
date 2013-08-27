@@ -1,10 +1,11 @@
-package api;
+package edu.uiowa.csense.runtime.api;
 
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.util.concurrent.TimeUnit;
 
-import api.concurrent.IIdleLock;
+import edu.uiowa.csense.runtime.api.concurrent.IIdleLock;
+import edu.uiowa.csense.runtime.v4.CSenseComponent;
 
 /**
  * No need to consider if a component needs CPU cycles or not, just call

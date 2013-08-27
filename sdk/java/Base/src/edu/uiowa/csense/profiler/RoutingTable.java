@@ -1,11 +1,11 @@
-package base;
+package edu.uiowa.csense.profiler;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import api.IRoute;
-import api.IRoutingTable;
+import edu.uiowa.csense.runtime.api.profile.IRoute;
+import edu.uiowa.csense.runtime.api.profile.IRoutingTable;
 
 public class RoutingTable implements IRoutingTable, Cloneable {
     private List<IRoute> _routes;

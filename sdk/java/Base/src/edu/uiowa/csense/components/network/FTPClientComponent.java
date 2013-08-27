@@ -1,19 +1,18 @@
-package components.network;
+package edu.uiowa.csense.components.network;
 
-import api.CSenseComponent;
-import api.CSenseException;
-import api.CSenseRuntimeException;
-import api.IInPort;
-import api.IOutPort;
-import api.TimerTask;
-import base.*;
 import java.io.*;
 import java.nio.*;
 import java.nio.channels.*;
 import java.net.*;
 import java.util.StringTokenizer;
 
-import messages.fixed.FilenameType;
+import edu.uiowa.csense.profiler.*;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.FilenameType;
+import edu.uiowa.csense.runtime.v4.CSenseComponent;
 
 /*
  * TODO
@@ -26,8 +25,8 @@ import messages.fixed.FilenameType;
  */
 
 public class FTPClientComponent extends CSenseComponent {
-    IInPort<FilenameType> in;
-    IOutPort<FilenameType> out;
+    InputPort<FilenameType> in;
+    OutputPort<FilenameType> out;
 
     static protected final String CRLF = "\r\n";
     static protected final long CONNECTION_TIMEOUT = 15 * 1000;
@@ -477,8 +476,8 @@ public class FTPClientComponent extends CSenseComponent {
 //    }
 
     @Override
-    public void doInput() throws CSenseException {
-		FilenameType msg = in.getMessage();
+    public void onInput() throws CSenseException {
+		FilenameType msg = in.getFrame();
 		upload(msg.getString());
 		out.push(msg);
     }

@@ -1,4 +1,4 @@
-package profile;
+package edu.uiowa.csense.profiler;
 
 import java.util.Formatter;
 
@@ -20,6 +20,7 @@ public class CPUPower {
     StringBuilder sb = new StringBuilder();
     Formatter formatter = new Formatter();
 
+    @Override
     public String toString() {
 	long nano = System.nanoTime();
 	long seconds = nano / 1000000000;

@@ -1,4 +1,4 @@
-package base;
+package edu.uiowa.csense.components.network;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -11,9 +11,9 @@ import java.util.Map;
  * 
  * @author Farley Lai
  */
-public class UDPSenderComponent<T extends Message> extends CSenseComponent {
-    public IInPort<T> in = new InPort<T>(this, "in", 100);
-    public IOutPort<T> out = new OutPort<T>(this, "out", 200);
+public class UDPSenderComponent<T extends Frame> extends CSenseComponent {
+    public InputPort<T> in = new InPort<T>(this, "in", 100);
+    public OutputPort<T> out = new OutPort<T>(this, "out", 200);
 
     private InetSocketAddress _address;
     private DatagramChannel _channel;
@@ -25,11 +25,11 @@ public class UDPSenderComponent<T extends Message> extends CSenseComponent {
     }
 
     @Override
-    protected void doInput(InPort<? extends Message> port) {
+    protected void doInput(InPort<? extends Frame> port) {
 	T msg = in.poll();
 	try {
 	    Log.d("sending UDP message of size " + msg.remaining());
-	    _channel.send(msg.buffer(), _address);
+	    _channel.send(msg.getBuffer(), _address);
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
@@ -55,7 +55,7 @@ public class UDPSenderComponent<T extends Message> extends CSenseComponent {
     }
 
     @Override
-    protected boolean mayPull(OutPort<? extends Message> port) {
+    protected boolean mayPull(OutPort<? extends Frame> port) {
 	return getInputPort().pull();
     }
 }

@@ -1,25 +1,23 @@
-package components.network;
+package edu.uiowa.csense.components.network;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.Frame;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.CharVector;
+import edu.uiowa.csense.runtime.types.FilenameType;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 
-import messages.TypeInfo;
-import messages.fixed.CharVector;
-import messages.fixed.FilenameType;
-import api.CSenseErrors;
-import api.CSenseException;
-import api.CSenseSource;
-import api.IInPort;
-import api.IOutPort;
-import api.Message;
-
-public class HTMLForm<T extends Message> extends CSenseSource<HTMLFormMessage> {
-    public final List<IInPort<Message>> inputs;
-    public final List<IOutPort<Message>> outputs;
-    public final IOutPort<HTMLFormMessage> form = newOutputPort(this, "form");
+public class HTMLForm<T extends Frame> extends CSenseSource<HTMLFormMessage> {
+    public final List<InputPort<Frame>> inputs;
+    public final List<OutputPort<Frame>> outputs;
+    public final OutputPort<HTMLFormMessage> form = newOutputPort(this, "form");
     protected final int _numPorts;
 
     //
@@ -32,8 +30,8 @@ public class HTMLForm<T extends Message> extends CSenseSource<HTMLFormMessage> {
 	super(type);
 
 	_numPorts = fields.length;
-	inputs = new ArrayList<IInPort<Message>>(_numPorts);
-	outputs = new ArrayList<IOutPort<Message>>(_numPorts);
+	inputs = new ArrayList<InputPort<Frame>>(_numPorts);
+	outputs = new ArrayList<OutputPort<Frame>>(_numPorts);
 	for (int i = 0; i < _numPorts; i++) {
 	    inputs.add(newInputPort(this, fields[i] + "In"));
 	    outputs.add(newOutputPort(this, fields[i] + "Out"));
@@ -57,16 +55,16 @@ public class HTMLForm<T extends Message> extends CSenseSource<HTMLFormMessage> {
     }
 
     @Override
-    public void doInput() throws CSenseException {
+    public void onInput() throws CSenseException {
 	HTMLFormMessage htmlForm = getNextMessageToWriteInto();
 
 	for (int i = 0; i < _fields.length; i++) {
 	    String name = _fields[i];
 	    String type = _types[i];
-	    IInPort<Message> input = inputs.get(i);
-	    IOutPort<Message> output = outputs.get(i);
+	    InputPort<Frame> input = inputs.get(i);
+	    OutputPort<Frame> output = outputs.get(i);
 
-	    Message m = input.getMessage();
+	    Frame m = input.getFrame();
 
 	    if ("text".equals(type)) {
 		try {

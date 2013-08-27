@@ -1,4 +1,4 @@
-package base.concurrent;
+package edu.uiowa.csense.runtime.concurrent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +97,7 @@ public class CSenseBlockingQueue<T> {
 			}
 		    }
 		}
+		_emptySignaled = false;
 	    }
 	}	
     }

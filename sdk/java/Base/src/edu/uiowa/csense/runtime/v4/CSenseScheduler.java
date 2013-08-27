@@ -1,4 +1,4 @@
-package base.v2;
+package edu.uiowa.csense.runtime.v4;
 
 import java.io.IOException;
 import java.nio.channels.SelectableChannel;
@@ -11,28 +11,24 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import compatibility.Log;
-import compatibility.ThreadCPUUsage;
-
-import base.CSenseFormatter;
-import base.Debug;
-import base.Utility;
-import api.CSense;
-import api.CSenseComponent;
-import api.CSenseErrors;
-import api.CSenseException;
-import api.CSenseRuntimeException;
-import api.CSenseSource;
-import api.Command;
-import api.ICommandHandler;
-import api.IComponent;
-import api.IEventManager;
-import api.IScheduler;
-import api.Task;
-import api.TimerEvent;
-import api.concurrent.IIdleLock;
-import api.concurrent.ITaskManager;
-
+import edu.uiowa.csense.profiler.CSenseFormatter;
+import edu.uiowa.csense.profiler.Debug;
+import edu.uiowa.csense.profiler.Utility;
+import edu.uiowa.csense.runtime.api.CSenseError;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
+import edu.uiowa.csense.runtime.api.Command;
+import edu.uiowa.csense.runtime.api.ICommandHandler;
+import edu.uiowa.csense.runtime.api.IComponent;
+import edu.uiowa.csense.runtime.api.IScheduler;
+import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.api.TimerEvent;
+import edu.uiowa.csense.runtime.api.concurrent.IState;
+import edu.uiowa.csense.runtime.api.concurrent.IEventManager;
+import edu.uiowa.csense.runtime.api.concurrent.IIdleLock;
+import edu.uiowa.csense.runtime.api.concurrent.ITaskManager;
+import edu.uiowa.csense.runtime.compatibility.Log;
+import edu.uiowa.csense.runtime.compatibility.ThreadCPUUsage;
 /**
  * The default implementation of the Scheduler interface. The scheduler supports
  * to schedule timer tasks and notify components of their interested I/O events.
@@ -90,14 +86,14 @@ public class CSenseScheduler implements IScheduler {
 	    for (int i = 0; i < _components.size(); i++) {
 		IComponent component = _components.get(i);		
 		component.onCreate();				
-		component.getState().assertState(IComponent.STATE_CREATED);
+		component.getState().assertState(IState.STATE_CREATED);
 	    }
 
 	    // start the components
 	    for (int i = 0; i < _components.size(); i++) {
 		IComponent component = _components.get(i);
 		component.onStart();
-		component.transitionTo(IComponent.STATE_READY);
+		component.transitionTo(IState.STATE_READY);
 	    }
 	}
 
@@ -111,7 +107,7 @@ public class CSenseScheduler implements IScheduler {
 	    for (int i = 0; i < _components.size(); i++) {
 		IComponent component = _components.get(i);  
 		component.onStop();
-		component.transitionTo(IComponent.STATE_STOPPED);
+		component.getState().assertState(IState.STATE_STOPPED);
 	    }
 	}
 
@@ -215,7 +211,7 @@ public class CSenseScheduler implements IScheduler {
 		}
 	    } catch (InterruptedException e) {
 	    } catch (CSenseException e) {				
-		if(!(e.getCause() instanceof InterruptedException) || (e.error() == CSenseErrors.INTERRUPTED_OPERATION)) {
+		if(!(e.getCause() instanceof InterruptedException) || (e.error() == CSenseError.INTERRUPTED_OPERATION)) {
 		    e.printStackTrace();
 		    Log.e("quit,", e);
 		}
@@ -293,7 +289,6 @@ public class CSenseScheduler implements IScheduler {
 	}
 
 	component.setScheduler(this);
-	CSense.registerComponent(component);
 	_components.add(component);
 	return true;
     }

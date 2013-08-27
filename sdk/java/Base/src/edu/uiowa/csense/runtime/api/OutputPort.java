@@ -1,4 +1,5 @@
-package api;
+package edu.uiowa.csense.runtime.api;
+
 
 /**
  * This is the abstract class from which the OutPort implementation should
@@ -14,7 +15,7 @@ package api;
  * @param <T>
  */
 
-public interface IOutPort<T extends Message> extends IPort {
+public interface OutputPort<T extends Frame> extends Port {
 
     /**
      * Links to the next component
@@ -22,7 +23,7 @@ public interface IOutPort<T extends Message> extends IPort {
      * @param port
      * @throws CSenseException
      */
-    public void link(IInPort<? extends Message> port) throws CSenseException;
+    public void link(InputPort<? extends Frame> port) throws CSenseException;
 
     /**
      * 
@@ -31,14 +32,13 @@ public interface IOutPort<T extends Message> extends IPort {
     public IComponent nextComponent();
 
     /**
-     * Pushes message m to the next component. The successful completion of a
-     * push operation result in the next component getting a a reference to the
-     * message m. Error conditions are returned as an error code
+     * Pushes message m to the next component. 
+     * Failures will results in exceptions being thrown
      * 
      * @param m
      * @throws CSenseException
      */
-    public IResult push(T m) throws CSenseException;
+    public int push(T m) throws CSenseException;
 
     /**
      * Called when a poll requested by the next component
@@ -64,5 +64,5 @@ public interface IOutPort<T extends Message> extends IPort {
      */
     public boolean isConnected();
 
-    public void setMultiplier(int multiplier);
+    //public void setMultiplier(int multiplier);
 }

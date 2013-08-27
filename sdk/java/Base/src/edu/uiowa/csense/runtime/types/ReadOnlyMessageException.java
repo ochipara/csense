@@ -1,4 +1,4 @@
-package messages;
+package edu.uiowa.csense.runtime.types;
 
 public class ReadOnlyMessageException extends UnsupportedOperationException {
     private static final long serialVersionUID = 1L;

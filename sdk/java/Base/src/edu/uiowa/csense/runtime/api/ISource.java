@@ -1,6 +1,7 @@
-package api;
+package edu.uiowa.csense.runtime.api;
 
-public interface ISource<T extends Message> extends IComponent {
+
+public interface ISource<T extends Frame> extends IComponent {
     //public void setupMessagePoolFromTypeInfo(CSenseSource<T> source) throws CSenseException;
     public T getNextMessageToWriteInto();
     public T getNextMessageToWriteIntoAndBlock() throws InterruptedException;   	

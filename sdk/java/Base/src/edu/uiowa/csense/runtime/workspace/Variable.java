@@ -1,4 +1,4 @@
-package base.workspace;
+package edu.uiowa.csense.runtime.workspace;
 
 public class Variable {
     protected final String name;

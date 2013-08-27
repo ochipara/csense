@@ -1,4 +1,4 @@
-package components.network;
+package edu.uiowa.csense.components.network;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -7,16 +7,15 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 
-import messages.TypeInfo;
-import api.CSenseException;
-import api.IMessagePool;
-import api.Message;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
-public class HTMLFormMessage extends Message {
+public class HTMLFormMessage extends Frame {
     protected MultipartEntity _entity = null;
 
-    public HTMLFormMessage(IMessagePool<? extends Message> pool,
-	    TypeInfo<? extends Message> type) throws CSenseException {
+    public HTMLFormMessage(FramePool<? extends Frame> pool,
+	    TypeInfo<? extends Frame> type) throws CSenseException {
 	super(pool, type);
     }
 

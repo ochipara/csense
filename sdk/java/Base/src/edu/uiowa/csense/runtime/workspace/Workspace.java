@@ -1,4 +1,4 @@
-package base.workspace;
+package edu.uiowa.csense.runtime.workspace;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class Workspace {
 	return workspace;
     }
 
-    public Object getValue(String string) {
+   synchronized public Object getValue(String string) {
 	return values.get(string);
     }
 }

@@ -1,9 +1,10 @@
-package base.concurrent;
+package edu.uiowa.csense.runtime.v4;
 
-import api.CSenseErrors;
-import api.CSenseException;
-import api.IComponent;
-import api.concurrent.ITaskManager;
+import edu.uiowa.csense.runtime.api.CSenseError;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.IComponent;
+import edu.uiowa.csense.runtime.api.concurrent.ITaskManager;
+import edu.uiowa.csense.runtime.concurrent.CSenseBlockingQueue;
 
 public class CBQTaskManager implements ITaskManager {
     private CSenseBlockingQueue<IComponent> _tasks;
@@ -23,7 +24,7 @@ public class CBQTaskManager implements ITaskManager {
 	    return;
 
 	if (_tasks.offer(component) == false) {
-	    throw new CSenseException(CSenseErrors.ERROR, "Out of space in the ABQManger?");
+	    throw new CSenseException(CSenseError.ERROR, "Out of space in the ABQManger?");
 	}
 
     }

@@ -1,4 +1,4 @@
-package base;
+package edu.uiowa.csense.profiler;
 
 //import java.util.Formatter;
 import java.util.logging.*;

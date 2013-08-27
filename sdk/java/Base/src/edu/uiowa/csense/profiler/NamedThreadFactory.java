@@ -1,4 +1,4 @@
-package base;
+package edu.uiowa.csense.profiler;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;

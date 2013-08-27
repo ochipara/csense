@@ -12,18 +12,15 @@ import java.nio.ShortBuffer;
  *
  */
 public class CSenseLib {
+    public static void CSenseLib_terminate() {
+	throw new UnsupportedOperationException();
+    }
 
     public static void int16_to_double(ShortBuffer buffer, DoubleBuffer buffer2, int capacity) {
 	throw new UnsupportedOperationException();
     }
 
-    public static void CSenseLib_terminate() {
-	throw new UnsupportedOperationException();
-    }
-
     public static void int16_to_floats(ShortBuffer buffer, FloatBuffer buffer2, int capacity) {
 	throw new UnsupportedOperationException();	
-    }
-    
-    
+    }        
 }

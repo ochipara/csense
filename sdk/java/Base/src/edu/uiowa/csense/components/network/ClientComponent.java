@@ -1,6 +1,4 @@
-package components.network;
-
-import base.*;
+package edu.uiowa.csense.components.network;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -8,13 +6,15 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Map;
 
+import edu.uiowa.csense.profiler.*;
+
 /**
  * Sends messages over a network via TCP. It drops messages when a successful
  * connection with a receiving (network) component doesn't exist. When the TCP
  * connection is severed, this component tries to re-establish a successful
  * connection.
  */
-public class ClientComponent<T extends Message> extends CSenseComponent {
+public class ClientComponent<T extends Frame> extends CSenseComponent {
     public final Map<String, InPort<T>> PORTS_IN = this
 	    .<T> setupInputPorts("in");
     public final Map<String, OutPort<T>> PORTS_OUT = this
@@ -84,7 +84,7 @@ public class ClientComponent<T extends Message> extends CSenseComponent {
      * @param msg
      *            TODO
      */
-    public void sendMessageOverNetwork(Message msg) {
+    public void sendMessageOverNetwork(Frame msg) {
 	try {
 	    Log.d("try push...");
 	    if (true == _server.isConnectionPending()) {
@@ -100,12 +100,12 @@ public class ClientComponent<T extends Message> extends CSenseComponent {
 	    }
 
 	    // get the ByteBuffer we're about to send over the network
-	    _buffersToSend[1] = msg.buffer();
+	    _buffersToSend[1] = msg.getBuffer();
 	    _buffersToSend[1].position(0);
 
 	    // optimization - this ensures we only send 'interesting' bytes
 	    // (bytes with values) in the ByteBuffer
-	    int length = msg.buffer().limit();
+	    int length = msg.getBuffer().limit();
 	    _buffersToSend[0].clear();
 	    _buffersToSend[0].putInt(length);
 	    _buffersToSend[0].position(0);
@@ -169,14 +169,14 @@ public class ClientComponent<T extends Message> extends CSenseComponent {
     }
 
     @Override
-    public void doInput(InPort<? extends Message> port) throws CSenseException {
-	Message msg = port.poll();
+    public void doInput(InPort<? extends Frame> port) throws CSenseException {
+	Frame msg = port.poll();
 	sendMessageOverNetwork(msg);
 	getOutputPort("out").push(msg);
     }
 
     @Override
-    protected boolean mayPull(OutPort<? extends Message> port) {
+    protected boolean mayPull(OutPort<? extends Frame> port) {
 	return getInputPort().pull();
     }
 }

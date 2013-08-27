@@ -1,4 +1,4 @@
-package api;
+package edu.uiowa.csense.runtime.api;
 
 public class CSenseException extends Exception {
     private static final long serialVersionUID = 1L;

@@ -7,7 +7,7 @@ import java.util.List;
 import com.google.caliper.Runner;
 import com.google.caliper.SimpleBenchmark;
 
-import base.Utility;
+import edu.uiowa.csense.profiler.Utility;
 
 public class BenchmarkConfiguration {
 	private int _trials;

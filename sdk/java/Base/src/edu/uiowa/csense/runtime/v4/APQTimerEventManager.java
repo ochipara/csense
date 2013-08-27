@@ -1,9 +1,9 @@
-package base.concurrent;
+package edu.uiowa.csense.runtime.v4;
 
 import java.util.concurrent.PriorityBlockingQueue;
 
-import api.IEventManager;
-import api.TimerEvent;
+import edu.uiowa.csense.runtime.api.TimerEvent;
+import edu.uiowa.csense.runtime.api.concurrent.IEventManager;
 
 public class APQTimerEventManager implements IEventManager {
     private final PriorityBlockingQueue<TimerEvent> _timerTasks;

@@ -1,14 +1,12 @@
 package base.test;
 
-import components.basic.DisplayFrame;
-import components.basic.TapComponent;
 //import components.storage.FromDiskComponent;
 
-import api.CSense;
-import api.CSenseException;
-import api.IScheduler;
-import messages.TypeInfo;
-import messages.fixed.CharVector;
+import edu.uiowa.csense.components.basic.TapComponent;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.IScheduler;
+import edu.uiowa.csense.runtime.types.CharVector;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
 public class CatFile {
     private IScheduler _scheduler;

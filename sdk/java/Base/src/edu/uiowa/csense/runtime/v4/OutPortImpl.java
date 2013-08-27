@@ -1,14 +1,11 @@
-package base.v2;
+package edu.uiowa.csense.runtime.v4;
 
-import base.Debug;
-import api.CSenseComponent;
-import api.CSenseErrors;
-import api.CSenseException;
-import api.IComponent;
-import api.IInPort;
-import api.IOutPort;
-import api.IResult;
-import api.Message;
+import edu.uiowa.csense.profiler.Debug;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.IComponent;
+import edu.uiowa.csense.runtime.api.Frame;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
 
 /**
  * This class implements the output port.
@@ -20,14 +17,12 @@ import api.Message;
  *
  * @param <T>
  */
-public class OutPortImpl<T extends Message> extends PortImpl implements IOutPort<T> {
+public class OutPortImpl<T extends Frame> extends PortImpl implements OutputPort<T> {
     private final String TAG;
-    IInPort<T> _in = null;
+    InputPort<T> _in = null;
     boolean _supportPull = false;
-    private int _multiplier;
-    private int _index = 0;
-
-    public OutPortImpl(CSenseComponent owner, String name) {
+   
+    public OutPortImpl(IComponent owner, String name) {
 	super(owner, name);
 	String cName = owner.getName().substring(owner.getName().lastIndexOf('.') + 1, owner.getName().length());
 	TAG = cName + "::" + name;
@@ -49,39 +44,20 @@ public class OutPortImpl<T extends Message> extends PortImpl implements IOutPort
     }
 
     @Override
-    public void link(IInPort<? extends Message> in) throws CSenseException {
-	if (in == null)
-	    throw new CSenseException(CSenseErrors.CONFIGURATION_ERROR,
-		    "in cannot be null");
-	_in = (IInPort<T>) in;
+    public void link(InputPort<? extends Frame> in) throws CSenseException {
+	if (in == null) {
+	    throw new IllegalArgumentException("input port cannot be null when connecting to " + TAG);
+	}
+	
+	_in = (InputPort<T>) in;
 	_in.link(this);
     }
 
     @Override
-    public IResult push(T m) throws CSenseException {
-	if (_owner.isEof()) {
-	    m.eof();
-	}
-
-	if (_index > 0) {
-	    _index = _index - 1;
-	    return IResult.PUSH_SUCCESS;
-	} else {
-	    IResult result;
-	    T pushMessage;
-	    if (_multiplier == 1) {
-		pushMessage = m;		
-	    } else {
-		pushMessage = (T) m.getParent();
-	    }
-	    int mid = pushMessage.getId();
-	    result = _in.onPush(pushMessage); 
-	    Debug.logMessagePushReturn(_owner, mid);
-	    _owner.accumulateResult(result);
-	    _index = _multiplier - 1;
-	    //Log.d(TAG, "push " + pushMessage.hashCode());
-	    return result;
-	}
+    public int push(T m) throws CSenseException {	
+	int r = _in.onPush(m);
+	Debug.logMessagePushReturn(_owner, m);
+	return r;
     }
 
     @Override
@@ -102,11 +78,5 @@ public class OutPortImpl<T extends Message> extends PortImpl implements IOutPort
     @Override
     public boolean isConnected() {
 	return (_in != null);
-    }
-
-    @Override
-    public void setMultiplier(int multiplier) {
-	this._multiplier = multiplier;
-	this._index = multiplier - 1;
     }
 }

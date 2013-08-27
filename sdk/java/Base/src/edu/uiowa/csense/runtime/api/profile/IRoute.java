@@ -1,8 +1,8 @@
-package api;
+package edu.uiowa.csense.runtime.api.profile;
 
 import java.util.List;
 
-import base.RouteEntry;
+import edu.uiowa.csense.profiler.RouteEntry;
 
 public interface IRoute extends Comparable<IRoute> {
     public boolean add(String station, int loc, long mid);

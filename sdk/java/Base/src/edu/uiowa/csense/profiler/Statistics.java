@@ -1,4 +1,4 @@
-package base;
+package edu.uiowa.csense.profiler;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-import api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseException;
 
 public class Statistics {
 	private String _prefix;

@@ -1,4 +1,4 @@
-package components.basic;
+package edu.uiowa.csense.components.basic;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

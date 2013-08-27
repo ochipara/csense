@@ -1,20 +1,23 @@
-package components.conversions;
+package edu.uiowa.csense.components.conversions;
+
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 
 import edu.uiowa.csense.CSenseLib;
-import messages.TypeInfo;
-import messages.fixed.FloatVector;
-import messages.fixed.ShortVector;
-import api.CSenseErrors;
-import api.CSenseException;
-import api.CSenseSource;
-import api.IInPort;
-import api.IOutPort;
+import edu.uiowa.csense.runtime.api.CSenseError;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.FloatVector;
+import edu.uiowa.csense.runtime.types.ShortVector;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 
 public class ShortsToFloats extends CSenseSource<FloatVector> {
-    public final IInPort<ShortVector> shortsIn = newInputPort(this, "shortIn");
-    public final IOutPort<ShortVector> shortsOut = newOutputPort(this, "shortOut");
+    public final InputPort<ShortVector> shortsIn = newInputPort(this, "shortIn");
+    public final OutputPort<ShortVector> shortsOut = newOutputPort(this, "shortOut");
 
-    public final IOutPort<FloatVector> floatsOut = newOutputPort(this, "floatsOut");
+    public final OutputPort<FloatVector> floatsOut = newOutputPort(this, "floatsOut");
     private final boolean useNative;
 
 
@@ -29,22 +32,24 @@ public class ShortsToFloats extends CSenseSource<FloatVector> {
     }
 
     @Override
-    public void doInput() throws CSenseException {
-	ShortVector shorts = shortsIn.getMessage();
-	FloatVector floats = getNextMessageToWriteInto();
+    public void onInput() throws CSenseException {
+	ShortVector shortsV = shortsIn.getFrame();
+	ShortBuffer shorts = shortsV.getShortBuffer();
+	FloatVector floatsV = getNextMessageToWriteInto();
+	FloatBuffer floats = floatsV.getFloatBuffer();
 
 	if (shorts.capacity() != floats.capacity() ) {
-	    throw new CSenseException(CSenseErrors.CONFIGURATION_ERROR, "Expected vector capacities to be equal");
+	    throw new CSenseException(CSenseError.CONFIGURATION_ERROR, "Expected vector capacities to be equal");
 	}
 
 	shorts.position(0);
 	floats.position(0);	
 	if (useNative) {
-	    CSenseLib.int16_to_floats(shorts.getBuffer(), floats.getBuffer(), shorts.capacity());    
+	    CSenseLib.int16_to_floats(shorts, floats, shorts.capacity());    
 	} else {
 	    for (int i = 0; i < shorts.capacity(); i++) {
-		short s = shorts.getShort();
-		float fs = (float) s;
+		short s = shorts.get(i);
+		float fs = s;
 		float sample = fs / (float) 32768.0;
 		floats.put(sample);
 	    }
@@ -52,7 +57,7 @@ public class ShortsToFloats extends CSenseSource<FloatVector> {
 
 
 	floats.position(0);
-	shortsOut.push(shorts);
-	floatsOut.push(floats);
+	shortsOut.push(shortsV);
+	floatsOut.push(floatsV);
     }
 }

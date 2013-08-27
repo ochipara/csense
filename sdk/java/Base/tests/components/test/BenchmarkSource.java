@@ -2,16 +2,14 @@ package components.test;
 
 import java.util.Properties;
 
-import base.Statistics;
-
-import api.CSenseErrors;
-import api.CSenseException;
-import api.CSenseSource;
-import api.IOutPort;
-import api.Task;
+import edu.uiowa.csense.profiler.Statistics;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 
 public class BenchmarkSource extends CSenseSource<BenchmarkMessage> {
-    IOutPort<BenchmarkMessage> out = newOutputPort(this, "out");
+    OutputPort<BenchmarkMessage> out = newOutputPort(this, "out");
     protected final long _delay;
     private final int _burst;
 

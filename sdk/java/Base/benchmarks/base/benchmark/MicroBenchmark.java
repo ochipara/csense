@@ -2,26 +2,23 @@ package base.benchmark;
 
 import static org.junit.Assert.*;
 
-import messages.RawMessage;
-import messages.TypeInfo;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import api.CSense;
-import api.CSenseException;
-import api.CSenseRuntimeException;
-import api.IInPort;
-import api.IMessagePool;
-import api.IScheduler;
-import api.Message;
-import base.Utility;
-import compatibility.Log;
-import components.basic.CopyRefComponent;
-import components.basic.TapComponent;
+import edu.uiowa.csense.components.basic.CopyRefComponent;
+import edu.uiowa.csense.components.basic.TapComponent;
+import edu.uiowa.csense.profiler.Utility;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.api.IScheduler;
+import edu.uiowa.csense.runtime.compatibility.Log;
+import edu.uiowa.csense.runtime.types.RawFrame;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
 public class MicroBenchmark {
 	private final int MSGS = 10000;
@@ -60,27 +57,27 @@ public class MicroBenchmark {
 	 */
 	public void chainsOfComponents(int branches, int length, final int maxPushTimes) throws CSenseException {
 		if(length < 4) throw new CSenseRuntimeException("length has to be at least 4");
-		ProducerComponent<RawMessage> p = new ProducerComponent<RawMessage>(new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, true, true), 0) {
+		ProducerComponent<RawFrame> p = new ProducerComponent<RawFrame>(new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, true, true), 0) {
 			@Override
 			protected boolean isTerminated() {
 				//if(getIMessagePushTimes() % 1000 == 0) Log.i("pushed 1000 times");
 				return getMessagePushTimes() == maxPushTimes;
 			}
 		};
-		CopyRefComponent<RawMessage> pivot = new CopyRefComponent<RawMessage>(branches);
+		CopyRefComponent<RawFrame> pivot = new CopyRefComponent<RawFrame>(branches);
 		p.getOutputPort("out").link(pivot.getInputPort("in"));
 		for(int branch = 0; branch < branches; branch++) {
-			CopyRefComponent<RawMessage> prev = pivot;
-			CopyRefComponent<RawMessage> ref = prev;
+			CopyRefComponent<RawFrame> prev = pivot;
+			CopyRefComponent<RawFrame> ref = prev;
 			for(int i = 0; i < length  - 4; i++) {
-				ref = new CopyRefComponent<RawMessage>(1);
+				ref = new CopyRefComponent<RawFrame>(1);
 				prev.getOutputPort(Utility.toString("out", i == 0 ? branch : 0)).link(ref.getInputPort("in"));
 				prev = ref;
 				 _scheduler.addComponent(ref);
 			}
 			
-			ConsumerComponent<RawMessage> c = new ConsumerComponent<RawMessage>(1, false);
-			TapComponent<RawMessage> tap = new TapComponent<RawMessage>();
+			ConsumerComponent<RawFrame> c = new ConsumerComponent<RawFrame>(1, false);
+			TapComponent<RawFrame> tap = new TapComponent<RawFrame>();
 			ref.getOutputPort(Utility.toString("out", ref == pivot ? branch : 0)).link(c.getInputPort("in0"));
 			c.getOutputPort("out").link(tap.getInputPort("in"));
 			 _scheduler.addComponent(c);
@@ -99,33 +96,33 @@ public class MicroBenchmark {
 		assertEquals( 0, p.getMessageDropCount());
 	}
 		
-	private void onPush(Message m) throws CSenseException {
-		IInPort<Message> input = null;
+	private void onPush(Frame m) throws CSenseException {
+		InputPort<Frame> input = null;
 		processInput(input, m);
 	}
 	
-	private <T extends Message> void processInput(IInPort<Message> input, Message m) throws CSenseException {
+	private <T extends Frame> void processInput(InputPort<Frame> input, Frame m) throws CSenseException {
 		internalProcessInput(input, m);
 	}
 	
-	private <T extends Message> void internalProcessInput(IInPort<Message> input, Message m) throws CSenseException {
+	private <T extends Frame> void internalProcessInput(InputPort<Frame> input, Frame m) throws CSenseException {
 		doInput(m);
 	}
 	
-	private void doInput(Message m) throws CSenseException {
+	private void doInput(Frame m) throws CSenseException {
 		push(m);
 	}
 	
-	private void push(Message m) throws CSenseException {
+	private void push(Frame m) throws CSenseException {
 		m.free();
 	}
 	
 	private void baseline(int branches, int length, int msgs) throws CSenseException {
 		final int count = msgs * branches * length;
-		TypeInfo<RawMessage> type = new TypeInfo<RawMessage>(RawMessage.class, 4, 32, 1, false, true);
-		IMessagePool<RawMessage> pool = _csense.<RawMessage>newMessagePool(type, 32);
+		TypeInfo<RawFrame> type = new TypeInfo<RawFrame>(RawFrame.class, 4, 32, 1, false, true);
+		FramePool<RawFrame> pool = _csense.<RawFrame>newFramePool(type, 32);
 		for(int i = 0; i < count; i++) {
-			RawMessage m = pool.get();
+			RawFrame m = pool.get();
 			assertNotNull(m);
 			onPush(m);
 		}

@@ -1,12 +1,5 @@
-package messages;
+package edu.uiowa.csense.runtime.types;
 
-import messages.fixed.ByteVector;
-import messages.fixed.CharVector;
-import messages.fixed.DoubleMatrix;
-import messages.fixed.DoubleVector;
-import messages.fixed.FilenameType;
-import messages.fixed.FloatVector;
-import messages.fixed.ShortVector;
 
 /**
  * This class will hold the type information. I hope that this should make it
@@ -60,7 +53,7 @@ public class TypeInfo<T> {
 	return _numElements * _elementSize;
     }
 
-    public Class<T> getJavaType() {
+    public Class getJavaType() {
 	return _class;
     }
 
@@ -100,9 +93,9 @@ public class TypeInfo<T> {
 	return new TypeInfo<ShortVector>(ShortVector.class, 2, size, 1, true, false);
     }
 
-    public static TypeInfo<DoubleMatrix> newDoubleMatrix(int rows, int columns) {
-	return new TypeInfo<DoubleMatrix>(DoubleMatrix.class, 8, rows, columns, true, false);
-    }
+//    public static TypeInfo<DoubleMatrix> newDoubleMatrix(int rows, int columns) {
+//	return new TypeInfo<DoubleMatrix>(DoubleMatrix.class, 8, rows, columns, true, false);
+//    }
 
     public static TypeInfo<FilenameType> newFilenameType() {
 	return new TypeInfo<FilenameType>(FilenameType.class, 2, FilenameType.MAX_SIZE, 1, true, false);

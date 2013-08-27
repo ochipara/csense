@@ -1,4 +1,4 @@
-package components.matlab;
+package edu.uiowa.csense.components.matlab;
 
 public class ToMatFile {
 

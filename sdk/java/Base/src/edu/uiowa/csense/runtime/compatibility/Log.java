@@ -1,9 +1,8 @@
-package compatibility;
+package edu.uiowa.csense.runtime.compatibility;
 
 import java.util.logging.Level;
 
-import api.ILog;
-
+import edu.uiowa.csense.runtime.api.ILog;
 public class Log {
     protected static boolean ANDROID = true;
     protected static ILog _log = null;
@@ -11,7 +10,8 @@ public class Log {
     static {
 	Class<?> logCls = null;
 	try {
-	    logCls = Class.forName("compatibility.AndroidLogger");
+	    
+	    logCls = Class.forName("edu.uiowa.csense.runtime.compatibility.AndroidLogger");
 	} catch (ClassNotFoundException e) {
 	}
 

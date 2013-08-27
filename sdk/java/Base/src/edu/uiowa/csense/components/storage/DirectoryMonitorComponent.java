@@ -1,23 +1,18 @@
-package components.storage;
+package edu.uiowa.csense.components.storage;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-
-import compatibility.Environment;
-
-import api.CSenseErrors;
-import api.CSenseException;
-import api.CSenseSource;
-import api.IOutPort;
-import api.TimerTask;
-
-import messages.TypeInfo;
-import messages.fixed.CharVector;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.compatibility.Environment;
+import edu.uiowa.csense.runtime.types.CharVector;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 
 public class DirectoryMonitorComponent extends CSenseSource<CharVector> {
-    public IOutPort<CharVector> fileName = newOutputPort(this, "fileName");
+    public OutputPort<CharVector> fileName = newOutputPort(this, "fileName");
     public static final int maxPathLength = 1024;
     public final Map<File, Boolean> fileList = new HashMap<File, Boolean>();
 

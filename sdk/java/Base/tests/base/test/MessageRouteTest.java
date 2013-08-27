@@ -20,18 +20,15 @@ import com.jmatio.io.MatFileWriter;
 import com.jmatio.types.MLChar;
 import com.jmatio.types.MLDouble;
 
-import compatibility.ThreadCPUUsage;
-
-import base.Debug;
-import base.Route;
-import base.RoutingTable;
-import base.Tracer;
-
-import api.CSense;
-import api.CSenseException;
-import api.IRoute;
-import api.IRouteUsage;
-import api.IRoutingTable;
+import edu.uiowa.csense.profiler.Debug;
+import edu.uiowa.csense.profiler.Route;
+import edu.uiowa.csense.profiler.RoutingTable;
+import edu.uiowa.csense.profiler.Tracer;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.profile.IRoute;
+import edu.uiowa.csense.runtime.api.profile.IRouteUsage;
+import edu.uiowa.csense.runtime.api.profile.IRoutingTable;
+import edu.uiowa.csense.runtime.compatibility.ThreadCPUUsage;
 
 public class MessageRouteTest {
     private static final String VERSION = "v2";

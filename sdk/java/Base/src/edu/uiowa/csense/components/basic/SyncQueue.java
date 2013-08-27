@@ -1,12 +1,12 @@
-package components.basic;
+package edu.uiowa.csense.components.basic;
 
-import api.CSenseComponent;
-import api.Message;
+import edu.uiowa.csense.runtime.api.Frame;
+import edu.uiowa.csense.runtime.api.bindings.Component;
 
 
 /**
  * This is an abstract implementation of the blocking queue.
  * Different implementations are allowable
  */
-public abstract class SyncQueue<T extends Message> extends CSenseComponent {
+public abstract class SyncQueue<T extends Frame> extends Component {
 }

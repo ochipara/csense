@@ -1,4 +1,4 @@
-package components.audio.desktop;
+package edu.uiowa.csense.components.audio.desktop;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -8,18 +8,16 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.TargetDataLine;
 
-
-import messages.TypeInfo;
-import messages.fixed.DoubleVector;
-
-import api.CSenseErrors;
-import api.CSenseException;
-import api.CSenseSource;
-import api.IOutPort;
+import edu.uiowa.csense.runtime.api.CSenseError;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.DoubleVector;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 
 public class AudioComponent extends CSenseSource<DoubleVector> {
     // Ports
-    public IOutPort<DoubleVector> audio = newOutputPort(this, "audio");
+    public OutputPort<DoubleVector> audio = newOutputPort(this, "audio");
     
     // automatically retrieved
     protected final int nFrameSize;
@@ -131,7 +129,7 @@ public class AudioComponent extends CSenseSource<DoubleVector> {
 		}
 	    }
 	    
-	    throw new CSenseException(CSenseErrors.CONFIGURATION_ERROR);
+	    throw new CSenseException(CSenseError.CONFIGURATION_ERROR);
 	} catch (LineUnavailableException e) {
 	    e.printStackTrace();
 	    System.exit(1);

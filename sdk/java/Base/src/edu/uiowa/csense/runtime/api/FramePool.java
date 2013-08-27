@@ -1,12 +1,15 @@
-package api;
+package edu.uiowa.csense.runtime.api;
 
-public interface IMessagePool<T extends Message> {
-    // public abstract void allocate(int capacity);
-    // public abstract boolean isEmpty();
-    // public abstract boolean isFull();
-    public void put(T m);
-    public T get();
-    public T getAndBlock() throws InterruptedException;
+/**
+ * Creates a frame pool
+ * 
+ * @author ochipara
+ *
+ */
+public interface FramePool {
+    public void put(Frame m);
+    public Frame get();
+    public Frame getAndBlock() throws InterruptedException;
     public int getAvailable();
-    public void setSource(ISource<T> source);
+    public void setSource(ISource source);
 }

@@ -1,4 +1,4 @@
-package compatibility;
+package edu.uiowa.csense.runtime.compatibility;
 
 import java.io.File;
 

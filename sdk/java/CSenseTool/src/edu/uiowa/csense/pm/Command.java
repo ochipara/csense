@@ -1,23 +1,29 @@
-package edu.uiowa.csense.tools;
+package edu.uiowa.csense.pm;
 
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.configuration.ToolkitConfiguration;
+
+
+/**
+ * This class provides an abstract description of a command 
+ * 
+ * @author ochipara
+ *
+ */
 public abstract class Command {
     protected String name;
 
-    public abstract void processCommand(String[] args, int argStart, Environment env)
-	    throws CSenseToolException;
-
+    public abstract void processCommand(String[] args, int argStart, ToolkitConfiguration sdk) throws CSenseToolException, CompilerException;       
+    public abstract String shortDescription();
+    public abstract String description();
+    
+    
     public String getName() {
 	return name;
     }
 
     public void setName(String name) {
 	this.name = name;
-    }
-
-    protected abstract String getShortDescription();
-
-    public String getDescription() {
-	return "";
     }
     
     protected String getArgument(String[] args, int argStart) throws CSenseToolException {
@@ -34,6 +40,7 @@ public abstract class Command {
 	    throw new CSenseToolException("Invalid number of arguments");
 	}
     }
+  
     
     
 

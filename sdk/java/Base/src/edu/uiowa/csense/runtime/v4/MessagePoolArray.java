@@ -1,48 +1,46 @@
-package base.v2;
+package edu.uiowa.csense.runtime.v4;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import base.Debug;
-import messages.TypeInfo;
+import edu.uiowa.csense.profiler.Debug;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
+import edu.uiowa.csense.runtime.api.Frame;
+import edu.uiowa.csense.runtime.api.ILog;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.api.ISource;
+import edu.uiowa.csense.runtime.compatibility.Log;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
-import compatibility.Log;
-
-import api.CSenseException;
-import api.CSenseRuntimeException;
-import api.ILog;
-import api.IMessagePool;
-import api.ISource;
-import api.Message;
-
-public class MessagePoolArray <T extends Message> implements IMessagePool<T> {
+public class MessagePoolArray implements FramePool {
     static public final int MAX_CAPACITY = 8;
     private int _numBytes;
     private int _capacity;
     private boolean _direct;
-    private Constructor<T> _constructor;
-    private TypeInfo<T> _type = null;
-    private ISource<T> _source = null;
+    private Constructor<? extends Frame> _constructor;
+    private TypeInfo<? extends Frame> _type = null;
+    private ISource _source = null;
 
     // must be synchronized
-    private List<T> _pool;
-    private ArrayList<T> _checkout;
+    private List<Frame> _pool;
+    private ArrayList<Frame> _checkout;
     private final static int level = ILog.VERBOSE;
 
-    public MessagePoolArray(TypeInfo<T> type, int capacity) {
+    public MessagePoolArray(TypeInfo<? extends Frame> type, int capacity) {
 	_numBytes = type.getNumBytes();
 	_direct = type.isDirect();
 	_capacity = capacity < 0 ? 0 : capacity > MAX_CAPACITY ? MAX_CAPACITY : capacity;
-	_pool = new ArrayList<T>(MAX_CAPACITY); //new LinkedBlockingQueue<T>(MAX_CAPACITY); //new ArrayBlockingQueue<T>(MAX_CAPACITY);
-	_checkout = new ArrayList<T>(MAX_CAPACITY);
+	_pool = new ArrayList<Frame>(MAX_CAPACITY); //new LinkedBlockingQueue<T>(MAX_CAPACITY); //new ArrayBlockingQueue<T>(MAX_CAPACITY);
+	_checkout = new ArrayList<Frame>(MAX_CAPACITY);
 	_type = type;
 
 	// this is more complicated because we need to instantiate an instance
 	// of type T
 	try {
 	    // Log.d(_owner, "message type: ", type.getJavaType().toString());
-	    _constructor = type.getJavaType().getDeclaredConstructor(IMessagePool.class, TypeInfo.class);
+	    _constructor = type.getJavaType().getDeclaredConstructor(FramePool.class, TypeInfo.class);
 	} catch (SecurityException e) {
 	    e.printStackTrace();
 	} catch (NoSuchMethodException e) {
@@ -62,7 +60,7 @@ public class MessagePoolArray <T extends Message> implements IMessagePool<T> {
      * @param direct
      * @return
      */
-    protected synchronized T allocate() {
+    protected synchronized Frame allocate() {
 	try {
 	    if (_type == null)
 		return _constructor.newInstance(this, _numBytes, _direct);
@@ -111,8 +109,8 @@ public class MessagePoolArray <T extends Message> implements IMessagePool<T> {
      */
     @SuppressWarnings("unused")
     @Override
-    public synchronized T get() {
-	T m = null;	
+    public synchronized Frame get() {
+	Frame m = null;	
 	if (_pool.size() > 0) {
 	    m = _pool.get(0);
 	    _pool.remove(0);
@@ -136,7 +134,7 @@ public class MessagePoolArray <T extends Message> implements IMessagePool<T> {
      * @return true if the pool is not full, false otherwise
      */
     @Override
-    public synchronized void put(T msg) {
+    public synchronized void put(Frame msg) {
 	if(_source != null) Debug.logMessageReturn(_source, msg);
 	if (_pool.add(msg) == false) {
 	    throw new CSenseRuntimeException("Failed to put back a message to the pool of size " + _pool.size() + ", remaining capacity ");
@@ -145,7 +143,7 @@ public class MessagePoolArray <T extends Message> implements IMessagePool<T> {
     }
 
     @Override
-    public void setSource(ISource<T> source) {
+    public void setSource(ISource source) {
 	_source = source;
     }
 
@@ -164,7 +162,7 @@ public class MessagePoolArray <T extends Message> implements IMessagePool<T> {
     }
 
     @Override
-    public T getAndBlock() throws InterruptedException {
+    public Frame getAndBlock() throws InterruptedException {
 	throw new UnsupportedOperationException();
     }
 

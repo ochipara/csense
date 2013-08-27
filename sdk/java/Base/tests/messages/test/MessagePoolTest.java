@@ -4,30 +4,27 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import messages.RawMessage;
-import messages.TypeInfo;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
-import api.CSense;
-import api.CSenseException;
-import api.IMessage;
-import api.IMessagePool;
-import api.Message;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.Frame;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.types.RawFrame;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
 public class MessagePoolTest {
     CSense _csense = new CSense("v2");
-    ArrayList<IMessagePool<? extends Message>> _pools = new ArrayList<IMessagePool<? extends Message>>(
+    ArrayList<FramePool<? extends Frame>> _pools = new ArrayList<FramePool<? extends Frame>>(
 	    3);
 
     @Before
     public void setUp() throws Exception {
-	_pools.add(_csense.newMessagePool(TypeInfo.newDoubleVector(8192), 0));
-	_pools.add(_csense.newMessagePool(TypeInfo.newByteVector(8192), 0));
-	_pools.add(_csense.newMessagePool(new TypeInfo<RawMessage>(
-		RawMessage.class, 4, 32, 1, true, false), 0));
+	_pools.add(_csense.newFramePool(TypeInfo.newDoubleVector(8192), 0));
+	_pools.add(_csense.newFramePool(TypeInfo.newByteVector(8192), 0));
+	_pools.add(_csense.newFramePool(new TypeInfo<RawFrame>(
+		RawFrame.class, 4, 32, 1, true, false), 0));
     }
 
     @After
@@ -38,7 +35,7 @@ public class MessagePoolTest {
     @Test
     public void testMessagePoolClassOfTIntBoolean() {
 	assertEquals(3, _pools.size());
-	for (IMessagePool<? extends IMessage> pool : _pools)
+	for (FramePool<? extends Frame> pool : _pools)
 	    assertNotNull(pool);
     }
 
@@ -63,8 +60,8 @@ public class MessagePoolTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testTake() throws CSenseException {
-	for (IMessagePool<? extends IMessage> pool : _pools) {
-	    Message msg = ((IMessagePool<? extends Message>) pool).get();
+	for (FramePool<? extends Frame> pool : _pools) {
+	    Frame msg = ((FramePool<? extends Frame>) pool).get();
 	    assertNotNull(msg);
 	    // assertEquals(1, pool.capacity());
 	    // assertEquals(0, pool.size());
@@ -75,14 +72,14 @@ public class MessagePoolTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testOffer() throws CSenseException {
-	for (IMessagePool<? extends IMessage> pool : _pools) {
-	    Message msg = ((IMessagePool<Message>) pool).get();
+	for (FramePool<? extends Frame> pool : _pools) {
+	    Frame msg = ((FramePool<Frame>) pool).get();
 	    assertNotNull(msg);
 	    // assertEquals(1, pool.capacity());
 	    // assertEquals(0, pool.size());
 	    // assertTrue(pool.isEmpty());
 
-	    ((IMessagePool<Message>) pool).put(msg);
+	    ((FramePool<Frame>) pool).put(msg);
 	    // assertEquals(1, pool.capacity());
 	    // assertEquals(1, pool.size());
 	    // assertFalse(pool.isEmpty());

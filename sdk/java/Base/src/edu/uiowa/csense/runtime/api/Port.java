@@ -1,14 +1,14 @@
-package api;
+package edu.uiowa.csense.runtime.api;
 
 /**
- * This is the base class for ports. Holds information regarding - the component
- * to which this port is attached (_owner) - the name of the port (_name) - the
- * ids of the port(_id)
+ * This is the base class for ports. Holds information regarding -
+ *  - the component to which this port is attached (owner) 
+ *  - the name of the port (name) 
  * 
  * @author farley, ochipara
  * 
  */
-public interface IPort {
+public interface Port {
     /**
      * 
      * @return the associated component with this port

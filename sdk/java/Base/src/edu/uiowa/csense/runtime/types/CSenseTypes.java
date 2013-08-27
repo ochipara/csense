@@ -1,6 +1,5 @@
-package messages.fixed;
+package edu.uiowa.csense.runtime.types;
 
-import messages.TypeInfo;
 
 public class CSenseTypes {
     public static TypeInfo<DoubleVector> newDoubleVector(int numElements,

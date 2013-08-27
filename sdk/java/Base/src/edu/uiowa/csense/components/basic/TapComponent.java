@@ -1,9 +1,9 @@
-package components.basic;
+package edu.uiowa.csense.components.basic;
 
-import api.CSenseComponent;
-import api.CSenseException;
-import api.IInPort;
-import api.Message;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.Frame;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.bindings.Component;
 
 /**
  * Responsible for 'freeing' messages that are being recycled in message queues.
@@ -12,10 +12,11 @@ import api.Message;
  * 
  * @author Austin
  */
-public class TapComponent<T extends Message> extends CSenseComponent {
-    public final IInPort<T> in = newInputPort(this, "in");
+public class TapComponent<T extends Frame> extends Component {
+    public final InputPort<T> in = newInputPort(this, "in");
 
     public TapComponent() throws CSenseException {
+	super();
     }
 
     /**
@@ -26,8 +27,8 @@ public class TapComponent<T extends Message> extends CSenseComponent {
      * @throws CSenseException
      */
     @Override
-    public void doInput() throws CSenseException {
-	T m = in.getMessage();
+    public void onInput() throws CSenseException {
+	T m = in.getFrame();
     	m.decrementReference();
     }
 }

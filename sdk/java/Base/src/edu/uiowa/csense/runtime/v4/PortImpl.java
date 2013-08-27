@@ -1,14 +1,13 @@
-package base.v2;
+package edu.uiowa.csense.runtime.v4;
 
-import api.CSenseComponent;
-import api.IComponent;
-import api.IPort;
+import edu.uiowa.csense.runtime.api.IComponent;
+import edu.uiowa.csense.runtime.api.Port;
 
-public abstract class PortImpl implements IPort {
-    protected final CSenseComponent _owner;
+public abstract class PortImpl implements Port {
+    protected final IComponent _owner;
     protected final String _name;
 
-    public PortImpl(CSenseComponent owner, String name) {
+    public PortImpl(IComponent owner, String name) {
 	_owner = owner;
 	_name = name;
     }

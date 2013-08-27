@@ -1,17 +1,15 @@
-package components.matlab;
+package edu.uiowa.csense.components.matlab;
 
-import api.CSenseComponent;
-import api.CSenseException;
-import api.IInPort;
-import api.IOutPort;
-import base.*;
-
+import edu.uiowa.csense.profiler.*;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.ByteVector;
+import edu.uiowa.csense.runtime.v4.CSenseComponent;
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
 import matlabcontrol.MatlabProxy;
 import matlabcontrol.MatlabProxyFactory;
-
-import messages.fixed.ByteVector;
 
 /**
  * Communicates with Matlab sessions through JMI.
@@ -20,8 +18,8 @@ import messages.fixed.ByteVector;
  * 
  */
 public class MatlabCtrlComponent extends CSenseComponent {
-    public IInPort<ByteVector> in_file = newInputPort(this, "in");
-    public IOutPort<ByteVector> out_file = newOutputPort(this, "out");
+    public InputPort<ByteVector> in_file = newInputPort(this, "in");
+    public OutputPort<ByteVector> out_file = newOutputPort(this, "out");
 
     MatlabProxyFactory _factory;
     private MatlabProxy _proxy;
@@ -32,10 +30,10 @@ public class MatlabCtrlComponent extends CSenseComponent {
     }
 
     @Override
-    public void doInput() throws CSenseException {
-	ByteVector msg = in_file.getMessage();
+    public void onInput() throws CSenseException {
+	ByteVector msg = in_file.getFrame();
 	try {
-	    String path = new String(msg.bytes());
+	    String path = new String(msg.getBuffer().array());
 	    _proxy.eval(Utility.toString("disp('file uploaded: ", path, "')"));
 	} catch (MatlabInvocationException e) {
 	    e.printStackTrace();

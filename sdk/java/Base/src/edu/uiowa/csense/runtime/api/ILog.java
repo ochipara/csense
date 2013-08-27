@@ -1,4 +1,4 @@
-package api;
+package edu.uiowa.csense.runtime.api;
 
 import java.util.logging.Level;
 
@@ -12,14 +12,9 @@ public interface ILog {
     public final int ERROR = 5;
 
     public void d(String tag, Object... args);
-
     public void e(String tag, Object... args);
-
     public void i(String tag, Object... args);
-
     public void w(String tag, Object... args);
-
     public void v(String tag, Object... args);
-
     public void setLevel(Level level);
 }

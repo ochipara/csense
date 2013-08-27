@@ -1,4 +1,4 @@
-package base;
+package edu.uiowa.csense.profiler;
 
 import java.io.BufferedWriter;
 import java.io.EOFException;
@@ -15,8 +15,8 @@ import java.util.StringTokenizer;
 import com.jmatio.io.MatFileWriter;
 import com.jmatio.types.MLDouble;
 
-import api.IRoute;
-import api.IRouteUsage;
+import edu.uiowa.csense.runtime.api.profile.IRoute;
+import edu.uiowa.csense.runtime.api.profile.IRouteUsage;
 
 public class Tracer {
     public static IRouteUsage getRouteUsage(IRoute r) {	

@@ -1,7 +1,7 @@
-package api.concurrent;
+package edu.uiowa.csense.runtime.api.concurrent;
 
-import api.CSenseException;
-import api.IComponent;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.IComponent;
 
 /**
  * Manages how the tasks in the future will be executed by the scheduler.

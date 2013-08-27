@@ -1,6 +1,6 @@
-package base.concurrent;
+package edu.uiowa.csense.runtime.v4;
 
-import api.concurrent.IIdleLock;
+import edu.uiowa.csense.runtime.api.concurrent.IIdleLock;
 
 public class MonitorIdleLock implements IIdleLock {
     private final Object lock = new Object();

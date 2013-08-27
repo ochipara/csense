@@ -1,18 +1,17 @@
-package components.basic;
+package edu.uiowa.csense.components.basic;
 
-import base.Debug;
-import base.concurrent.CSenseBlockingQueue;
-
-import api.CSenseComponent;
-import api.CSenseErrors;
-import api.CSenseException;
-import api.IComponent;
-import api.IInPort;
-import api.ILog;
-import api.IOutPort;
-import api.IResult;
-import api.Message;
-import api.Task;
+import edu.uiowa.csense.profiler.Debug;
+import edu.uiowa.csense.runtime.api.CSenseError;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.Constants;
+import edu.uiowa.csense.runtime.api.Frame;
+import edu.uiowa.csense.runtime.api.IComponent;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.ILog;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.api.concurrent.IState;
+import edu.uiowa.csense.runtime.concurrent.CSenseBlockingQueue;
 
 /**
  * This class implements the synchronized queue. It should be used between
@@ -24,15 +23,19 @@ import api.Task;
  * 
  * @param <T>
  */
-public class CBQSyncQueue<T extends Message> extends CSenseComponent {
-    public final IInPort<T> in = newInputPort(this, "dataIn");
-    public final IOutPort<T> out = newOutputPort(this, "dataOut");
-    protected final CSenseBlockingQueue<T> _queue;
+public class CBQSyncQueue<T extends Frame> extends SyncQueue<T> {
+    public final InputPort<T> in = newInputPort(this, "dataIn");
+    public final OutputPort<T> out = newOutputPort(this, "dataOut");
+    protected final CSenseBlockingQueue<Frame> _queue;
     protected IComponent _nextComponent;
 
-    private long _count = 0;
     private static final int level = ILog.INFO;
 
+    public CBQSyncQueue(int capacity) throws CSenseException {
+  	super();
+  	_queue = new CSenseBlockingQueue<Frame>(capacity);
+      }
+    
     @Override
     public void onStart() throws CSenseException {
 	super.onStart();
@@ -45,56 +48,45 @@ public class CBQSyncQueue<T extends Message> extends CSenseComponent {
 	_queue.clear();
     }
 
-    public CBQSyncQueue(int capacity) throws CSenseException {
-	super();
-	_queue = new CSenseBlockingQueue<T>(capacity);
-    }
-
-    protected void log() throws CSenseException {}
-
     /**
      * The function may be called from a different a different thread
      */
     @SuppressWarnings("unused")
     @Override
-    public <T2 extends Message> IResult processInput(IInPort<T2> input, T2 m) throws CSenseException {
+    public <T2 extends Frame> int onPush(InputPort<T2> self, Frame m) throws CSenseException {
 	if (Thread.currentThread() == getScheduler().getThread()) {
-	    if (transition(STATE_READY, STATE_RUNNING) == true) {
+	    if (transition(IState.STATE_READY, IState.STATE_RUNNING) == true) {
 		// call the doInput method
-//		m.log(this, Debug.TRACE_LOC_INPUT);
-		doInput();
-		ready();
-		log();			
-		return IResult.PUSH_SUCCESS;
+		onInput();
+		in.clear();
+		return Constants.PUSH_SUCCESS;
 	    } else {
-		throw new CSenseException(CSenseErrors.SYNCHRONIZATION_ERROR, "This should not happen");
+		throw new CSenseException(CSenseError.SYNCHRONIZATION_ERROR, "This should not happen");
 	    }
-	} else {
-	    if (_queue.offer((T) m)) {
-		log();
+	} else {	    
+	    if (_queue.offer(m)) {
 		in.clear();
 		getScheduler().schedule(this, asTask());		
-		return IResult.PUSH_SUCCESS;
+		return Constants.PUSH_SUCCESS;
 	    } else {
-		log();
 		m.drop();
 		in.clear();
 		getScheduler().schedule(this, asTask());
-		if (level <= ILog.DEBUG) debug("Droppeed", m);
-		return IResult.PUSH_DROP;
+		if (level <= ILog.DEBUG) warn("Droppeed", m);
+		return Constants.PUSH_DROP;
 	    }
 	}
     }
 
     @Override
-    public void doInput() throws CSenseException {
+    public void onInput() throws CSenseException {
 	// FIXME only executed when no thread-switching 
-	T msg = in.getMessage();
+	T msg = in.getFrame();
 	try {
 	    _queue.put(msg);
 	} catch (InterruptedException e) {
 	    e.printStackTrace();
-	    if (getState().getState() == STATE_STOPPED) {
+	    if (getState().getState() == IState.STATE_STOPPED) {
 		return;
 	    }
 	}
@@ -104,36 +96,17 @@ public class CBQSyncQueue<T extends Message> extends CSenseComponent {
     @SuppressWarnings("unused")
     @Override
     public void doEvent(Task t) throws CSenseException {
-//	T m = _queue.peek();
-//	if (m != null) {
-//	    m.log(this, Debug.TRACE_LOC_INPUT);
-//	    if (out.push(m) == IResult.PUSH_SUCCESS) {
-//		_queue.remove();
-//		if (level <= ILog.VERBOSE)
-//		    verbose("push", _count, _queue.size());
-//		_count += 1;
-//	    } else {
-//		error("push fail");
-//		throw new CSenseException(CSenseErrors.SYNCHRONIZATION_ERROR);
-//	    }
-//	    log();
-//	}
-//
-//	if (!_queue.isEmpty()) getScheduler().schedule(this, asTask());
-	
-	T m = _queue.poll();
+	T m = (T) _queue.poll();
 	if (m != null) {
 	    Debug.logMessageInput(this, m);
-	    if (out.push(m) == IResult.PUSH_SUCCESS) {
+	    if (out.push(m) == Constants.PUSH_SUCCESS) {
 		if (level <= ILog.VERBOSE) {
-		    verbose("push", _count, _queue.size());
+		    verbose("push", _queue.size());
 		}
-		_count += 1;
 	    } else {
 		error("push fail");
-		throw new CSenseException(CSenseErrors.SYNCHRONIZATION_ERROR);
+		throw new CSenseException(CSenseError.SYNCHRONIZATION_ERROR);
 	    }
-	    log();
 	}
 
 	if (!_queue.isEmpty()) getScheduler().schedule(this, asTask());

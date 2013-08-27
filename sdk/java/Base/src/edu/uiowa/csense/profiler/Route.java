@@ -1,10 +1,10 @@
-package base;
+package edu.uiowa.csense.profiler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import compatibility.ThreadCPUUsage;
-import api.IRoute;
+import edu.uiowa.csense.runtime.api.profile.IRoute;
+import edu.uiowa.csense.runtime.compatibility.ThreadCPUUsage;
 
 public class Route implements IRoute, Cloneable {
     private List<RouteEntry> _entries;

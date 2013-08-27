@@ -1,4 +1,4 @@
-package api;
+package edu.uiowa.csense.runtime.api.profile;
 
 import java.util.List;
 

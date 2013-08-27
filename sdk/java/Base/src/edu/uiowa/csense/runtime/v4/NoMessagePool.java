@@ -1,33 +1,31 @@
-package base.v2;
+package edu.uiowa.csense.runtime.v4;
 
 import java.lang.reflect.Constructor;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import base.Debug;
+import edu.uiowa.csense.profiler.Debug;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.Frame;
+import edu.uiowa.csense.runtime.api.ILog;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.api.ISource;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
-import messages.TypeInfo;
-
-import api.CSenseException;
-import api.ILog;
-import api.IMessagePool;
-import api.ISource;
-import api.Message;
-
-public class NoMessagePool <T extends Message> implements IMessagePool<T> {
+public class NoMessagePool implements FramePool {
     static public final int MAX_CAPACITY = 8;
     private int _numBytes;
     private int _capacity;
     private boolean _direct;
-    private Constructor<T> _constructor;
-    private TypeInfo<T> _type = null;
-    private ISource<T> _source = null;
+    private Constructor<? extends Frame> _constructor;
+    private TypeInfo<? extends Frame> _type = null;
+    private ISource<? extends Frame> _source = null;
     
     
     public final AtomicInteger _size;
 
     private final static int level = ILog.VERBOSE;
 
-    public NoMessagePool(TypeInfo<T> type, int capacity) {
+    public NoMessagePool(TypeInfo<? extends Frame> type, int capacity) {
 	_numBytes = type.getNumBytes();
 	_direct = type.isDirect();
 	_capacity = capacity < 0 ? 0 : capacity > MAX_CAPACITY ? MAX_CAPACITY : capacity;
@@ -38,7 +36,7 @@ public class NoMessagePool <T extends Message> implements IMessagePool<T> {
 	// of type T
 	try {
 	    // Log.d(_owner, "message type: ", type.getJavaType().toString());
-	    _constructor = type.getJavaType().getDeclaredConstructor(IMessagePool.class, TypeInfo.class);
+	    _constructor = type.getJavaType().getDeclaredConstructor(FramePool.class, TypeInfo.class);
 	} catch (SecurityException e) {
 	    e.printStackTrace();
 	} catch (NoSuchMethodException e) {
@@ -55,7 +53,7 @@ public class NoMessagePool <T extends Message> implements IMessagePool<T> {
      * @param direct
      * @return
      */
-    protected T allocate() {	
+    protected Frame allocate() {	
 	try {
 	    if (_type == null)
 		return _constructor.newInstance(this, _numBytes, _direct);
@@ -104,14 +102,14 @@ public class NoMessagePool <T extends Message> implements IMessagePool<T> {
      */
     @SuppressWarnings("unused")
     @Override
-    public T get() {
+    public Frame get() {
 	while(true) {
 	    int value = _size.decrementAndGet();
 	    if (value > 0) break;
 	    else _size.incrementAndGet();
 	};
 	
-	T m = allocate();	
+	Frame m = allocate();	
 	return m;
     }
 
@@ -124,25 +122,25 @@ public class NoMessagePool <T extends Message> implements IMessagePool<T> {
      */
     @SuppressWarnings("unused")
     @Override
-    public void put(T msg) {
+    public void put(Frame msg) {
 	_size.incrementAndGet();
 	if(_source != null) Debug.logMessageReturn(_source, msg);	
     }
 
     @Override
-    public T getAndBlock() {
+    public Frame getAndBlock() {
 	while(true) {
 	    int value = _size.decrementAndGet();
 	    if (value > 0) break;
 	    else _size.incrementAndGet();
 	};
-	T m = allocate();
+	Frame m = allocate();
 
 	return m;
     }
     
     @Override
-    public void setSource(ISource<T> source) {
+    public void setSource(ISource source) {
 	_source = source;
     }
 

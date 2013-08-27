@@ -9,12 +9,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import base.Statistics;
-import base.StatisticsLogger;
-import base.Utility;
+import edu.uiowa.csense.profiler.Statistics;
+import edu.uiowa.csense.profiler.StatisticsLogger;
+import edu.uiowa.csense.profiler.Utility;
+import edu.uiowa.csense.runtime.api.CSenseException;
 import base.benchmark.ChainBenchmark;
-
-import api.CSenseException;
 
 public class GraphGenerator {
 	private static final int IDX_MIN_BOX = 0;

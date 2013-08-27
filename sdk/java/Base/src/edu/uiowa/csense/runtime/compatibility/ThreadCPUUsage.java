@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package compatibility;
+package edu.uiowa.csense.runtime.compatibility;
 
 /**
  * Get the user and system CPU time used per-thread via JNI and the system

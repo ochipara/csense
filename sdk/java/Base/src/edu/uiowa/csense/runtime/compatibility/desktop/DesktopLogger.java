@@ -1,8 +1,8 @@
-package compatibility;
+package edu.uiowa.csense.runtime.compatibility.desktop;
 
 import java.util.logging.Level;
 
-import api.ILog;
+import edu.uiowa.csense.runtime.api.ILog;
 
 public class DesktopLogger implements ILog {
     @Override

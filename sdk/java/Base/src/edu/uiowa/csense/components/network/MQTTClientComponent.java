@@ -1,8 +1,6 @@
-package components.network;
+package edu.uiowa.csense.components.network;
 
 import java.util.Map;
-
-import messages.fixed.ByteVector;
 
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -15,16 +13,17 @@ import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 
-import base.Utility;
+import edu.uiowa.csense.profiler.Utility;
+import edu.uiowa.csense.runtime.types.ByteVector;
 
 public class MQTTClientComponent extends SourceComponent<ByteVector> {
     // public final Map<String, InPort<ByteVector>> PORTS_IN_FILE =
     // this.<ByteVector>setupInputPorts("in");
     // public final Map<String, OutPort<ByteVector>> PORTS_OUT_FILE =
     // this.<ByteVector>setupOutputPorts("out");
-    public final IInPort<ByteVector> in = new InPort<ByteVector>(this, "in",
+    public final InputPort<ByteVector> in = new InPort<ByteVector>(this, "in",
 	    100);
-    public final IOutPort<ByteVector> out = new OutPort<ByteVector>(this,
+    public final OutputPort<ByteVector> out = new OutPort<ByteVector>(this,
 	    "out", 200);
 
     private final String _id;
@@ -135,7 +134,7 @@ public class MQTTClientComponent extends SourceComponent<ByteVector> {
     }
 
     @Override
-    protected void doInput(InPort<? extends Message> port) {
+    protected void doInput(InPort<? extends Frame> port) {
 	ByteVector msg = in.poll();
 	String path = new String(msg.bytes());
 	byte[] payload = new byte[msg.remaining()];
@@ -177,7 +176,7 @@ public class MQTTClientComponent extends SourceComponent<ByteVector> {
     }
 
     @Override
-    protected boolean mayPull(OutPort<? extends Message> port) {
+    protected boolean mayPull(OutPort<? extends Frame> port) {
 	return getInputPort().pull();
     }
 }

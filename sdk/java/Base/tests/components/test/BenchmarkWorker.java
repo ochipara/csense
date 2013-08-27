@@ -1,14 +1,13 @@
 package components.test;
 
-import api.CSenseErrors;
-import api.CSenseException;
-import api.CSenseSource;
-import api.IInPort;
-import api.IOutPort;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 
 public class BenchmarkWorker extends CSenseSource<BenchmarkMessage> {
-    IInPort<BenchmarkMessage> in = newInputPort(this, "in");
-    IOutPort<BenchmarkMessage> out = newOutputPort(this, "out");
+    InputPort<BenchmarkMessage> in = newInputPort(this, "in");
+    OutputPort<BenchmarkMessage> out = newOutputPort(this, "out");
 
     protected final long _delay;
     protected long _drops = 0;
@@ -32,8 +31,8 @@ public class BenchmarkWorker extends CSenseSource<BenchmarkMessage> {
     }
 
     @Override
-    public void doInput() throws CSenseException {
-	BenchmarkMessage m = in.getMessage();
+    public void onInput() throws CSenseException {
+	BenchmarkMessage m = in.getFrame();
 	if (m.getCount() != _expectedCount) {
 	    error("message count does not match", _expectedCount, "but got",
 		    m.getCount());

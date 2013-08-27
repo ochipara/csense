@@ -1,11 +1,12 @@
-package edu.uiowa.csense.tools;
+package edu.uiowa.csense.pm;
 
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import base.Tracer;
+
+import edu.uiowa.csense.profiler.Tracer;
 
 public class Profiler {   
     public static void main(String[] args) throws IOException {	
