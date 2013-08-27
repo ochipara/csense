@@ -1,11 +1,11 @@
 package components.storage;
 
-import base.workspace.Variable;
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.types.BaseTypeC;
-import components.storage.FromDiskComponent;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.components.storage.FromDiskComponent;
+import edu.uiowa.csense.runtime.workspace.Variable;
 
 public class FromDiskComponentC extends CSenseComponentC {
     public FromDiskComponentC(BaseTypeC portType, Variable variable) throws CompilerException {

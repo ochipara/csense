@@ -1,10 +1,10 @@
 package components.basic;
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.types.BaseTypeC;
-import components.basic.CopyRefComponent;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.components.basic.CopyRefComponent;
 
 
 public class CopyRefC extends CSenseComponentC {

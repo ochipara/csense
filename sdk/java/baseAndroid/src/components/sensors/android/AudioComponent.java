@@ -2,20 +2,17 @@ package components.sensors.android;
 
 import java.nio.ByteBuffer;
 
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.Command;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.ByteVector;
+import edu.uiowa.csense.runtime.types.ShortVector;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.util.Log;
-import api.CSenseErrors;
-import api.CSenseException;
-import api.CSenseInnerThread;
-import api.CSenseSource;
-import api.Command;
-import api.IOutPort;
-
-import messages.TypeInfo;
-import messages.fixed.ByteVector;
-import messages.fixed.ShortVector;
 
 
 /**
@@ -33,7 +30,7 @@ import messages.fixed.ShortVector;
  *
  */
 public class AudioComponent extends CSenseSource<ShortVector> {	
-    public final IOutPort<ShortVector> audio = newOutputPort(this, "audio");
+    public final OutputPort<ShortVector> audio = newOutputPort(this, "audio");
 
     public enum State { 
 	INITIALIZING, 	// recorder is initializing
@@ -77,7 +74,7 @@ public class AudioComponent extends CSenseSource<ShortVector> {
 	    while(_state == AudioComponent.State.RECORDING) {				
 		_msg = getNextMessageToWriteInto();
 		if (_msg != null ) {   
-		    ByteBuffer buffer = _msg.buffer();
+		    ByteBuffer buffer = _msg.getBuffer();
 		    do {
 			int bytes = _audioRecorder.read(buffer, buffer.remaining());
 			buffer.position(buffer.position() + bytes);

@@ -1,10 +1,10 @@
 package components.sensors.android;
 
 
-import compiler.CSenseSourceC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.types.FrameTypeC;
+import edu.uiowa.csense.compiler.CSenseSourceC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.types.FrameTypeC;
 
 public class AccelerometerC extends CSenseSourceC {
     public AccelerometerC(FrameTypeC frameT) throws CompilerException {

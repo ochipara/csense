@@ -10,9 +10,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import api.CSenseException;
-
-import compatibility.Log;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.compatibility.Log;
 
 public class BluetoothClient {
     private final BroadcastReceiver _receiver;
@@ -51,6 +50,7 @@ public class BluetoothClient {
 	_listener = listener;
 	_services = new ArrayList<BluetoothClientService>();
 	_receiver = new BroadcastReceiver() {
+	    @Override
 	    public void onReceive(Context context, Intent intent) {
 		if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
 		    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);

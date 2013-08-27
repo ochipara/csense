@@ -6,17 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import base.Debug;
 import android.content.Context;
-
-import api.CSenseException;
-import api.CSenseRuntimeException;
-import messages.RawMessage;
-import messages.TypeInfo;
 import components.bluetooth.BluetoothCommand;
 import components.bluetooth.BluetoothCommand.Type;
 import components.bluetooth.android.BluetoothClientComponent;
 import components.bluetooth.android.BluetoothClientService;
+import edu.uiowa.csense.profiler.Debug;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
+import edu.uiowa.csense.runtime.types.RawFrame;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
 
 /**
@@ -24,7 +23,7 @@ import components.bluetooth.android.BluetoothClientService;
  * @author Farley Lai
  *
  */
-public class ShimmerSensorComponent extends BluetoothClientComponent<RawMessage, ShimmerSensorData> {	
+public class ShimmerSensorComponent extends BluetoothClientComponent<RawFrame, ShimmerSensorData> {	
     // packet type definitions
     static private final byte DATA_PACKET 		= 0x00;
     static private final byte SET_SAMPLING_RATE_COMMAND = 0x05;
@@ -56,6 +55,7 @@ public class ShimmerSensorComponent extends BluetoothClientComponent<RawMessage,
 
     // thread-specific sensor data message storage
     private class SensorData extends ThreadLocal<ShimmerSensorData> {
+	@Override
 	protected ShimmerSensorData initialValue() {
 	    return getNextMessageToWriteInto();
 	}

@@ -1,11 +1,11 @@
 package components.conversions;
 
 
-import compiler.CSenseSourceC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.types.TypeInfoC;
-import components.conversions.ShortsToDoubles;
+import edu.uiowa.csense.compiler.CSenseSourceC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.components.conversions.ShortsToDoubles;
 
 
 public class ShortsToFloatsC extends CSenseSourceC {

@@ -120,7 +120,7 @@ static void test_getrusage_usleep(useconds_t us) {
   LOGD("getrusage()", "===== End of TEST =====\n");
 }
 
-JNIEXPORT jobject JNICALL Java_compatibility_ThreadCPUUsage_getusage(JNIEnv *env, jclass cl, jobject cpuUsage) {
+JNIEXPORT jobject JNICALL Java_edu_uiowa_csense_runtime_compatibility_ThreadCPUUsage_getusage(JNIEnv *env, jclass cl, jobject cpuUsage) {
   jfieldID secondsID = (*env)->GetFieldID(env, cl, "seconds", "J");
   jfieldID nanosecondsID = (*env)->GetFieldID(env, cl, "nanoseconds", "J");
   jfieldID processSecondsID = (*env)->GetFieldID(env, cl, "processSeconds", "J");

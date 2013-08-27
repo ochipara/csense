@@ -3,23 +3,22 @@ package components.monitors.android;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import compatibility.SystemInfo;
-import components.network.HTMLFormMessage;
-
-import messages.TypeInfo;
+import edu.uiowa.csense.components.network.HTMLFormMessage;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.compatibility.SystemInfo;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.util.Log;
-import api.CSenseException;
-import api.CSenseSource;
-import api.IOutPort;
-import api.Task;
 
 public class BatteryMonitor extends CSenseSource<BatteryMonitorMessage> {
-    public final IOutPort<BatteryMonitorMessage> out = newOutputPort(this, "out");
+    public final OutputPort<BatteryMonitorMessage> out = newOutputPort(this, "out");
 
     // local data
     protected int batteryStatus;

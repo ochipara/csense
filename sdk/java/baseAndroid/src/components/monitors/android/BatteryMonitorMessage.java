@@ -1,18 +1,16 @@
 package components.monitors.android;
 
-import compatibility.Utils;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.compatibility.Utils;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
-import api.CSenseException;
-import api.IMessagePool;
-import api.Message;
-import messages.TypeInfo;
-
-public class BatteryMonitorMessage extends Message {
+public class BatteryMonitorMessage extends Frame {
     protected int status = -1;
     protected float level = -1.0f; // percent
     protected long timestamp = 0;
     
-    public BatteryMonitorMessage(IMessagePool<BatteryMonitorMessage> pool, TypeInfo<BatteryMonitorMessage> type) throws CSenseException {
+    public BatteryMonitorMessage(FramePool<BatteryMonitorMessage> pool, TypeInfo<BatteryMonitorMessage> type) throws CSenseException {
 	super(pool, type);
     }
 

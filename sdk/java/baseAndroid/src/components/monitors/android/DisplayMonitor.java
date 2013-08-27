@@ -1,19 +1,18 @@
 package components.monitors.android;
 
-import components.network.HTMLFormMessage;
-
-import messages.TypeInfo;
+import edu.uiowa.csense.components.network.HTMLFormMessage;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import api.CSenseException;
-import api.CSenseSource;
-import api.IOutPort;
-import api.Task;
 
 public class DisplayMonitor extends CSenseSource<DisplayMonitorMessage>{
-    public final IOutPort<DisplayMonitorMessage> out = newOutputPort(this, "out");
+    public final OutputPort<DisplayMonitorMessage> out = newOutputPort(this, "out");
 ;
     protected final Context context;
     private BroadcastReceiver broadcastReceiver;
@@ -23,6 +22,7 @@ public class DisplayMonitor extends CSenseSource<DisplayMonitorMessage>{
 	super(type);
 
 	broadcastReceiver = new BroadcastReceiver() {
+	    @Override
 	    public void onReceive(Context context, Intent intent) {
 		synchronized(this) {
 		    if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {

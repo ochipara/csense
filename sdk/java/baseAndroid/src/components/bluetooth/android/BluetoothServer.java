@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
 import android.bluetooth.BluetoothServerSocket;
-import api.CSenseInnerThread;
-import api.CSenseRuntimeException;
 
 public class BluetoothServer implements Runnable {
     private Bluetooth _bt;

@@ -1,21 +1,20 @@
 package components.bluetooth.shimmer;
 
-import messages.TypeInfo;
-import messages.fixed.FloatMatrix;
-import api.CSenseException;
-import api.CSenseRuntimeException;
-import api.CSenseSource;
-import api.IInPort;
-import api.IOutPort;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 
 public class ShimmerSensorAccNormalizer extends CSenseSource<FloatMatrix>{
     public static final int ACC_IDEA_G_MIN = 935;//1676;
     public static final int ACC_IDEA_G_MAX = 3107;//2420;
     public static final int ACC_IDEA_G_MID = (int)((ACC_IDEA_G_MIN + ACC_IDEA_G_MAX + 0.5) / 2); 
     public static final int ACC_SAMPLE_SIZE = ShimmerSensorComponent.getSensorSampleSizeInBytes(ShimmerSensorComponent.SENSOR_ACCEL);
-    public final IInPort<ShimmerSensorData> rawIn = newInputPort(this, "rawIn");
-    public final IOutPort<ShimmerSensorData> rawOut = newOutputPort(this, "rawOut");
-    public final IOutPort<FloatMatrix> dataOut = newOutputPort(this, "dataOut");
+    public final InputPort<ShimmerSensorData> rawIn = newInputPort(this, "rawIn");
+    public final OutputPort<ShimmerSensorData> rawOut = newOutputPort(this, "rawOut");
+    public final OutputPort<FloatMatrix> dataOut = newOutputPort(this, "dataOut");
     private FloatMatrix frame;
     
     public ShimmerSensorAccNormalizer(TypeInfo<FloatMatrix> frameT) throws CSenseException {
@@ -38,7 +37,7 @@ public class ShimmerSensorAccNormalizer extends CSenseSource<FloatMatrix>{
     }
     
     @Override
-    public void doInput() throws CSenseException {
+    public void onInput() throws CSenseException {
 	// call JNI to normalize an incoming short raw frame
 //	ShimmerSensorData raw = rawIn.getMessage();
 //	FloatMatrix frame = getNextMessageToWriteInto();
@@ -51,7 +50,7 @@ public class ShimmerSensorAccNormalizer extends CSenseSource<FloatMatrix>{
 //	    debug("frame capacity:", frame.remaining(), "floats");
 	}
 	
-	ShimmerSensorData raw = rawIn.getMessage();
+	ShimmerSensorData raw = rawIn.getFrame();
 	int samples = raw.remaining() / ACC_SAMPLE_SIZE;
 	for(int i = 0; i < samples; i++) {
 	    float timestamp = raw.getShort() & 0xFFFF;

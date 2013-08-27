@@ -8,19 +8,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import compatibility.Log;
-
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.IComponent;
+import edu.uiowa.csense.runtime.api.IScheduler;
+import edu.uiowa.csense.runtime.compatibility.Log;
+import edu.uiowa.csense.runtime.v4.CSenseComponent;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import api.CSenseComponent;
-import api.CSenseException;
-import api.IComponent;
-import api.IScheduler;
 
 class UploaderThread extends Thread {
 	protected HttpURLConnection connection = null;

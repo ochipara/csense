@@ -1,9 +1,8 @@
 package components.bluetooth.shimmer;
 
-import messages.TypeInfo;
-import messages.fixed.ShortMatrix;
-import api.CSenseException;
-import api.IMessagePool;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
 /**
  * Instead of encoding string names in the payload, ShimmerSensorData stores string names separately to facilitate access.
@@ -19,7 +18,7 @@ public class ShimmerSensorData extends ShortMatrix {
     private String _sensorName;
     private String _fullName;
     
-    public ShimmerSensorData(IMessagePool<ShimmerSensorData> pool, TypeInfo<ShimmerSensorData> type) throws CSenseException {
+    public ShimmerSensorData(FramePool<ShimmerSensorData> pool, TypeInfo<ShimmerSensorData> type) throws CSenseException {
 	super(pool, type);
 	_fullName = _moteName = _sensorName = "";
     }

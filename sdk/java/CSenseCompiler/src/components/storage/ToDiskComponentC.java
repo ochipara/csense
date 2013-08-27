@@ -1,16 +1,15 @@
 package components.storage;
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.types.BaseTypeC;
-import compiler.types.FrameTypeC;
-import compiler.types.TypeInfoC;
-import compiler.types.constraints.Constraint;
-import compiler.types.constraints.SFGreaterEqual;
-import components.storage.ToDiskComponent;
-
-import base.workspace.Variable;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.compiler.types.FrameTypeC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.compiler.types.constraints.Constraint;
+import edu.uiowa.csense.compiler.types.constraints.SFGreaterEqual;
+import edu.uiowa.csense.components.storage.ToDiskComponent;
+import edu.uiowa.csense.runtime.workspace.Variable;
 
 public class ToDiskComponentC extends CSenseComponentC {
     public static int SPLIT_BY_FILESIZE = ToDiskComponent.SPLIT_BY_FILESIZE;

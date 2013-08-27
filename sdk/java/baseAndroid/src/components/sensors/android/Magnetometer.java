@@ -1,11 +1,10 @@
 package components.sensors.android;
 
-import messages.TypeInfo;
-import messages.fixed.FloatMatrix;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import api.CSenseException;
 
 public class Magnetometer extends MotionSensor {
 

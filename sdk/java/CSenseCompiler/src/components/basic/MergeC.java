@@ -1,10 +1,10 @@
 package components.basic;
 
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.types.BaseTypeC;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
 
 public class MergeC extends CSenseComponentC {
     public MergeC(BaseTypeC portType, int fanin) throws CompilerException {

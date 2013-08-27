@@ -1,9 +1,9 @@
 package components.basic;
 
-import compiler.CSenseSourceC;
-import compiler.CompilerException;
-import compiler.types.FrameTypeC;
-import components.basic.MemorySource;
+import edu.uiowa.csense.compiler.CSenseSourceC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.types.FrameTypeC;
+import edu.uiowa.csense.components.basic.MemorySource;
 
 
 public class MemorySourceC extends CSenseSourceC {

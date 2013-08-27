@@ -1,12 +1,11 @@
 package components.network;
 
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.types.TypeInfoC;
-
-import messages.fixed.FilenameType;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.runtime.types.FilenameType;
 
 
 public class FTPClientComponentC extends CSenseComponentC {

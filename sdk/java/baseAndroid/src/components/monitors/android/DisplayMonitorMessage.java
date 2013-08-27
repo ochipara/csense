@@ -1,15 +1,14 @@
 package components.monitors.android;
 
-import messages.TypeInfo;
-import api.CSenseException;
-import api.IMessagePool;
-import api.Message;
-import compatibility.Utils;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.compatibility.Utils;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
-public class DisplayMonitorMessage extends Message {
+public class DisplayMonitorMessage extends Frame {
     private int screenOn;
 
-    public DisplayMonitorMessage(IMessagePool<DisplayMonitorMessage> pool, TypeInfo<DisplayMonitorMessage> type) throws CSenseException {
+    public DisplayMonitorMessage(FramePool<DisplayMonitorMessage> pool, TypeInfo<DisplayMonitorMessage> type) throws CSenseException {
 	super(pool, type);
     }
 

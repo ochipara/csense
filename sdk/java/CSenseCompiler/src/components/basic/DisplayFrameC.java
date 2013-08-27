@@ -1,9 +1,8 @@
 package components.basic;
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.types.BaseTypeC;
-import components.basic.DisplayFrame;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
 
 
 public class DisplayFrameC extends CSenseComponentC {

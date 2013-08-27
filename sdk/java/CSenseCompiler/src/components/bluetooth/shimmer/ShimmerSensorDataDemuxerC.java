@@ -1,9 +1,9 @@
 package components.bluetooth.shimmer;
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.types.FrameTypeC;
-import compiler.types.TypeInfoC;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.types.FrameTypeC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
 
 
 // TODO: nicer way to handle this

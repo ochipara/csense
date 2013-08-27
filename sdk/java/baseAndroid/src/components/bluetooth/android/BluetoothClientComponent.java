@@ -4,22 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.api.TimerEvent;
+import edu.uiowa.csense.runtime.types.RawFrame;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 import android.content.Context;
-import api.CSenseException;
-import api.CSenseRuntimeException;
-import api.CSenseSource;
-import api.IInPort;
-import api.IOutPort;
-import api.Task;
-import api.TimerEvent;
-import messages.RawMessage;
-import messages.TypeInfo;
 
-public abstract class BluetoothClientComponent<T1 extends RawMessage, T2 extends RawMessage> extends CSenseSource<T2> implements BluetoothListener {
+public abstract class BluetoothClientComponent<T1 extends RawFrame, T2 extends RawFrame> extends CSenseSource<T2> implements BluetoothListener {
     private abstract class RunnableTimerEvent extends TimerEvent implements Runnable {}
     
-    protected List<IInPort<T1>> _ins;
-    protected List<IOutPort<T2>> _outs;
+    protected List<InputPort<T1>> _ins;
+    protected List<OutputPort<T2>> _outs;
     private List<BluetoothClientService> _channels;
     private BluetoothClient _client;
     private int _max;
@@ -55,6 +55,7 @@ public abstract class BluetoothClientComponent<T1 extends RawMessage, T2 extends
      */
     private RunnableTimerEvent _connectionTimerTask = new RunnableTimerEvent() {
 	boolean _ready;	
+	@Override
 	public void run() {
 	    if(!_ready) {
 		info(_client.getConnections(), "/", _devices, "Bluetooth devices are connected");
@@ -108,12 +109,12 @@ public abstract class BluetoothClientComponent<T1 extends RawMessage, T2 extends
 	super(typeInfo);
 	_max = max;
 	_client = new BluetoothClient(context, prefix, max, bufferSize, this);	
-	_ins = new ArrayList<IInPort<T1>>(max);
-	_outs = new ArrayList<IOutPort<T2>>(max);
+	_ins = new ArrayList<InputPort<T1>>(max);
+	_outs = new ArrayList<OutputPort<T2>>(max);
 	_channels = new ArrayList<BluetoothClientService>(max);
 	for(int i = 0; i < max; i++) {
-	    IInPort<T1> in = newInputPort(this, "in" + i);
-	    IOutPort<T2> out = newOutputPort(this, "out" + i);
+	    InputPort<T1> in = newInputPort(this, "in" + i);
+	    OutputPort<T2> out = newOutputPort(this, "out" + i);
 	    _ins.add(in);
 	    _outs.add(out);
 	}
@@ -200,12 +201,12 @@ public abstract class BluetoothClientComponent<T1 extends RawMessage, T2 extends
      * Tells the client to send the data in the input message to remote Bluetooth devices of their particular channels.
      */
     @Override
-    public void doInput() throws CSenseException {
+    public void onInput() throws CSenseException {
 	for(int i = 0; i < _ins.size(); i++) {
-	    IInPort<T1> p = _ins.get(i);
-	    if(p.hasMessage()) {
-		T1 msg = p.getMessage();
-		_client.send(i, msg.buffer());
+	    InputPort<T1> p = _ins.get(i);
+	    if(p.hasFrame()) {
+		T1 msg = p.getFrame();
+		_client.send(i, msg.getBuffer());
 	    }
 	}
     }

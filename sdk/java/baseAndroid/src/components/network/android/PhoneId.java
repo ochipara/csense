@@ -1,16 +1,15 @@
 package components.network.android;
 
-import messages.TypeInfo;
-import messages.fixed.CharVector;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.CharVector;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 import android.content.Context;
 import android.provider.Settings.Secure;
-import api.CSenseException;
-import api.CSenseSource;
-import api.IOutPort;
-import api.Message;
 
 public class PhoneId extends CSenseSource<CharVector> {
-	public final IOutPort<CharVector> out = newOutputPort(this, "out");
+	public final OutputPort<CharVector> out = newOutputPort(this, "out");
 	protected final Context _context;
 	protected String _androidId;
 	
@@ -28,7 +27,7 @@ public class PhoneId extends CSenseSource<CharVector> {
 	}
 
 	@Override
-	public void onPoll(IOutPort<? extends Message> port) throws CSenseException {
+	public void onPoll(OutputPort<? extends Frame> port) throws CSenseException {
 		CharVector id = getNextMessageToWriteInto();
 		id.position(0);
 		id.put(_androidId);

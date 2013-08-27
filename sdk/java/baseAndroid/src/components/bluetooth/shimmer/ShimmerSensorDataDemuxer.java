@@ -1,17 +1,16 @@
 package components.bluetooth.shimmer;
 
-import messages.fixed.ShortMatrix;
-import api.CSenseComponent;
-import api.CSenseException;
-import api.CSenseRuntimeException;
-import api.IInPort;
-import api.IOutPort;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.v4.CSenseComponent;
 
 public class ShimmerSensorDataDemuxer extends CSenseComponent {
-    public final IInPort<ShimmerSensorData> in;
-    public final IOutPort<ShortMatrix> mag;
-    public final IOutPort<ShortMatrix> acc;
-    public final IOutPort<ShortMatrix> gyro;
+    public final InputPort<ShimmerSensorData> in;
+    public final OutputPort<ShortMatrix> mag;
+    public final OutputPort<ShortMatrix> acc;
+    public final OutputPort<ShortMatrix> gyro;
 
     public ShimmerSensorDataDemuxer() throws CSenseException {
 	in = newInputPort(this, "in");
@@ -21,8 +20,8 @@ public class ShimmerSensorDataDemuxer extends CSenseComponent {
     }
     
     @Override
-    public void doInput() throws CSenseException {
-	ShimmerSensorData m = in.getMessage();
+    public void onInput() throws CSenseException {
+	ShimmerSensorData m = in.getFrame();
 	if(m.getSensorName() == ShimmerSensorComponent.getSensorName(ShimmerSensorComponent.SENSOR_ACCEL))
 	    acc.push(m);
 	else if(m.getSensorName() == ShimmerSensorComponent.getSensorName(ShimmerSensorComponent.SENSOR_GYRO))

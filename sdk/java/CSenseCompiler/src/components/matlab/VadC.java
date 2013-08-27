@@ -1,15 +1,15 @@
 package components.matlab;
 
-import compiler.CompilerException;
-import compiler.matlab.MatlabArgument;
-import compiler.matlab.MatlabComponentC;
-import compiler.matlab.MatlabParameter;
-import compiler.matlab.MatlabPersistent;
-import compiler.matlab.types.MLDoubleMatrix;
-import compiler.matlab.types.MatlabStruct;
-import compiler.model.InputPortC;
-import compiler.model.OutputPortC;
-import compiler.types.BaseTypeC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.matlab.MatlabArgument;
+import edu.uiowa.csense.compiler.matlab.MatlabComponentC;
+import edu.uiowa.csense.compiler.matlab.MatlabParameter;
+import edu.uiowa.csense.compiler.matlab.MatlabPersistent;
+import edu.uiowa.csense.compiler.matlab.types.MLDoubleMatrix;
+import edu.uiowa.csense.compiler.matlab.types.MatlabStruct;
+import edu.uiowa.csense.compiler.model.InputPortC;
+import edu.uiowa.csense.compiler.model.OutputPortC;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
 
 
 public class VadC extends MatlabComponentC {
@@ -68,7 +68,7 @@ public class VadC extends MatlabComponentC {
 	params.addValue("ni", frameSize);
 	System.out.println("VadParams:");
 	params.display();
-	addMatlabInput(new compiler.matlab.MatlabConstant("vad_params",
+	addMatlabInput(new edu.uiowa.csense.compiler.matlab.MatlabConstant("vad_params",
 		params));
     }
 

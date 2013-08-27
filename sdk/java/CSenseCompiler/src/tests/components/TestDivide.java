@@ -1,12 +1,11 @@
 package tests.components;
 
-import compiler.CompilerException;
-import compiler.model.Project;
-import compiler.types.BaseTypeC;
 import components.math.DivideC;
-
-import messages.fixed.DoubleVector;
-import api.CSenseException;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.Project;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.types.DoubleVector;
 
 public class TestDivide {
     public static void main(String[] args) throws CSenseException,

@@ -1,11 +1,11 @@
 package components.monitors.android;
 
 
-import compiler.CSenseSourceC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.types.JavaTypeC;
-import compiler.types.TypeInfoC;
+import edu.uiowa.csense.compiler.CSenseSourceC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.types.JavaTypeC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
 
 public class DisplayMonitorC extends CSenseSourceC {
     public static final JavaTypeC displayT = TypeInfoC.newJavaMessage(DisplayMonitorMessage.class);

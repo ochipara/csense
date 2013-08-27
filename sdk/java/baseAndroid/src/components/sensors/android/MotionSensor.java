@@ -1,9 +1,10 @@
 package components.sensors.android;
 
-import compatibility.CSenseHandlerThread;
-
-import messages.TypeInfo;
-import messages.fixed.FloatMatrix;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.compatibility.CSenseHandlerThread;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -13,12 +14,9 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import api.CSenseException;
-import api.CSenseSource;
-import api.IOutPort;
 
 public class MotionSensor extends CSenseSource<FloatMatrix> implements SensorEventListener {
-    public final IOutPort<FloatMatrix> output;
+    public final OutputPort<FloatMatrix> output;
 
     protected final SensorManager _sensorManager;
     protected final Context _context;

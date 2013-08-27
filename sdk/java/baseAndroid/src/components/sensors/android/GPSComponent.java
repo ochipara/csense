@@ -1,6 +1,9 @@
 package components.sensors.android;
 
-import messages.TypeInfo;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
@@ -8,13 +11,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
-import api.CSenseException;
-import api.CSenseSource;
-import api.IOutPort;
-import api.Message;
 
 public class GPSComponent extends CSenseSource<GPSMessage> implements LocationListener {
-    public final IOutPort<GPSMessage> out = newOutputPort(this, "out");	
+    public final OutputPort<GPSMessage> out = newOutputPort(this, "out");	
     private static LocationManager _locationManager = null;
     private static Location _location = null;
     private static Context _context;
@@ -117,7 +116,7 @@ public class GPSComponent extends CSenseSource<GPSMessage> implements LocationLi
 
 
     @Override
-    public Message onPoll(IOutPort<? extends Message> port) throws CSenseException {		
+    public Frame onPoll(OutputPort<? extends Frame> port) throws CSenseException {		
 	if (_location != null) { 
 	    GPSMessage m = getNextMessageToWriteInto();
 	    if (m != null) m.update(_location);

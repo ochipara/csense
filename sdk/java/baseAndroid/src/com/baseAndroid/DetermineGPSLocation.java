@@ -1,7 +1,6 @@
 package com.baseAndroid;
 
-import compatibility.Log;
-
+import edu.uiowa.csense.runtime.compatibility.Log;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;

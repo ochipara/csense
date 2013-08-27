@@ -1,11 +1,10 @@
 package components.sensors.android;
 
-import messages.TypeInfo;
-import messages.fixed.FloatMatrix;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.content.Context;
-import api.CSenseException;
 
 
 /**

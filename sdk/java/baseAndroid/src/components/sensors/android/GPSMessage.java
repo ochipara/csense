@@ -1,19 +1,19 @@
 package components.sensors.android;
 
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.types.RawFrame;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 import android.location.Location;
-import api.CSenseException;
-import api.IMessagePool;
-import messages.RawMessage;
-import messages.TypeInfo;
 
-public class GPSMessage extends RawMessage {
+public class GPSMessage extends RawFrame {
 	protected double longitude;
 	protected double latitude;
 	protected double accuracy;
 	
 	public static final TypeInfo<GPSMessage> type = new TypeInfo<GPSMessage>(GPSMessage.class);
 	
-	public GPSMessage(IMessagePool<? extends RawMessage> pool, TypeInfo<? extends RawMessage> type) throws CSenseException {
+	public GPSMessage(FramePool<? extends RawFrame> pool, TypeInfo<? extends RawFrame> type) throws CSenseException {
 		super(pool, type);
 	}
 	

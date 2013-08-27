@@ -1,11 +1,12 @@
 package components.storage;
 
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.types.BaseTypeC;
-import compiler.types.TypeInfoC;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.components.storage.DirectoryMonitorComponent;
 
 public class DirectoryMonitorC extends CSenseComponentC {
     public BaseTypeC filenameType;

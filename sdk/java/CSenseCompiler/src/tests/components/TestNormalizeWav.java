@@ -1,11 +1,10 @@
 package tests.components;
 
 
-import compiler.CompilerException;
-import compiler.model.Project;
-import compiler.types.BaseTypeC;
-
-import messages.fixed.DoubleVector;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.Project;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.runtime.types.DoubleVector;
 
 
 public class TestNormalizeWav {

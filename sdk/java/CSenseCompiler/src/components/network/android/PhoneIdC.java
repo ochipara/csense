@@ -1,12 +1,12 @@
 package components.network.android;
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.model.Project;
-import compiler.types.BaseTypeC;
-import compiler.types.TypeInfoC;
-import components.network.desktop.PhoneId;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.model.Project;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.components.network.desktop.PhoneId;
 
 
 public class PhoneIdC extends CSenseComponentC {

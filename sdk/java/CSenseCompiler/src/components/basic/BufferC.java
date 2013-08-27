@@ -1,15 +1,14 @@
 package components.basic;
 
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.model.DefaultComponentCoder;
-import compiler.types.BaseTypeC;
-import compiler.types.FrameTypeC;
-import compiler.utils.JavaCoder;
-
-import api.IComponentC;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.model.DefaultComponentCoder;
+import edu.uiowa.csense.compiler.model.api.IComponentC;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.compiler.types.FrameTypeC;
+import edu.uiowa.csense.compiler.utils.JavaCoder;
 
 public class BufferC extends CSenseComponentC {
     private class BufferCoder extends DefaultComponentCoder {

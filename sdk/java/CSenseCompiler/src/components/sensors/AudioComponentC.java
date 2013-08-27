@@ -1,15 +1,15 @@
 package components.sensors;
 
-import messages.fixed.ShortVector;
-import project.targets.DesktopTarget;
-import project.targets.android.AndroidTarget;
-import compiler.CSenseSourceC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.model.Project;
-import compiler.types.FrameTypeC;
-import compiler.types.constraints.Constraint;
-import compiler.types.constraints.GreaterEqual;
+import edu.uiowa.csense.compiler.CSenseSourceC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.model.Project;
+import edu.uiowa.csense.compiler.targets.AndroidTarget;
+import edu.uiowa.csense.compiler.targets.DesktopTarget;
+import edu.uiowa.csense.compiler.types.FrameTypeC;
+import edu.uiowa.csense.compiler.types.constraints.Constraint;
+import edu.uiowa.csense.compiler.types.constraints.GreaterEqual;
+import edu.uiowa.csense.runtime.types.ShortVector;
 
 
 public class AudioComponentC extends CSenseSourceC {

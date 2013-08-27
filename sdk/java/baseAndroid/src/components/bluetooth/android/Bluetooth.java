@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import compatibility.Log;
-
+import edu.uiowa.csense.runtime.compatibility.Log;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;

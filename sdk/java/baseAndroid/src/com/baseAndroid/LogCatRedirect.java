@@ -18,6 +18,7 @@ public class LogCatRedirect extends PrintStream {
 		super(out);
 	}
 
+	@Override
 	public void println ( String str ){
 		Log.d( "Redirect" , str );
 	}

@@ -1,13 +1,13 @@
 package components.network.android;
 
-import compiler.CSenseSourceC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.model.OutputPortC;
-import compiler.types.BaseTypeC;
-import compiler.types.TypeInfoC;
-import components.network.HTMLForm;
-import components.network.HTMLFormMessage;
+import edu.uiowa.csense.compiler.CSenseSourceC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.model.OutputPortC;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.components.network.HTMLForm;
+import edu.uiowa.csense.components.network.HTMLFormMessage;
 
 
 public class HTMLFormC extends CSenseSourceC {

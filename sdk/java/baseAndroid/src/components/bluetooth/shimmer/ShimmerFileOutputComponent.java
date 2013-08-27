@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import components.storage.FileOutputComponent;
-
-import api.CSenseException;
+import edu.uiowa.csense.components.storage.FileOutputComponent;
+import edu.uiowa.csense.runtime.api.CSenseException;
 
 public class ShimmerFileOutputComponent extends FileOutputComponent<ShimmerSensorData> {
     static private final int BYTES_PER_SAMPLE = 2 + 3 * 2;

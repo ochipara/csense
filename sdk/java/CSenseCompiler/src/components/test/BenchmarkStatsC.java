@@ -1,9 +1,9 @@
 package components.test;
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.types.BaseTypeC;
-import compiler.types.TypeInfoC;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
 
 public class BenchmarkStatsC extends CSenseComponentC {
     public BaseTypeC benchmarkMessageType = TypeInfoC.newJavaMessage(BenchmarkMessage.class);

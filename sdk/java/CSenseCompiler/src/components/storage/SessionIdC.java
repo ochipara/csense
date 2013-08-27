@@ -1,10 +1,11 @@
 package components.storage;
 
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.types.BaseTypeC;
-import compiler.types.TypeInfoC;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.components.storage.SessionId;
 
 public class SessionIdC extends CSenseComponentC {
     public BaseTypeC type;

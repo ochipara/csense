@@ -8,14 +8,15 @@
 extern "C" {
 #endif
 /*
- * Class:     compatibility_ThreadCPUUsage
+ * Class:     edu_uiowa_csense_runtime_compatibility_ThreadCPUUsage
  * Method:    getusage
- * Signature: ()Lcompatibility/ThreadCPUUsage;
+ * Signature: ()Ledu/uiowa/csense/runtime/compatibility/ThreadCPUUsage;
  */
-JNIEXPORT jobject JNICALL Java_compatibility_ThreadCPUUsage_getusage
+JNIEXPORT jobject JNICALL Java_edu_uiowa_csense_runtime_compatibility_ThreadCPUUsage_getusage
   (JNIEnv *, jclass, jobject);
 
 #ifdef __cplusplus
 }
 #endif
 #endif
+

@@ -1,11 +1,10 @@
 package components.conversions;
 
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.types.BaseTypeC;
-import components.conversions.Split;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
 
 public class SplitC extends CSenseComponentC {
     public SplitC(BaseTypeC type, int numSplits, int frameSize) throws CompilerException {

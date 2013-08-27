@@ -2,12 +2,12 @@ package components.bluetooth.shimmer;
 
 import java.util.List;
 
-import compiler.CSenseSourceC;
-import compiler.CompilerException;
-import compiler.types.FrameTypeC;
-import compiler.types.JavaTypeC;
-import compiler.types.TypeInfoC;
-import compiler.types.constraints.Constraint;
+import edu.uiowa.csense.compiler.CSenseSourceC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.types.FrameTypeC;
+import edu.uiowa.csense.compiler.types.JavaTypeC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.compiler.types.constraints.Constraint;
 
 public class ShimmerSensorAccNormalizerC extends CSenseSourceC {        
     public ShimmerSensorAccNormalizerC(FrameTypeC frameT) throws CompilerException {

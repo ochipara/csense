@@ -1,11 +1,11 @@
 package components.math;
 
 
-import compiler.CompilerException;
-import compiler.matlab.MatlabArgument;
-import compiler.matlab.MatlabComponentC;
-import compiler.matlab.MatlabParameter;
-import compiler.types.BaseTypeC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.matlab.MatlabArgument;
+import edu.uiowa.csense.compiler.matlab.MatlabComponentC;
+import edu.uiowa.csense.compiler.matlab.MatlabParameter;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
 
 public class MeanC extends MatlabComponentC {
 

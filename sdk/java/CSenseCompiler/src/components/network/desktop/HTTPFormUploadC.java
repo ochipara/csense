@@ -1,12 +1,13 @@
 package components.network.desktop;
 
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.types.BaseTypeC;
-import compiler.types.TypeInfoC;
-import components.network.HTMLFormMessage;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.components.network.HTMLFormMessage;
+import edu.uiowa.csense.components.network.desktop.HTMLFormUpload;
 
 public class HTTPFormUploadC extends CSenseComponentC {
 

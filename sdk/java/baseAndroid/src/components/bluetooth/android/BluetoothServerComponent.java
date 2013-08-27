@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import api.CSenseException;
-import api.CSenseSource;
-import api.IInPort;
-import api.IOutPort;
-import messages.RawMessage;
-import messages.TypeInfo;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.types.RawFrame;
+import edu.uiowa.csense.runtime.types.TypeInfo;
+import edu.uiowa.csense.runtime.v4.CSenseSource;
 
-public abstract class BluetoothServerComponent<T1 extends RawMessage, T2 extends RawMessage> extends CSenseSource<T2> implements BluetoothListener {     
+public abstract class BluetoothServerComponent<T1 extends RawFrame, T2 extends RawFrame> extends CSenseSource<T2> implements BluetoothListener {     
     private BluetoothServer _server;
-    private List<IInPort<T1>> _ins;
-    private List<IOutPort<T2>> _outs;
+    private List<InputPort<T1>> _ins;
+    private List<OutputPort<T2>> _outs;
     
     /**
      * Constructs a Bluetooth server component with necessary information that uses the default SPP Bluetooth communication
@@ -49,11 +49,11 @@ public abstract class BluetoothServerComponent<T1 extends RawMessage, T2 extends
     public BluetoothServerComponent(TypeInfo<T2> type, String name, UUID uuid, int channels) throws CSenseException {
 	super(type);
 	_server = new BluetoothServer(name, uuid, this);
-	_ins = new ArrayList<IInPort<T1>>(channels);
-	_outs = new ArrayList<IOutPort<T2>>(channels);
+	_ins = new ArrayList<InputPort<T1>>(channels);
+	_outs = new ArrayList<OutputPort<T2>>(channels);
 	for(int i = 0; i < channels; i++) {
-	    IInPort<T1> in = newInputPort(this, "in" + i);
-	    IOutPort<T2> out = newOutputPort(this, "out" + i);
+	    InputPort<T1> in = newInputPort(this, "in" + i);
+	    OutputPort<T2> out = newOutputPort(this, "out" + i);
 	    _ins.add(in);
 	    _outs.add(out);
 	}
@@ -78,12 +78,12 @@ public abstract class BluetoothServerComponent<T1 extends RawMessage, T2 extends
     }
     
     @Override
-    public void doInput() throws CSenseException {
+    public void onInput() throws CSenseException {
 	for(int i = 0; i < _ins.size(); i++) {
-	    IInPort<T1> p = _ins.get(i);
-	    if(p.hasMessage()) {
-		T1 msg = p.getMessage();
-		_server.send(i, msg.buffer());
+	    InputPort<T1> p = _ins.get(i);
+	    if(p.hasFrame()) {
+		T1 msg = p.getFrame();
+		_server.send(i, msg.getBuffer());
 	    }
 	}
     }

@@ -1,9 +1,9 @@
 package components.basic;
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.types.BaseTypeC;
-import components.basic.TapComponent;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
+import edu.uiowa.csense.components.basic.TapComponent;
 
 
 /**

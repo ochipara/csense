@@ -1,13 +1,13 @@
 package components.matlab;
 
-import compiler.CompilerException;
-import compiler.matlab.MatlabArgument;
-import compiler.matlab.MatlabComponentC;
-import compiler.matlab.MatlabConstant;
-import compiler.matlab.MatlabParameter;
-import compiler.matlab.MatlabPersistent;
-import compiler.matlab.types.MatlabStruct;
-import compiler.types.BaseTypeC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.matlab.MatlabArgument;
+import edu.uiowa.csense.compiler.matlab.MatlabComponentC;
+import edu.uiowa.csense.compiler.matlab.MatlabConstant;
+import edu.uiowa.csense.compiler.matlab.MatlabParameter;
+import edu.uiowa.csense.compiler.matlab.MatlabPersistent;
+import edu.uiowa.csense.compiler.matlab.types.MatlabStruct;
+import edu.uiowa.csense.compiler.types.BaseTypeC;
 
 public class EstimateNoiseC extends MatlabComponentC {
 

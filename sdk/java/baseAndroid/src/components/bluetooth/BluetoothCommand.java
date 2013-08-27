@@ -1,14 +1,14 @@
 package components.bluetooth;
 
-import messages.RawMessage;
-import messages.TypeInfo;
-import api.CSenseException;
-import api.IMessagePool;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.types.RawFrame;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
 /*
  * This message is used command Bluetooth client services internally within Bluetooth components, not intended to pass through CSense components.
  */
-public class BluetoothCommand extends RawMessage {
+public class BluetoothCommand extends RawFrame {
     public enum Type {
 	CONNECT,
 	DISCONNECT,
@@ -20,7 +20,7 @@ public class BluetoothCommand extends RawMessage {
     private Type _type;
     private int _bytesToRead;
     
-    public BluetoothCommand(IMessagePool<? extends RawMessage> pool, TypeInfo<? extends RawMessage> type) throws CSenseException {
+    public BluetoothCommand(FramePool<? extends RawFrame> pool, TypeInfo<? extends RawFrame> type) throws CSenseException {
 	super(pool, type);
     }
     

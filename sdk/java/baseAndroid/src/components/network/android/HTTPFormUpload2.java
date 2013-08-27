@@ -18,17 +18,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 
-import api.CSenseComponent;
-import api.CSenseException;
-import api.CSenseInnerThread;
-import api.ICommandHandler;
-import api.IInPort;
-import api.IOutPort;
-import api.IResult;
-import api.Task;
-import api.TimerEvent;
-
-import components.network.HTMLFormMessage;
+import edu.uiowa.csense.components.network.HTMLFormMessage;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.ICommandHandler;
+import edu.uiowa.csense.runtime.api.InputPort;
+import edu.uiowa.csense.runtime.api.OutputPort;
+import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.api.TimerEvent;
+import edu.uiowa.csense.runtime.v4.CSenseComponent;
 
 /**
  * This allows you to upload a form. It uses events rather than a thread. This has the advantage
@@ -122,8 +119,8 @@ public class HTTPFormUpload2 extends CSenseComponent{
 	}
     }
     
-    public final IInPort<HTMLFormMessage> in = newInputPort(this, "dataIn");
-    public final IOutPort<HTMLFormMessage> out = newOutputPort(this, "dataOut");
+    public final InputPort<HTMLFormMessage> in = newInputPort(this, "dataIn");
+    public final OutputPort<HTMLFormMessage> out = newOutputPort(this, "dataOut");
 
     // state for the uploader
     private final Context _context;
@@ -188,15 +185,15 @@ public class HTTPFormUpload2 extends CSenseComponent{
     }
     
     @Override
-    public void doInput() throws CSenseException {
+    public void onInput() throws CSenseException {
 	if (_inForm == null && doOutput() != IResult.PUSH_DROP) {
-	    _inForm = in.getMessage();
+	    _inForm = in.getFrame();
 	    synchronized(this) {
 		debug("incoming file to upload, wake up the uploader");
 		notify();
 	    }
 	} else {
-	    in.getMessage().drop();
+	    in.getFrame().drop();
 	    ready();
 	    accumulateResult(IResult.PUSH_FAILED);
 	}

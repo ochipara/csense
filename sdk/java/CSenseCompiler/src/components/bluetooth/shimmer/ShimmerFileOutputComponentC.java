@@ -1,13 +1,12 @@
 package components.bluetooth.shimmer;
 
 
-import compiler.CSenseComponentC;
-import compiler.CompilerException;
-import compiler.model.ArgumentC;
-import compiler.types.TypeInfoC;
-
-import messages.RawMessage;
-import messages.fixed.FilenameType;
+import edu.uiowa.csense.compiler.CSenseComponentC;
+import edu.uiowa.csense.compiler.CompilerException;
+import edu.uiowa.csense.compiler.model.ArgumentC;
+import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.runtime.types.FilenameType;
+import edu.uiowa.csense.runtime.types.RawFrame;
 
 
 public class ShimmerFileOutputComponentC extends CSenseComponentC {
@@ -18,7 +17,7 @@ public class ShimmerFileOutputComponentC extends CSenseComponentC {
 	addArgument(new ArgumentC(path));
 	addArgument(new ArgumentC(extension));
 	
-	addIOPort(TypeInfoC.newJavaMessage(RawMessage.class), "data");	
+	addIOPort(TypeInfoC.newJavaMessage(RawFrame.class), "data");	
 	addOutputPort(TypeInfoC.newJavaMessage(FilenameType.class), "path");
     }
 }

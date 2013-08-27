@@ -10,18 +10,15 @@ import java.nio.ByteOrder;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import messages.TypeInfo;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import api.CSense;
-import api.CSenseException;
-import api.CSenseInnerThread;
-import api.CSenseRuntimeException;
-import api.IMessagePool;
-
-import compatibility.Log;
 import components.bluetooth.BluetoothCommand;
 import components.bluetooth.BluetoothCommand.Type;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
+import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.compatibility.Log;
+import edu.uiowa.csense.runtime.types.TypeInfo;
 
 public class BluetoothClientService implements Runnable {    
     private BluetoothListener _listener;
@@ -32,7 +29,7 @@ public class BluetoothClientService implements Runnable {
     private OutputStream _out;
     private ByteBuffer _response;
     
-    private IMessagePool<BluetoothCommand> _cmdPool;
+    private FramePool<BluetoothCommand> _cmdPool;
     private BlockingQueue<BluetoothCommand> _cmds;
     private Thread _thread;
     private boolean _running;
@@ -65,7 +62,7 @@ public class BluetoothClientService implements Runnable {
 	}
 
 	try {
-	    _cmdPool = CSense.getImplementation().newMessagePool(new TypeInfo<BluetoothCommand>(BluetoothCommand.class, 1, 64, 1, false, false), 4);
+	    _cmdPool = CSense.getImplementation().newFramePool(new TypeInfo<BluetoothCommand>(BluetoothCommand.class, 1, 64, 1, false, false), 4);
 	} catch (CSenseException e) {
 	    throw new CSenseRuntimeException(e);
 	}
@@ -117,7 +114,7 @@ public class BluetoothClientService implements Runnable {
 //	}	
 
 	try {
-	    _cmdPool = CSense.getImplementation().newMessagePool(new TypeInfo<BluetoothCommand>(BluetoothCommand.class, 1, 64, 1, false, false), 4);
+	    _cmdPool = CSense.getImplementation().newFramePool(new TypeInfo<BluetoothCommand>(BluetoothCommand.class, 1, 64, 1, false, false), 4);
 	} catch (CSenseException e) {
 	    throw new CSenseRuntimeException(e);
 	}
@@ -263,6 +260,7 @@ public class BluetoothClientService implements Runnable {
     /**
      * The service loop that continues processing the input Bluetooth commands.
      */
+    @Override
     public void run() {
 	if(_sock.isConnected() && _listener != null) _listener.onClientConnected(this);
 	int _retry = 0;
@@ -322,9 +320,9 @@ public class BluetoothClientService implements Runnable {
 		break;
 	    case RAW:
 		try {
-		    cmd.buffer().mark();
+		    cmd.getBuffer().mark();
 		    _out.write(cmd.bytes(), cmd.position(), cmd.remaining());
-		    cmd.buffer().reset();	   						   			
+		    cmd.getBuffer().reset();	   						   			
 		    if(cmd.bytesToRead() > 0) {				
 			int bytes = 0;
 //			Log.d(getClass().getSimpleName(), "ready to read response immediately");
