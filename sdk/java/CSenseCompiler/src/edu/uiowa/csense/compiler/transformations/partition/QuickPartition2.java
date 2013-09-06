@@ -27,48 +27,49 @@ import edu.uiowa.csense.compiler.transformations.PartitionApplication2;
 public class QuickPartition2 {
     protected static Logger logger = Logger.getLogger("partition");
 
-    public class ComponentAssignment {
-	int domain;
-	boolean preliminary;
-
-	public ComponentAssignment(int domain) {
-	    this.domain = domain;
-	    this.preliminary = true;
+    private void makeAssignment(IComponentC component, int domain, Hashtable<IComponentC, Integer> assignments) {
+	if (assignments.containsKey(component)) {
+	    if (assignments.get(component) != domain) {
+		throw new IllegalStateException("This should not happen");
+	    }
+	} else {
+	    assignments.put(component, domain);
+	    logger.debug("assigning component=" + component.getVariableName() + " domain=" + domain);
 	}
 
-	@Override
-	public String toString() {
-	    if (preliminary)
-		return "d=" + domain + "[final]";
-	    return "d=" + domain + "[preliminary";
-	}
-
-	public int getDomain() {
-	    return domain;
-	}
-
-	public boolean isPreliminary() {
-	    return preliminary;
-	}
     }
 
-    public void partitionApplication(CSenseGroupC main)
-	    throws CompilerException {
+    public void partitionApplication(CSenseGroupC main) throws CompilerException {
 	logger.setLevel(Level.DEBUG);
 
 	ComponentGraph graph = main.getComponentGraph();
-	Hashtable<IComponentC, ComponentAssignment> assignments = new Hashtable<IComponentC, ComponentAssignment>();
+	Hashtable<IComponentC, Integer> assignments = new Hashtable<IComponentC, Integer>();
 	int domain = -1;
+
+	for (IComponentC component : graph.components()) {
+	    if (component.getThreadType() != ThreadingOption.NONE) {
+		domain = domain + 1;
+
+		makeAssignment(component, domain, assignments);
+	    }
+	}
 
 	// start from sources
 	for (IComponentC component : graph.components()) {
 	    if (component.isSource()) {
-		if (component.getThreadType() != ThreadingOption.NONE) {
-		    domain = domain + 1;
-
-		    ComponentAssignment a = new ComponentAssignment(domain);
-		    assignments.put(component, a);
+		if (component.getThreadType() != ThreadingOption.NONE) {		    
+		    domain = assignments.get(component);
 		    assignDomains(component, domain, assignments);
+		}
+	    }
+	}
+
+	// start from sources
+	for (IComponentC component : graph.components()) {
+	    if (component.isSource() == false) {
+		if (component.getThreadType() != ThreadingOption.NONE) {		    
+		    int cdomain = assignments.get(component);
+		    assignDomains(component, cdomain, assignments);
 		}
 	    }
 	}
@@ -79,8 +80,7 @@ public class QuickPartition2 {
 		    && (component.getThreadType() != ThreadingOption.NONE)) {
 		domain = domain + 1;
 
-		ComponentAssignment a = new ComponentAssignment(domain);
-		assignments.put(component, a);
+		makeAssignment(component, domain, assignments);
 		assignDomains(component, domain, assignments);
 	    }
 	}
@@ -92,8 +92,8 @@ public class QuickPartition2 {
 	    Domain cdomain = manager.newDomain();
 
 	    for (IComponentC component : assignments.keySet()) {
-		ComponentAssignment assignment = assignments.get(component);
-		if (assignment.getDomain() == d) {
+		Integer assignment = assignments.get(component);
+		if (assignment == d) {
 		    cdomain.addComponent(component);
 		}
 	    }
@@ -103,12 +103,14 @@ public class QuickPartition2 {
 	PartitionApplication2.fixAndroidSources(graph, manager);
     }
 
-    private void assignDomains(IComponentC component, int domain, Hashtable<IComponentC, ComponentAssignment> assignments) {
-	logger.debug("considering component=" + component + " domain=" + domain);
+    private void assignDomains(IComponentC component, int domain, Hashtable<IComponentC, Integer> assignments) {
+	//logger.debug("considering component=" + component + " domain=" + domain);
 	assert (assignments.containsKey(component));
-	assert (assignments.get(component).getDomain() >= 0);
+	assert (assignments.get(component) >= 0);
 
 	// check if the assignment is safe
+	List<IComponentC> toallocate = new LinkedList<IComponentC>();
+
 	for (InputPortC input : component.getInputPorts()) {
 	    List<IComponentC> ancestors = getAncestors(input, component);
 
@@ -123,23 +125,85 @@ public class QuickPartition2 {
 	    // if safe, assign the ancestors to this domain
 	    if (safe) {
 		for (IComponentC ancestor : ancestors) {
-		    assignments.put(ancestor, new ComponentAssignment(domain));
+		    makeAssignment(ancestor, domain, assignments);
+
+		    // necessary if you walking backwards you encounter an element that has multiple inputs
+		    for (IComponentC next : ancestor.nextComponents()) {
+
+			if ((assignments.containsKey(next) == false) && (component != next)) {
+			    boolean r = checkAssignment(next, domain, assignments);
+			    if (r) {
+				toallocate.add(next);
+			    }			
+			}
+		    }
 		}
 	    }
 	}
 
 	// we will try to assign the next components to this thread
-	List<IComponentC> toallocate = new LinkedList<IComponentC>();
 	for (IComponentC next : component.nextComponents()) {
 	    boolean r = checkAssignment(next, domain, assignments);
-	    if (r)
+	    if (r) {
 		toallocate.add(next);
+	    }
 	}
 
 	for (IComponentC next : toallocate) {
 	    assignDomains(next, domain, assignments);
 	}
     }
+
+//    private void assignDomains(IComponentC component, int domain, Hashtable<IComponentC, Integer> assignments) {
+//	//logger.debug("considering component=" + component + " domain=" + domain);
+//	assert (assignments.containsKey(component));
+//	assert (assignments.get(component) >= 0);
+//
+//	// check if the assignment is safe
+//	List<IComponentC> toallocate = new LinkedList<IComponentC>();
+//
+//	for (InputPortC input : component.getInputPorts()) {
+//	    List<IComponentC> ancestors = getAncestors(input, component);
+//
+//	    // check if the assignment is safe
+//	    boolean safe = true;
+//	    for (IComponentC ancestor : ancestors) {
+//		safe = checkAncestors(ancestor, domain, assignments);
+//		if (safe == false)
+//		    break;
+//	    }
+//
+//	    // if safe, assign the ancestors to this domain
+//	    if (safe) {
+//		for (IComponentC ancestor : ancestors) {
+//		    makeAssignment(ancestor, domain, assignments);
+//
+//		    // necessary if you walking backwards you encounter an element that has multiple inputs
+//		    for (IComponentC next : ancestor.nextComponents()) {
+//
+//			if ((assignments.containsKey(next) == false) && (component != next)) {
+//			    boolean r = checkAssignment(next, domain, assignments);
+//			    if (r) {
+//				toallocate.add(next);
+//			    }			
+//			}
+//		    }
+//		}
+//	    }
+//	}
+//
+//	// we will try to assign the next components to this thread
+//	for (IComponentC next : component.nextComponents()) {
+//	    boolean r = checkAssignment(next, domain, assignments);
+//	    if (r) {
+//		toallocate.add(next);
+//	    }
+//	}
+//
+//	for (IComponentC next : toallocate) {
+//	    assignDomains(next, domain, assignments);
+//	}
+//    }
 
     private List<IComponentC> getAncestors(InputPortC input, IComponentC component) {
 	LinkedList<IComponentC> ancestors = new LinkedList<IComponentC>();
@@ -165,36 +229,34 @@ public class QuickPartition2 {
      * @param assignments
      * @return
      */
-    private boolean checkAncestors(IComponentC component, int domain,
-	    Hashtable<IComponentC, ComponentAssignment> assignments) {
-	ComponentAssignment assignment = assignments.get(component);
+    private boolean checkAncestors(IComponentC component, int domain, Hashtable<IComponentC, Integer> assignments) {
+	Integer assignment = assignments.get(component);
 	if (assignment != null) {
 	    // we have an assignment, check if it is the same domain
-	    return (assignment.getDomain() == domain);
+	    return (assignment == domain);
 	} else {
 	    for (IComponentC prev : component.prevComponents()) {
 		boolean safe = checkAncestors(prev, domain, assignments);
-		if (safe == false)
+		if (safe == false) {
 		    return false;
+		}
 	    }
 
 	    return true;
 	}
     }
 
-    private boolean checkAssignment(IComponentC component, int domain,
-	    Hashtable<IComponentC, ComponentAssignment> assignments) {
+    private boolean checkAssignment(IComponentC component, int domain, Hashtable<IComponentC, Integer> assignments) {
 	if (component.getThreadType() == ThreadingOption.CSENSE)
 	    return false;
 
-	if (assignments.contains(component) == false) {
-	    ComponentAssignment assignment = new ComponentAssignment(domain);
-	    assignments.put(component, assignment);
+	if (assignments.containsKey(component) == false) {
+	    makeAssignment(component, domain, assignments);
 	    return true;
 	} else {
-	    ComponentAssignment assignment = assignments.get(component);
+	    Integer assignment = assignments.get(component);
 
-	    return assignment.getDomain() == domain;
+	    return assignment == domain;
 	}
 
     }

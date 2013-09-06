@@ -132,11 +132,6 @@ public class CSenseService {
 	    coder.code("csense.setEventQueueClass(" + version.getEventQueue() + ".class);");
 	    coder.code("csense.setIdleLockClass(" + version.getIdleLock() + ".class);");
 
-
-
-	    //	    coder.code("csense.setMemoryPool(" + ProjectConfiguration.messagePool.getCanonicalName() + ".class);");
-	    //	    coder.code("csense.setTaskQueue(" + ProjectConfiguration.taskQueue.getCanonicalName() +".class);");
-	    //	    coder.code("csense.setTimerQueue(" + ProjectConfiguration.eventQueue.getCanonicalName() +".class);");	
 	    coder.code("}");
 
 	    generateOnCreate(coder);

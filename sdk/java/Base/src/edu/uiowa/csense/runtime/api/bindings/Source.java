@@ -9,7 +9,7 @@ import edu.uiowa.csense.runtime.v4.CSenseSource;
 public class Source<T extends Frame> extends Component implements ISource<T> {
     private final CSenseSource<T> source;
 
-    public Source(TypeInfo<T> type) throws CSenseException {
+    public Source(TypeInfo type) throws CSenseException {
 	source = new CSenseSource<T>(type);
     }
 

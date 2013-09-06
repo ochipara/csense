@@ -11,7 +11,7 @@ import edu.uiowa.csense.components.network.HTMLFormMessage;
 public class HTTPFormUploadC extends CSenseComponentC {
 
     public HTTPFormUploadC(String url, long[] timeoutsMs) throws CompilerException {
-	super("components.network.android.HTTPFormUpload2");
+	super("edu.uiowa.csense.components.android.network.HTTPFormUpload3");
 	BaseTypeC type = TypeInfoC.newJavaMessage(HTMLFormMessage.class);
 	addIOPort(type, "data");
 	addArgument(ArgumentC.self());
@@ -20,6 +20,10 @@ public class HTTPFormUploadC extends CSenseComponentC {
 	addPermission("android.permission.INTERNET");
 	addPermission("android.permission.ACCESS_NETWORK_STATE");
 	setThreadingOption(ThreadingOption.CSENSE);
+	
+	
+	addResource("edu.uiowa.csense.components.android.network.HTTPFormUpload3");
+	addResource("edu.uiowa.csense.components.network.HTMLFormMessage");
     }
     
     

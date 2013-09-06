@@ -19,8 +19,8 @@ public class MessagePoolArray implements FramePool {
     private int _numBytes;
     private int _capacity;
     private boolean _direct;
-    private Constructor<? extends Frame> _constructor;
-    private TypeInfo<? extends Frame> _type = null;
+    private Constructor _constructor;
+    private TypeInfo _type = null;
     private ISource _source = null;
 
     // must be synchronized
@@ -28,7 +28,7 @@ public class MessagePoolArray implements FramePool {
     private ArrayList<Frame> _checkout;
     private final static int level = ILog.VERBOSE;
 
-    public MessagePoolArray(TypeInfo<? extends Frame> type, int capacity) {
+    public MessagePoolArray(TypeInfo type, int capacity) {
 	_numBytes = type.getNumBytes();
 	_direct = type.isDirect();
 	_capacity = capacity < 0 ? 0 : capacity > MAX_CAPACITY ? MAX_CAPACITY : capacity;
@@ -63,9 +63,9 @@ public class MessagePoolArray implements FramePool {
     protected synchronized Frame allocate() {
 	try {
 	    if (_type == null)
-		return _constructor.newInstance(this, _numBytes, _direct);
+		return (Frame) _constructor.newInstance(this, _numBytes, _direct);
 	    else
-		return _constructor.newInstance(this, _type);
+		return (Frame) _constructor.newInstance(this, _type);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return null;

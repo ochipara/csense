@@ -41,7 +41,7 @@ public class AudioComponentC extends CSenseSourceC {
 	if (AndroidTarget.PLATFORM.equals(platform)) {
 	    if (audioType.getMessageType() != ShortVector.class) throw new CompilerException("Unsupported audioType");
 	      
-	    setComponent("components.sensors.android.AudioComponent");
+	    setComponent("edu.uiowa.csense.components.android.sensors.AudioComponent");
 	    addArgument(new ArgumentC(rate));	    
 	    addOutputPort(audioType, "audio");
 	    

@@ -19,7 +19,7 @@ public class CSensePriorityQueue<T> {
     protected static final int UNLOCKED = 200;
     protected static final int LOCKED = 300;
     protected final AtomicInteger _lock = new AtomicInteger(UNLOCKED);
-    protected volatile int _waitOnEmpty = 0; //it is a counter of the number of elements in queue
+    protected int _waitOnEmpty = 0; //it is a counter of the number of elements in queue
 
     protected final Object _empty = new Object();
     protected boolean _emptySignaled = false;
@@ -66,7 +66,7 @@ public class CSensePriorityQueue<T> {
 	    if (_waitOnEmpty > 0) {
 		// we got lucky, we will get the result and return
 		T elem = _list.poll();
-		_waitOnEmpty -= 1;
+		if (elem != null) _waitOnEmpty -= 1;
 
 		if (_waitOnEmpty < 0) {
 		    throw new IllegalStateException("This state cannot be reached");
@@ -107,7 +107,7 @@ public class CSensePriorityQueue<T> {
 
 	T element = null;
 
-	if (_list.size() > 0) {	    
+	if (_waitOnEmpty > 0) {	    
 	    element = _list.poll();
 	    _waitOnEmpty -= 1;
 	}
@@ -125,6 +125,7 @@ public class CSensePriorityQueue<T> {
 	}
 
 	_list.clear();
+	_waitOnEmpty = 0;
 
 	if (_lock.compareAndSet(LOCKED, UNLOCKED) == false) {
 	    throw new IllegalStateException("This state cannot be reached");
@@ -199,7 +200,7 @@ public class CSensePriorityQueue<T> {
 	}
 
 	boolean r = _list.remove(task);
-	_waitOnEmpty -= 1;
+	if (r) _waitOnEmpty -= 1;
 
 	if (_lock.compareAndSet(LOCKED, UNLOCKED) == false) {
 	    throw new IllegalStateException("This state cannot be reached");

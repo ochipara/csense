@@ -4,6 +4,8 @@ import edu.uiowa.csense.compiler.CSenseComponentC;
 import edu.uiowa.csense.compiler.CompilerException;
 import edu.uiowa.csense.compiler.types.FrameTypeC;
 import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.components.bluetooth.shimmer.ShimmerSensorData;
+import edu.uiowa.csense.components.bluetooth.shimmer.ShimmerSensorDataDemuxer;
 
 
 // TODO: nicer way to handle this

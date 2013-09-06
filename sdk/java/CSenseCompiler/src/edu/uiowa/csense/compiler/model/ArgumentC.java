@@ -4,6 +4,7 @@ import edu.uiowa.csense.compiler.types.BaseTypeC;
 import edu.uiowa.csense.compiler.types.FrameTypeC;
 import edu.uiowa.csense.compiler.types.JavaTypeC;
 import edu.uiowa.csense.compiler.utils.JavaCoder;
+import edu.uiowa.csense.runtime.workspace.Variable;
 
 public class ArgumentC {
     protected Class _type = null;
@@ -39,7 +40,7 @@ public class ArgumentC {
 	_type = BaseTypeC.class;
 	// _value = "" + portType.getMessageType().getSimpleName() + ".class";
 	String qn = portType.getMessageType().getSimpleName();
-	_value = "new TypeInfo<" + qn + ">(" + qn + ".class, "
+	_value = "new TypeInfo(" + qn + ".class, "
 		+ portType.getElementSize() + ","
 		+ portType.getRows() + "," 
 		+ portType.getColumns() + " ,true, false)";
@@ -78,22 +79,11 @@ public class ArgumentC {
 	}
 	_value += "}";    
     }
-
-//    public ArgumentC(TypeInfo typeInfo) {
-//	_type = TypeInfo.class;
-//	//    public TypeInfo(Class<T> cls, int elementSize, int rows, int columns, boolean direct, boolean readonly) {
-//
-//	_value = "new TypeInfo(" + typeInfo.getJavaType().getSimpleName() + ".class, " 
-//		+ typeInfo.getElementSize() + ", " 
-//		+ typeInfo.getRows() + ", " 
-//		+ typeInfo.getColumns() + ", true, false)";		
-//    }
-
  
     public ArgumentC(JavaTypeC type) {
 	_type = type.getMessageType();
 	String qn = type.getMessageType().getSimpleName();
-	_value = "new TypeInfo<" + qn + ">(" + qn + ".class, "
+	_value = "new TypeInfo(" + qn + ".class, "
 		+ type.getElementSize() + ","
 		+ 1 + "," 
 		+ 1 + " ,true, false)";

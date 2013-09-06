@@ -35,7 +35,9 @@ public class CSenseBlockingQueue<T> {
     }
 
     public boolean offer(T element) {
-	if (element == null) throw new IllegalArgumentException("element cannot be null");
+	if (element == null) {
+	    throw new IllegalArgumentException("element cannot be null");
+	}
 
 	while(_lock.compareAndSet(UNLOCKED, LOCKED) == false) {
 	    // spin -- hopefully not too long
@@ -128,6 +130,7 @@ public class CSenseBlockingQueue<T> {
 	}
 
 	_list.clear();
+	_waitOnEmpty = 0;
 
 	if (_lock.compareAndSet(LOCKED, UNLOCKED) == false) {
 	    throw new IllegalStateException("This state cannot be reached");

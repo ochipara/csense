@@ -17,16 +17,16 @@ public class MessagePoolAtomic implements FramePool {
     private int _numBytes;
     private int _capacity;
     private boolean _direct;
-    private Constructor<? extends Frame> _constructor;
-    private TypeInfo<? extends Frame> _type = null;
-    private ISource<? extends Frame> _source = null;
+    private Constructor _constructor;
+    private TypeInfo _type = null;
+    private ISource _source = null;
 
     // must be synchronized
     private CSenseBlockingQueue<Frame> _pool;
     //private ArrayList<T> _checkout;
     private final static int level = ILog.VERBOSE;
 
-    public MessagePoolAtomic(TypeInfo<? extends Frame> type, int capacity) {
+    public MessagePoolAtomic(TypeInfo type, int capacity) throws CSenseException {
 	_numBytes = type.getNumBytes();
 	_direct = type.isDirect();
 	_capacity = capacity < 0 ? 0 : capacity > MAX_CAPACITY ? MAX_CAPACITY : capacity;
@@ -39,8 +39,10 @@ public class MessagePoolAtomic implements FramePool {
 	    _constructor = type.getJavaType().getDeclaredConstructor(FramePool.class, TypeInfo.class);
 	} catch (SecurityException e) {
 	    e.printStackTrace();
+	    throw new CSenseException("Failed to instatiate frame", e);
 	} catch (NoSuchMethodException e) {
 	    e.printStackTrace();
+	    throw new CSenseException("Failed to instatiate frame", e);
 	}
 
 	for (int i = 0; i < _capacity; i++) {
@@ -59,10 +61,11 @@ public class MessagePoolAtomic implements FramePool {
      */
     protected Frame allocate() {
 	try {
-	    if (_type == null)
-		return _constructor.newInstance(this, _numBytes, _direct);
-	    else
-		return _constructor.newInstance(this, _type);
+	    if (_type == null) {
+		return (Frame) _constructor.newInstance(this, _numBytes, _direct);
+	    } else {
+		return (Frame) _constructor.newInstance(this, _type);
+	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return null;

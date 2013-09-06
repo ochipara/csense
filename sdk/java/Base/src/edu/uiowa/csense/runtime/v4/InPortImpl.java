@@ -21,7 +21,6 @@ import edu.uiowa.csense.runtime.api.OutputPort;
 public class InPortImpl<T extends Frame> extends PortImpl implements InputPort<T> {
     private final String TAG;
     protected OutputPort<T> _out = null;   
-    protected InputPort<T> self;
     protected Frame _m = null;        
    
     public InPortImpl(IComponent owner, String name) {
@@ -52,15 +51,14 @@ public class InPortImpl<T extends Frame> extends PortImpl implements InputPort<T
     @Override
     public int onPush(Frame m) throws CSenseException {
 	if (_m != null) {
-	    return Constants.PUSH_FAIL;
+	    return Constants.PUSH_COLLISON;
 	}
-	
 	
 	_m = m;	
 	if (Debug.isTracing()) {
 	    Debug.logMessagePush(_owner, m);
 	}	
-	_owner.onPush(self, m);	
+	_owner.onPush(this, m);	
 	return Constants.PUSH_SUCCESS;
     }
     

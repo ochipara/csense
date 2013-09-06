@@ -16,7 +16,7 @@ import edu.uiowa.csense.runtime.api.CSenseError;
 import edu.uiowa.csense.runtime.api.CSenseException;
 import edu.uiowa.csense.runtime.api.Frame;
 import edu.uiowa.csense.runtime.api.OutputPort;
-import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.api.Event;
 import edu.uiowa.csense.runtime.types.DoubleVector;
 import edu.uiowa.csense.runtime.types.FloatVector;
 import edu.uiowa.csense.runtime.types.RawFrame;
@@ -75,7 +75,7 @@ public class FromMatFile<T extends RawFrame> extends CSenseSource<T> {
      * component.
      */
     @Override
-    public void doEvent(Task t) throws CSenseException {
+    public void onEvent(Event t) throws CSenseException {
 	T msg = getNextMessageToWriteInto();
 	ByteBuffer byteBuffer = msg.getBuffer();
 	byteBuffer.position(0);

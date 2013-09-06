@@ -13,5 +13,4 @@ public interface GroupC extends IComponentC {
     public IComponentC getComponent(String name) throws CompilerException;
 
     public Collection<IComponentC> getComponents();
-
 }

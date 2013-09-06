@@ -8,7 +8,7 @@ import java.nio.channels.FileChannel;
 
 import edu.uiowa.csense.runtime.api.CSenseException;
 import edu.uiowa.csense.runtime.api.OutputPort;
-import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.api.Event;
 import edu.uiowa.csense.runtime.types.RawFrame;
 import edu.uiowa.csense.runtime.types.TypeInfo;
 import edu.uiowa.csense.runtime.v4.CSenseSource;
@@ -46,7 +46,7 @@ public class FromDiskComponent<T extends RawFrame> extends CSenseSource<T> {
     }
 
     @Override
-    public void doEvent(Task t) throws CSenseException {
+    public void onEvent(Event t) throws CSenseException {
 	try {
 	    //if (channel.position() < channel.size()) {
 	    T message = getNextMessageToWriteInto();

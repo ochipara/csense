@@ -124,6 +124,7 @@ public class CSenseAtomicQueue<Telem, T extends Queue<Telem>> {
 	    // spin -- hopefully not too long
 	}
 
+	_waitOnEmpty = 0;
 	_list.clear();
 
 	if (_lock.compareAndSet(LOCKED, UNLOCKED) == false) {

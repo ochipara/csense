@@ -4,10 +4,7 @@ import edu.uiowa.csense.compiler.CSenseComponentC;
 import edu.uiowa.csense.compiler.CompilerException;
 import edu.uiowa.csense.compiler.model.ArgumentC;
 import edu.uiowa.csense.compiler.types.BaseTypeC;
-import edu.uiowa.csense.compiler.types.FrameTypeC;
 import edu.uiowa.csense.compiler.types.TypeInfoC;
-import edu.uiowa.csense.compiler.types.constraints.Constraint;
-import edu.uiowa.csense.compiler.types.constraints.SFGreaterEqual;
 import edu.uiowa.csense.components.storage.ToDiskComponent;
 import edu.uiowa.csense.runtime.workspace.Variable;
 
@@ -23,7 +20,7 @@ public class ToDiskComponentC extends CSenseComponentC {
 
 	// ports
 	addIOPort(type, "data");
-	addOutputPort(TypeInfoC.newFilenameType(), "fileOutput", true);
+	addOutputPort(TypeInfoC.newJavaMessage(String.class), "fileOutput", true);
 
 	addArgument(new ArgumentC(path));
 	addArgument(new ArgumentC(fileName));
@@ -57,7 +54,7 @@ public class ToDiskComponentC extends CSenseComponentC {
 
 	// ports
 	addIOPort(type, "data");
-	addOutputPort(TypeInfoC.newFilenameType(), "fileOutput", true);
+	addOutputPort(TypeInfoC.newJavaMessage(String.class), "fileOutput", true);
 
 	addArgument(new ArgumentC(variable));
 	addPermission("android.permission.WRITE_EXTERNAL_STORAGE");

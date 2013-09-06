@@ -5,23 +5,23 @@ import java.util.concurrent.BlockingQueue;
 
 import edu.uiowa.csense.runtime.api.CSenseError;
 import edu.uiowa.csense.runtime.api.CSenseException;
-import edu.uiowa.csense.runtime.api.IComponent;
-import edu.uiowa.csense.runtime.api.concurrent.ITaskManager;
+import edu.uiowa.csense.runtime.api.Event;
+import edu.uiowa.csense.runtime.api.concurrent.IEventManager;
 
-public class ABQTaskManager implements ITaskManager {
-    private BlockingQueue<IComponent> _tasks;
+public class ABQTaskManager implements IEventManager {
+    private BlockingQueue<Event> _tasks;
 
     public ABQTaskManager(int numTasks) {
-	_tasks = new ArrayBlockingQueue<IComponent>(numTasks);
+	_tasks = new ArrayBlockingQueue<Event>(numTasks);
     }
 
     @Override
-    public IComponent nextTask() {
+    public Event nextEvent() {
 	return _tasks.poll();
     }
 
     @Override
-    public void scheduleTask(IComponent component) throws CSenseException {
+    public void scheduleEvent(Event component) throws CSenseException {
 	if (_tasks.contains(component))
 	    return;
 
@@ -37,7 +37,7 @@ public class ABQTaskManager implements ITaskManager {
     }
 
     @Override
-    public boolean hasTask() {
+    public boolean hasEvent() {
 	return _tasks.size() > 0;
     }
 }

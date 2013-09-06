@@ -13,7 +13,6 @@ import edu.uiowa.csense.runtime.api.FramePool;
 import edu.uiowa.csense.runtime.api.profile.IRoute;
 import edu.uiowa.csense.runtime.compatibility.Log;
 import edu.uiowa.csense.runtime.types.RawFrame;
-import edu.uiowa.csense.runtime.v4.CSenseComponent;
 
 /**
  * This is for objects sent between components. Messages carry information
@@ -24,10 +23,10 @@ import edu.uiowa.csense.runtime.v4.CSenseComponent;
  * 
  */
 public class RawFrame implements Frame {
-    private static final String TAG = "message";
+    private static final String TAG = "RawFrame";
     protected final FramePool pool;
     protected final Frame parent;
-    protected final TypeInfo<? extends Frame> type;
+    protected final TypeInfo type;
 
     protected final ByteBuffer buffer;
     protected final Map<Integer, List<Frame>> viewMap = new HashMap<Integer, List<Frame>>();
@@ -41,7 +40,7 @@ public class RawFrame implements Frame {
     private int id = -1;
 
 
-    public RawFrame(FramePool pool, TypeInfo<? extends Frame> type, Frame parent) {	
+    public RawFrame(FramePool pool, TypeInfo type, Frame parent) {	
 	this.pool = pool;
 	this.parent = parent;
 	this.type = type;
@@ -51,22 +50,7 @@ public class RawFrame implements Frame {
 	buffer.order(ByteOrder.LITTLE_ENDIAN);
     }
     
-    protected ThreadLocal<CSenseComponent> _owner = new ThreadLocal<CSenseComponent>() {
-	@Override
-	public CSenseComponent initialValue() {
-	    return null;
-	}
-    };
-
-    public CSenseComponent getOwner() {
-        return _owner.get();
-    }
-
-    public void setOwner(CSenseComponent owner) {
-        this._owner.set(owner);
-    }
-
-    public RawFrame(FramePool pool, TypeInfo<? extends Frame> type) {
+    public RawFrame(FramePool pool, TypeInfo type) {
 	this(pool, type, null);
     }
 
@@ -178,48 +162,7 @@ public class RawFrame implements Frame {
     
     @Override
     public Frame[] split(int numFrames) {
-	/*
-	if (parent != null) {
-	    return parent.split(component, numFrames);
-	}
-	
-	List<Frame> views = null; 
-	if (viewMap.containsKey(numFrames) == false) {
-	    try {
-		views = new ArrayList<Frame>(numFrames);
-
-		int start = 0;
-		int step = buffer.capacity() / numFrames;
-		for (int i = 0; i < numFrames; i++) {
-		    buffer.position(start);
-		    buffer.limit(start + step);		
-		    ByteBuffer bb = buffer.slice();
-
-		    Constructor c = type.getJavaType().getDeclaredConstructor(FramePool.class, TypeInfo.class, Frame.class, ByteBuffer.class);
-		    FrameImpl msg = (FrameImpl) c.newInstance(pool, type, this, bb);
-		    views.add(msg);
-		    start = start + step;
-		}
-		viewMap.put(numFrames, views);
-	    } catch (NoSuchMethodException e) {		 
-		e.printStackTrace();
-	    } catch (IllegalArgumentException e) {
-		e.printStackTrace();
-	    } catch (InstantiationException e) {
-		e.printStackTrace();
-	    } catch (IllegalAccessException e) {
-		e.printStackTrace();
-	    } catch (InvocationTargetException e) {	
-		e.printStackTrace();
-	    }
-	} else {
-	    views = viewMap.get(numFrames);
-	}
-	
-	
-	return (Frame[]) views.toArray();
-	*/
-	return null;
+	throw new UnsupportedOperationException();
     }
     
     @Override

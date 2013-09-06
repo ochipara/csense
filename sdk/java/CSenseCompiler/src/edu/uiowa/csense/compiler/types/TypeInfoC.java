@@ -1,8 +1,6 @@
 package edu.uiowa.csense.compiler.types;
 
-import edu.uiowa.csense.compiler.CompilerException;
 import edu.uiowa.csense.compiler.RuntimeCompilerException;
-import edu.uiowa.csense.compiler.model.Project;
 import edu.uiowa.csense.compiler.types.constraints.Constraint;
 import edu.uiowa.csense.compiler.types.constraints.Equal;
 import edu.uiowa.csense.compiler.types.constraints.MultipleOf;
@@ -10,25 +8,25 @@ import edu.uiowa.csense.runtime.api.Frame;
 import edu.uiowa.csense.runtime.types.ByteVector;
 import edu.uiowa.csense.runtime.types.CharVector;
 import edu.uiowa.csense.runtime.types.DoubleVector;
-import edu.uiowa.csense.runtime.types.FilenameType;
 import edu.uiowa.csense.runtime.types.FloatVector;
 import edu.uiowa.csense.runtime.types.ShortVector;
 
 public class TypeInfoC {
-    public static JavaTypeC newFilenameType() throws RuntimeCompilerException {
-	return TypeInfoC.newJavaMessage(FilenameType.class);
-    }
+    //    public static JavaTypeC newFilenameType() throws RuntimeCompilerException {
+    //	return TypeInfoC.newJavaMessage(FilenameType.class);
+    //    }
 
+    /**
+     * Creates a custom JavaType. 
+     * @param cls
+     * @return
+     * @throws RuntimeCompilerException
+     */
     public static JavaTypeC newJavaMessage(Class cls) throws RuntimeCompilerException {
-	try {
-	    Project.getProject().getResourceManager().addClass(cls);
-	    JavaTypeC f = new JavaTypeC(cls);
-	    f.addConstraint(new Equal(Constraint.ROW_DIMENSION, 1));
-	    f.addConstraint(new Equal(Constraint.COLUMN_DIMENSION, 1));
-	    return f; 
-	} catch (CompilerException e) {
-	    throw new RuntimeCompilerException(e);
-	}
+	JavaTypeC f = new JavaTypeC(cls);
+	f.addConstraint(new Equal(Constraint.ROW_DIMENSION, 1));
+	f.addConstraint(new Equal(Constraint.COLUMN_DIMENSION, 1));
+	return f; 
     }
 
     public static BaseTypeC newBaseType() {
@@ -81,26 +79,26 @@ public class TypeInfoC {
 	return f;
     }
 
-//    public static FrameTypeC newDoubleMatrix() throws RuntimeCompilerException {
-//	return new FrameTypeC(DoubleMatrix.class);
-//    }
-//
-//    public static FrameTypeC newShortMatrix() {
-//	return new FrameTypeC(ShortMatrix.class);
-//    }
-//
-//    public static FrameTypeC newFloatMatrix() throws RuntimeCompilerException {
-//	return new FrameTypeC(FloatMatrix.class);
-//    }
-//
-//    public static FrameTypeC newFloatMatrix(int rows, int cols) throws RuntimeCompilerException {
-//	FrameTypeC m = newFloatMatrix();
-//	m.addConstraint(new Equal(Constraint.ROW_DIMENSION, rows));
-//	m.addConstraint(new Equal(Constraint.COLUMN_DIMENSION, cols));
-//	return m;
-//    }
+    //    public static FrameTypeC newDoubleMatrix() throws RuntimeCompilerException {
+    //	return new FrameTypeC(DoubleMatrix.class);
+    //    }
+    //
+    //    public static FrameTypeC newShortMatrix() {
+    //	return new FrameTypeC(ShortMatrix.class);
+    //    }
+    //
+    //    public static FrameTypeC newFloatMatrix() throws RuntimeCompilerException {
+    //	return new FrameTypeC(FloatMatrix.class);
+    //    }
+    //
+    //    public static FrameTypeC newFloatMatrix(int rows, int cols) throws RuntimeCompilerException {
+    //	FrameTypeC m = newFloatMatrix();
+    //	m.addConstraint(new Equal(Constraint.ROW_DIMENSION, rows));
+    //	m.addConstraint(new Equal(Constraint.COLUMN_DIMENSION, cols));
+    //	return m;
+    //    }
 
-    
+
 
 
 }

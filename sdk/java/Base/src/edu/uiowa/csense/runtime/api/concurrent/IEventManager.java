@@ -1,12 +1,11 @@
 package edu.uiowa.csense.runtime.api.concurrent;
 
-import edu.uiowa.csense.runtime.api.TimerEvent;
+import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.Event;
 
 public interface IEventManager {
-    boolean isEmpty();
-    TimerEvent peek();
-    TimerEvent poll();
-    void clear();
-    boolean add(TimerEvent task);
-    boolean remove(TimerEvent task);
+    public Event nextEvent();
+    public void scheduleEvent(Event event) throws CSenseException;    
+    public void clear();
+    public boolean hasEvent();
 }

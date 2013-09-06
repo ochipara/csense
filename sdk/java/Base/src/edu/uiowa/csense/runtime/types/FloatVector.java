@@ -6,19 +6,12 @@ import edu.uiowa.csense.runtime.api.CSenseException;
 import edu.uiowa.csense.runtime.api.FramePool;
 
 public class FloatVector extends Vector<Float> {
-    protected final TypeInfo<FloatVector> _type;
     private final FloatBuffer _floatBuffer;
 
-    public FloatVector(FramePool pool, TypeInfo<FloatVector> type)
+    public FloatVector(FramePool pool, TypeInfo type)
 	    throws CSenseException {
 	super(pool, type);
-	_type = type;
 	_floatBuffer = buffer.asFloatBuffer();
-    }
-
-    @Override
-    public TypeInfo<FloatVector> getTypeInfo() {
-	return _type;
     }
 
     @Override

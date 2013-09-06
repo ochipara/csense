@@ -3,7 +3,6 @@ package edu.uiowa.csense.components.basic;
 import edu.uiowa.csense.runtime.api.CSenseException;
 import edu.uiowa.csense.runtime.api.Frame;
 import edu.uiowa.csense.runtime.api.InputPort;
-import edu.uiowa.csense.runtime.api.bindings.Component;
 
 /**
  * Responsible for 'freeing' messages that are being recycled in message queues.
@@ -12,7 +11,7 @@ import edu.uiowa.csense.runtime.api.bindings.Component;
  * 
  * @author Austin
  */
-public class TapComponent<T extends Frame> extends Component {
+public class TapComponent<T extends Frame> extends edu.uiowa.csense.runtime.v4.CSenseComponent {
     public final InputPort<T> in = newInputPort(this, "in");
 
     public TapComponent() throws CSenseException {

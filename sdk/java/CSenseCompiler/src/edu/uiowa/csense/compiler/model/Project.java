@@ -88,7 +88,7 @@ public class Project {
 	project = this;
 
 	_resourceManager = new ResourceManager();
-	projectDirectory = projectDir; 	
+	projectDirectory = ProjectConfiguration.locate(projectDir); 	
 	projectXml = new File(projectDirectory, "project.xml");
 	
 	// load project components
@@ -176,7 +176,7 @@ public class Project {
 	return component;
     }
 
-    protected IComponentC getComponent(String name) throws CompilerException {
+    public IComponentC getComponent(String name) throws CompilerException {
 	return _mainGroup.getComponent(name);
     }
 

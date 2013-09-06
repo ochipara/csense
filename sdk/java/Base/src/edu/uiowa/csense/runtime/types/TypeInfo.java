@@ -10,8 +10,8 @@ package edu.uiowa.csense.runtime.types;
  * 
  * @param <T>
  */
-public class TypeInfo<T> {
-    protected final Class<T> _class;
+public class TypeInfo {
+    protected final Class _class;
     protected int _elementSize = 0; // in bytes
     protected int _rows = 0;
     protected int _columns = 0;
@@ -20,14 +20,14 @@ public class TypeInfo<T> {
     protected final boolean _readonly;
     protected final boolean _dynamic;
 
-    public TypeInfo(Class<T> cls) {
+    public TypeInfo(Class cls) {
 	_class = cls;
 	_dynamic = true;
 	_readonly = false;
 	_direct = false;
     }
 
-    public TypeInfo(Class<T> cls, int elementSize, int rows, int columns, boolean direct, boolean readonly) {
+    public TypeInfo(Class cls, int elementSize, int rows, int columns, boolean direct, boolean readonly) {
 	if ((rows <= 0) || (columns <= 0)) {
 	    throw new IllegalArgumentException("Type must have at least one row and one column");
 	}
@@ -73,36 +73,38 @@ public class TypeInfo<T> {
 	return _class.getName();
     }
 
-    public static TypeInfo<FloatVector> newFloatVector(int size) {
-	return new TypeInfo<FloatVector>(FloatVector.class, 4, size, 1, true, false);
+    public static TypeInfo newFloatVector(int size) {
+	return new TypeInfo(FloatVector.class, 4, size, 1, true, false);
     }
 
-    public static TypeInfo<DoubleVector> newDoubleVector(int size) {
-	return new TypeInfo<DoubleVector>(DoubleVector.class, 8, size, 1, true, false);
+    public static TypeInfo newDoubleVector(int size) {
+	return new TypeInfo(DoubleVector.class, 8, size, 1, true, false);
     }
 
-    public static TypeInfo<ByteVector> newByteVector(int size) {
-	return new TypeInfo<ByteVector>(ByteVector.class, 1, size, 1, true, false);
+    public static TypeInfo newByteVector(int size) {
+	return new TypeInfo(ByteVector.class, 1, size, 1, true, false);
     }
 
-    public static TypeInfo<CharVector> newCharVector(int size) {
-	return new TypeInfo<CharVector>(CharVector.class, 2, size, 1, true, false);
+    public static TypeInfo newCharVector(int size) {
+	return new TypeInfo(CharVector.class, 2, size, 1, true, false);
     }
 
-    public static TypeInfo<ShortVector> newShortVector(int size) {
-	return new TypeInfo<ShortVector>(ShortVector.class, 2, size, 1, true, false);
+    public static TypeInfo newShortVector(int size) {
+	return new TypeInfo(ShortVector.class, 2, size, 1, true, false);
     }
 
 //    public static TypeInfo<DoubleMatrix> newDoubleMatrix(int rows, int columns) {
 //	return new TypeInfo<DoubleMatrix>(DoubleMatrix.class, 8, rows, columns, true, false);
 //    }
 
-    public static TypeInfo<FilenameType> newFilenameType() {
-	return new TypeInfo<FilenameType>(FilenameType.class, 2, FilenameType.MAX_SIZE, 1, true, false);
-    }
+//    public static TypeInfo<FilenameType> newFilenameType() {
+//	return new TypeInfo<FilenameType>(FilenameType.class, 2, FilenameType.MAX_SIZE, 1, true, false);
+//    }
     
-    public static <T> TypeInfo<T> newJavaMessage(Class<T> cls) {
-	return new TypeInfo<T>(cls, 1, 1, 1, false, false);
+    public static TypeInfo newJavaMessage(Class cls) {
+	TypeInfo obj = new TypeInfo(cls, 1, 1, 1, false, false);
+	
+	return obj;
     }
 
     public int getColumns() {
@@ -116,6 +118,4 @@ public class TypeInfo<T> {
     public boolean isDynamic() {
 	return _dynamic;
     }
-
-
 }

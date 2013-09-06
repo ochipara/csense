@@ -25,21 +25,21 @@ import edu.uiowa.csense.runtime.types.TypeInfo;
  * 
  */
 public class CSenseSource<T extends Frame> extends CSenseComponent implements ISource<T> {
-    protected TypeInfo<T> _type;
+    protected TypeInfo _type;
     protected FramePool _pool = null;
 
     private volatile boolean _logging;
 
-    public CSenseSource(TypeInfo<T> type) throws CSenseException {
+    public CSenseSource(TypeInfo type) throws CSenseException {
 	super();	
 	_type = type;
-	_pool = CSenseToolkit.getImplementation().newFramePool(type, Options.INIT_MSG_POOL_CAPACITY);
-	_pool.setSource(this);	
-
     }
     
     @Override
-    public void onCreate() throws CSenseException {	
+    public void onCreate() throws CSenseException {
+	_pool = CSenseToolkit.getImplementation().newFramePool(_type, Options.INIT_MSG_POOL_CAPACITY);
+	_pool.setSource(this);	
+
 	super.onCreate();
     }
     

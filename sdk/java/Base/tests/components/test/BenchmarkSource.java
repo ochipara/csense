@@ -5,7 +5,7 @@ import java.util.Properties;
 import edu.uiowa.csense.profiler.Statistics;
 import edu.uiowa.csense.runtime.api.CSenseException;
 import edu.uiowa.csense.runtime.api.OutputPort;
-import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.api.Event;
 import edu.uiowa.csense.runtime.v4.CSenseSource;
 
 public class BenchmarkSource extends CSenseSource<BenchmarkMessage> {
@@ -49,7 +49,7 @@ public class BenchmarkSource extends CSenseSource<BenchmarkMessage> {
     }
 
     @Override
-    public void doEvent(Task t) throws CSenseException {
+    public void onEvent(Event t) throws CSenseException {
 	for (int i = 0; i < _burst; i++) {
 	    BenchmarkMessage m = getNextMessageToWriteInto();
 	    if(m == null) {

@@ -5,6 +5,7 @@ import edu.uiowa.csense.compiler.CompilerException;
 import edu.uiowa.csense.compiler.model.ArgumentC;
 import edu.uiowa.csense.compiler.types.JavaTypeC;
 import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.components.bluetooth.shimmer.ShimmerSensorData;
 
 public class ShimmerSensorComponentC extends CSenseSourceC {
     static public final Byte SENSOR_ACCEL   = (byte) 0x80;

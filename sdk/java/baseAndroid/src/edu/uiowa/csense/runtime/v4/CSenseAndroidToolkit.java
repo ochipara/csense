@@ -7,8 +7,8 @@ import edu.uiowa.csense.runtime.api.CSenseException;
 import edu.uiowa.csense.runtime.api.CSenseToolkit;
 import edu.uiowa.csense.runtime.api.IScheduler;
 import edu.uiowa.csense.runtime.api.concurrent.IEventManager;
+import edu.uiowa.csense.runtime.api.concurrent.ITimerEventManager;
 import edu.uiowa.csense.runtime.api.concurrent.IIdleLock;
-import edu.uiowa.csense.runtime.api.concurrent.ITaskManager;
 
 public class CSenseAndroidToolkit extends CSenseToolkit {
     protected final Context context;
@@ -28,14 +28,14 @@ public class CSenseAndroidToolkit extends CSenseToolkit {
   	    
   	    // create the new task queue
   	    Constructor<?> taskQueueConstructor = taskQueueClass.getConstructor(Integer.TYPE);
-  	    ITaskManager pending = (ITaskManager) taskQueueConstructor.newInstance(30);
+  	    IEventManager events = (IEventManager) taskQueueConstructor.newInstance(30);
 
   	    Constructor<?> timerConstructor = eventQueueClass.getConstructor(Integer.TYPE);
-  	    IEventManager events = (IEventManager) timerConstructor.newInstance(30);
+  	    ITimerEventManager timerEvents = (ITimerEventManager) timerConstructor.newInstance(30);
 
   	    //public CSenseScheduler(String threadName, IIdleLock idleLock, ITaskManager pending, IEventManager eventQueue) throws CSenseException {
-  	    Constructor<?> schedulerConstructor = schedulerClass.getConstructor(String.class, IIdleLock.class, ITaskManager.class, IEventManager.class);
-  	    scheduler = (IScheduler) schedulerConstructor.newInstance(threadName, idleLock, pending, events);	
+  	    Constructor<?> schedulerConstructor = schedulerClass.getConstructor(String.class, IIdleLock.class, IEventManager.class, ITimerEventManager.class);
+  	    scheduler = (IScheduler) schedulerConstructor.newInstance(threadName, idleLock, events, timerEvents);	
   	} catch (Exception e) {
   	    e.printStackTrace();
   	    throw new CSenseException(e);

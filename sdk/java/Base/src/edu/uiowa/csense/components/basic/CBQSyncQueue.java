@@ -9,7 +9,7 @@ import edu.uiowa.csense.runtime.api.IComponent;
 import edu.uiowa.csense.runtime.api.InputPort;
 import edu.uiowa.csense.runtime.api.ILog;
 import edu.uiowa.csense.runtime.api.OutputPort;
-import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.api.Event;
 import edu.uiowa.csense.runtime.api.concurrent.IState;
 import edu.uiowa.csense.runtime.concurrent.CSenseBlockingQueue;
 
@@ -95,7 +95,7 @@ public class CBQSyncQueue<T extends Frame> extends SyncQueue<T> {
 
     @SuppressWarnings("unused")
     @Override
-    public void doEvent(Task t) throws CSenseException {
+    public void onEvent(Event t) throws CSenseException {
 	T m = (T) _queue.poll();
 	if (m != null) {
 	    Debug.logMessageInput(this, m);

@@ -3,11 +3,13 @@ package edu.uiowa.csense.runtime.v4;
 import java.nio.channels.SelectionKey;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import edu.uiowa.csense.runtime.api.CSenseError;
 import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseToolkit;
+import edu.uiowa.csense.runtime.api.Feedback;
 import edu.uiowa.csense.runtime.api.IComponent;
 import edu.uiowa.csense.runtime.api.Constants;
 import edu.uiowa.csense.runtime.api.Frame;
@@ -15,7 +17,7 @@ import edu.uiowa.csense.runtime.api.InputPort;
 import edu.uiowa.csense.runtime.api.Options;
 import edu.uiowa.csense.runtime.api.OutputPort;
 import edu.uiowa.csense.runtime.api.IScheduler;
-import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.api.Event;
 import edu.uiowa.csense.runtime.api.concurrent.IState;
 import edu.uiowa.csense.runtime.compatibility.Log;
 
@@ -33,7 +35,7 @@ public class CSenseComponent implements IComponent {
     protected boolean eof = false;
     protected int _id = -1;
 
-    private Task _task = new Task();
+    private Event _task = new Event();
     private int multiplier = 1;
 
     public CSenseComponent() {
@@ -138,7 +140,7 @@ public class CSenseComponent implements IComponent {
 		throw new CSenseException(CSenseError.SYNCHRONIZATION_ERROR);
 	    }
 	}
-	
+
 	// check if all the puts have data to process		
 	for (int i = 0; i < _inPortSize; i++) {
 	    InputPort<? extends Frame> port = _inPortList.get(i);	   	    
@@ -151,20 +153,20 @@ public class CSenseComponent implements IComponent {
 		}
 	    } 
 	}
-	
+
 	if (transition(IState.STATE_READY, IState.STATE_RUNNING) == true) {
 	    // call the doInput method    	    
 	    for (int i = 0; i < multiplier; i++) {
 		onInput();
 	    }
-	    
+
 	    // clear the input ports
 	    for (int i = 0; i < _inPortSize; i++) {
 		InputPort<? extends Frame> port = _inPortList.get(i);
 		port.clear();
 		transitionTo(IState.STATE_READY);
 	    }
-	    
+
 	    return Constants.PUSH_SUCCESS;
 	} else {
 	    throw new CSenseException(CSenseError.SYNCHRONIZATION_ERROR, "This should not happen");
@@ -186,14 +188,14 @@ public class CSenseComponent implements IComponent {
      * @throws CSenseException 
      */
     @Override
-    public void doEvent(Task t) throws CSenseException {
+    public void onEvent(Event t) throws CSenseException {
     }
 
     @Override
-    public Task asTask() {
+    public Event asTask() {
 	return _task;
     }
-    
+
     @Override
     public String getName() {
 	return _name;
@@ -202,18 +204,19 @@ public class CSenseComponent implements IComponent {
     @Override
     public void setName(String name) {
 	_name = name;	
+	CSenseToolkit.registerComponent(this);
     }
 
     @Override
     public int getId() {
 	return _id;
     }
-    
+
     @Override
     public void setId(int id) {
 	_id = id;
     }
-    
+
     @Override
     public void error(Object... args) {
 	Log.e(_name, args);
@@ -244,8 +247,8 @@ public class CSenseComponent implements IComponent {
     public String toString() {
 	return _name + " state=" + _state.toString();
     }
-    
-    
+
+
 
     @Override
     public boolean transition(int expectedState, int newState) {
@@ -260,5 +263,37 @@ public class CSenseComponent implements IComponent {
     @Override
     public void setMultiplier(int m) {
 	this.multiplier = m;
-    }  
+    }
+
+
+    // exception handling channels
+    protected final Map<Integer, List<IComponent>> feedbackSubscribers = new HashMap<Integer, List<IComponent>>(); 
+    
+    @Override
+    public void registerFeedback(int category, IComponent source) {
+	List<IComponent> subscribers = feedbackSubscribers.get(category);
+	if (subscribers == null) {
+	    subscribers = new LinkedList<IComponent>();	    
+	    feedbackSubscribers.put(category, subscribers);
+	}
+	subscribers.add(source);
+    }
+    
+    @Override
+    public void feedback(int category, Feedback<?> feedback) throws CSenseException {
+	List<IComponent> subscribers = feedbackSubscribers.get(category);
+	if (subscribers == null) return; 
+	
+	feedback.setCategory(category);
+	for (int i = 0; i < subscribers.size(); i++) {
+	    IComponent target = subscribers.get(i);
+	    IScheduler targetScheduler = target.getScheduler();
+	    if (targetScheduler == _scheduler) {
+		// we are in the same domain
+		target.onEvent(feedback);
+	    } else {
+		targetScheduler.schedule(target, feedback);
+	    }
+	}
+    }
 }

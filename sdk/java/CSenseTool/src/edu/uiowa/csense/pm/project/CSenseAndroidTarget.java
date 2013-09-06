@@ -22,7 +22,7 @@ import edu.uiowa.csense.pm.Command;
  */
 public class CSenseAndroidTarget extends Command {
     public static final String NAME = "csenseandroid";
-    
+
     protected final ExecuteCommand create = ExecuteCommand.executeCommand();
 
     @Override
@@ -30,31 +30,42 @@ public class CSenseAndroidTarget extends Command {
 	if (argStart + 2 != args.length) {
 	    throw new CSenseToolException("\tInvalid arguments. Excepected " + NAME + " <targetName> <packageName>");
 	} 
-	
+
 	String targetName = args[argStart];
 	File projectDirectory = new File(System.getProperty("user.dir"));
-			
+	File projectFile = new File(projectDirectory, "project.xml");
+
 	String packageName = args[argStart + 1];
-	ProjectConfiguration conf = ProjectConfiguration.defaultAndroidConfiguration(targetName, targetName, packageName, projectDirectory);
+
 	try {
-	    File f = new File(projectDirectory,  "project.xml");
-	    conf.save(f);
+	    ProjectConfiguration conf;
+	    if (projectFile.exists() == false) {
+		conf = ProjectConfiguration.defaultAndroidConfiguration(targetName, targetName, packageName, projectDirectory);		
+	    } else {
+		conf = ProjectConfiguration.load(projectFile);
+		AndroidTarget target = new AndroidTarget(targetName, "CSenseDeployActivity", packageName, projectDirectory);
+		conf.addTarget(target);
+	    }
+
+	    conf.save(projectFile);
+
 	} catch (JAXBException e) {	    
 	    e.printStackTrace();
 	    throw new CSenseToolException(e);
 	}
-	
-		
-	// configure the android target	
-	AndroidTarget target = new AndroidTarget(targetName, "CSenseDeployActivity", packageName, projectDirectory);
-	//AndroidTargetProcessor processor = new AndroidTargetProcessor();
-	
-//	Project pinfo = new Project(projectDirectory, projectName, target.getName());	
-//	pinfo.initializeTarget();
-//	pinfo.getResourceManager().deployResources(target);
-	//processor.initialize(pinfo, target);
-	//processor.deployToolkit("latest", target);	
     }
+
+
+    // configure the android target	
+    //AndroidTarget target = new AndroidTarget(targetName, "CSenseDeployActivity", packageName, projectDirectory);
+    //AndroidTargetProcessor processor = new AndroidTargetProcessor();
+
+    //	Project pinfo = new Project(projectDirectory, projectName, target.getName());	
+    //	pinfo.initializeTarget();
+    //	pinfo.getResourceManager().deployResources(target);
+    //processor.initialize(pinfo, target);
+    //processor.deployToolkit("latest", target);	
+
 
     @Override
     public String shortDescription() {

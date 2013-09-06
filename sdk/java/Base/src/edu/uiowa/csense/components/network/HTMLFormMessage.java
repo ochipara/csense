@@ -9,38 +9,37 @@ import org.apache.http.entity.mime.content.StringBody;
 
 import edu.uiowa.csense.runtime.api.CSenseException;
 import edu.uiowa.csense.runtime.api.FramePool;
+import edu.uiowa.csense.runtime.types.JavaFrame;
 import edu.uiowa.csense.runtime.types.TypeInfo;
 
-public class HTMLFormMessage extends Frame {
-    protected MultipartEntity _entity = null;
+public class HTMLFormMessage extends JavaFrame<MultipartEntity> {
 
-    public HTMLFormMessage(FramePool<? extends Frame> pool,
-	    TypeInfo<? extends Frame> type) throws CSenseException {
+    public HTMLFormMessage(FramePool pool,
+	    TypeInfo type) throws CSenseException {
 	super(pool, type);
     }
 
     @Override
     public void initialize() {
 	super.initialize();
-	_entity = new MultipartEntity();
+	data = new MultipartEntity();
     }
 
-    public static TypeInfo<HTMLFormMessage> type() {
-	return new TypeInfo<HTMLFormMessage>(HTMLFormMessage.class);
+    public static TypeInfo type() {
+	return new TypeInfo(HTMLFormMessage.class);
     }
 
     public void addString(String name, String value)
 	    throws UnsupportedEncodingException {
-	_entity.addPart(name, new StringBody(value));
+	data.addPart(name, new StringBody(value));
     }
 
     public void addFile(String name, String fileName) {
-	_entity.addPart(name, new FileBody(new File(fileName),
-		"application/octet-stream"));
+	data.addPart(name, new FileBody(new File(fileName), "application/octet-stream"));
     }
 
     public MultipartEntity getForm() {
-	return _entity;
+	return data;
     }
 
 }

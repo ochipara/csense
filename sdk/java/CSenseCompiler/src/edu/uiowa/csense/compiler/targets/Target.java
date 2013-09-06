@@ -25,16 +25,16 @@ public class Target {
 
     @XmlElement(name = "sourceDirectory")
     protected File sourceDirectory;
-  
+
     @XmlElement(name = "jniDirectory")
     protected File jniDirectory;
-  
+
     @XmlElement(name = "libDirectory")
     protected File libDirectory;
-    
+
     @XmlElement(name = "resourceDirectory")
     private File resourceDirectory;
-    
+
     public Target() {
     }
 
@@ -48,14 +48,23 @@ public class Target {
     }
 
     public File getDirectory() {
+	if (baseDirectory.isAbsolute() == false) {
+	    baseDirectory = baseDirectory.getAbsoluteFile();
+	}
 	return baseDirectory;
     }
 
     public File getJniDirectory() {	
+	if (jniDirectory.isAbsolute() == false) {
+	    jniDirectory = new File(baseDirectory, jniDirectory.getPath());
+	}
 	return jniDirectory;
     }
 
     public File getSourceDirectory() {
+	if (sourceDirectory.isAbsolute() == false) {
+	    sourceDirectory = new File(baseDirectory, sourceDirectory.getPath());
+	}
 	return sourceDirectory;
     }
 
@@ -64,10 +73,16 @@ public class Target {
     }
 
     public File getLibDirectory() {
+	if (libDirectory.isAbsolute() == false) {
+	    libDirectory = new File(baseDirectory, libDirectory.getPath());
+	}
 	return libDirectory;
     }
 
     public File getResouceDirectory() {
+	if (resourceDirectory.isAbsolute() == false) {
+	    resourceDirectory = new File(baseDirectory, resourceDirectory.getPath());
+	}
 	return resourceDirectory;
     }
 

@@ -7,17 +7,17 @@ import edu.uiowa.csense.runtime.api.CSenseException;
 import edu.uiowa.csense.runtime.api.FramePool;
 
 public class DoubleVector extends Vector<Double> {
-    protected final TypeInfo<DoubleVector> _type;
+    protected final TypeInfo _type;
     protected final DoubleBuffer _doubleBuffer;
     
-    public DoubleVector(FramePool pool, TypeInfo<DoubleVector> type) throws CSenseException {
+    public DoubleVector(FramePool pool, TypeInfo type) throws CSenseException {
 	super(pool, type);
 	_type = type;
 	_doubleBuffer = buffer.asDoubleBuffer();
     }
 
     @Override
-    public TypeInfo<DoubleVector> getTypeInfo() {
+    public TypeInfo getTypeInfo() {
 	return _type;
     }
 

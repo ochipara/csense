@@ -5,6 +5,7 @@ import edu.uiowa.csense.compiler.CSenseComponentC;
 import edu.uiowa.csense.compiler.CompilerException;
 import edu.uiowa.csense.compiler.model.ArgumentC;
 import edu.uiowa.csense.compiler.types.FrameTypeC;
+import edu.uiowa.csense.components.basic.Slice;
 
 public class SliceC extends CSenseComponentC {
     protected final int _lower;

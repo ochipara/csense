@@ -1,12 +1,13 @@
 package edu.uiowa.csense.runtime.api;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.uiowa.csense.runtime.api.concurrent.IEventManager;
+import edu.uiowa.csense.runtime.api.concurrent.ITimerEventManager;
 import edu.uiowa.csense.runtime.api.concurrent.IIdleLock;
-import edu.uiowa.csense.runtime.api.concurrent.ITaskManager;
 import edu.uiowa.csense.runtime.types.TypeInfo;
 
 /**
@@ -41,6 +42,7 @@ public class CSenseToolkit {
     protected Class<?> eventQueueClass = null;
     protected Class<?> idleLockClass = null;
 
+    /*
     public IComponent newComponent() throws CSenseException {
 	Constructor<?> c;
 	try {
@@ -52,9 +54,9 @@ public class CSenseToolkit {
 	    throw new CSenseException(CSenseError.FACTORY_ERROR, e.getMessage());
 	} 	
     }
-    
-    
-    public <T extends Frame> ISource newSource(TypeInfo<T> typeInfo) throws CSenseException {
+
+
+    public <T extends Frame> ISource newSource(TypeInfo typeInfo) throws CSenseException {
 	Constructor<?> c;
 	try {
 	    c = sourceClass.getConstructor();
@@ -64,32 +66,49 @@ public class CSenseToolkit {
 	    e.printStackTrace();
 	    throw new CSenseException(CSenseError.FACTORY_ERROR, e.getMessage());
 	} 
+    }*/
+
+    public <T extends Frame> FramePool newFramePool(TypeInfo type, int capacity) throws CSenseException {
+	Object obj;
+	Constructor<?> constructor;
+	try {
+	    constructor = messagePoolClasss.getConstructor(TypeInfo.class, Integer.TYPE);
+	    obj = constructor.newInstance(type, capacity);
+	    FramePool pool = (FramePool) obj;
+	    return pool;
+	} catch (NoSuchMethodException e) {
+	    e.printStackTrace();
+	    throw new CSenseException(CSenseError.INITIALIZATION_ERROR, e);
+	} catch (IllegalArgumentException e) {
+	    e.printStackTrace();
+	    throw new CSenseException(CSenseError.INITIALIZATION_ERROR, e);
+	} catch (InstantiationException e) {
+	    e.printStackTrace();
+	    throw new CSenseException(CSenseError.INITIALIZATION_ERROR, e);
+	} catch (IllegalAccessException e) {
+	    e.printStackTrace();
+	    throw new CSenseException(CSenseError.INITIALIZATION_ERROR, e);
+	} catch (InvocationTargetException e) {
+	    e.printStackTrace();
+	    throw new CSenseException(CSenseError.INITIALIZATION_ERROR, e);
+	}
+
+
     }
 
-    public <T extends Frame> FramePool newFramePool(TypeInfo<T> type, int capacity) throws CSenseException {
-	try {
-	    Constructor<?> constructor = messagePoolClasss.getConstructor(TypeInfo.class, Integer.TYPE);
-	    FramePool pool = (FramePool) constructor.newInstance(type, capacity);
-	    return pool;
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    throw new CSenseException(e);
-	}	
-    }
-        
     public IScheduler newScheduler(String threadName) throws CSenseException {
 	IScheduler scheduler;
 	try {
 	    // create the new task queue
 	    Constructor<?> idleLockConstructor = idleLockClass.getConstructor();
 	    IIdleLock idleLock = (IIdleLock) idleLockConstructor.newInstance();
-	    
+
 	    // create the new task queue
 	    Constructor<?> taskQueueConstructor = taskQueueClass.getConstructor(Integer.TYPE);
-	    ITaskManager pending = (ITaskManager) taskQueueConstructor.newInstance(30);
+	    IEventManager pending = (IEventManager) taskQueueConstructor.newInstance(30);
 
 	    Constructor<?> timerConstructor = eventQueueClass.getConstructor(Integer.TYPE);
-	    IEventManager events = (IEventManager) timerConstructor.newInstance(30);
+	    ITimerEventManager events = (ITimerEventManager) timerConstructor.newInstance(30);
 
 	    //public CSenseScheduler(String threadName, IIdleLock idleLock, ITaskManager pending, IEventManager eventQueue) throws CSenseException {
 	    Constructor<?> schedulerConstructor = schedulerClass.getConstructor(String.class, idleLockClass, taskQueueClass, eventQueueClass);
@@ -102,8 +121,8 @@ public class CSenseToolkit {
 	schedulers.put(threadName, scheduler);
 	return scheduler;    
     }
-    
-    
+
+
     /**
      * 
      */
@@ -127,39 +146,39 @@ public class CSenseToolkit {
     public IScheduler getScheduler(String threadName) {
 	return schedulers.get(threadName);
     }
-    
+
 
     public void setComponentClass(Class<?> componentClass) {
-        this.componentClass = componentClass;
+	this.componentClass = componentClass;
     }
 
 
     public void setSourceClass(Class<?> sourceClass) {
-        this.sourceClass = sourceClass;
+	this.sourceClass = sourceClass;
     }
 
 
     public void setMessagePoolClass(Class<?> messagePoolClasss) {
-        this.messagePoolClasss = messagePoolClasss;
+	this.messagePoolClasss = messagePoolClasss;
     }
 
 
     public void setSchedulerClass(Class<?> schedulerClass) {
-        this.schedulerClass = schedulerClass;
+	this.schedulerClass = schedulerClass;
     }
 
 
     public void setTaskQueueClass(Class<?> taskQueueClass) {
-        this.taskQueueClass = taskQueueClass;
+	this.taskQueueClass = taskQueueClass;
     }
 
 
     public void setEventQueueClass(Class<?> timerQueueClass) {
-        this.eventQueueClass = timerQueueClass;
+	this.eventQueueClass = timerQueueClass;
     }
 
 
     public void setIdleLockClass(Class<?> idleLockClass) {
-        this.idleLockClass = idleLockClass;
+	this.idleLockClass = idleLockClass;
     }
 }

@@ -136,7 +136,7 @@ public class ProjectConfiguration {
 	proj.setApi("v4");
 
 	File sdkPath = ToolkitConfiguration.getSdkPath();
-	
+
 	CSenseInclude csense = new CSenseInclude();
 	csense.addSource(new File(sdkPath, "sdk/java/Base/src/"));
 	csense.addSource(new File(sdkPath, "sdk/java/baseAndroid/src/"));
@@ -181,6 +181,15 @@ public class ProjectConfiguration {
 	AndroidTarget target = new AndroidTarget("audiology-android","AudiologyUI", "edu.uiowa.csense.audiology", new File("gen/AudiologyApp"));
 	proj.addTarget(target);
 	proj.print();
+    }
+
+    public static File locate(File projectDir) throws CompilerException {
+	while(projectDir.getAbsolutePath().contains("code")) {
+	    projectDir = projectDir.getParentFile();
+	}
+	validateProjectDirectory(projectDir);
+
+	return projectDir;
     }
 
 

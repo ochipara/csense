@@ -86,7 +86,11 @@ public interface IComponentC {
 
     public void removeOutput(OutputPortC output);
 
+    public void setThreadingOption(ThreadingOption threading);
     // public void addNextComponent(IComponentC destComp);
     // public void addPrevComponent(IComponentC sourceComp)
     // public List<IComponentC> prevComponents();
+
+    public void instantiate() throws CompilerException;
+    public void validate() throws CompilerException;
 }

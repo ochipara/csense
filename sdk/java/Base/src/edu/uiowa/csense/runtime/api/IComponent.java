@@ -1,7 +1,6 @@
 package edu.uiowa.csense.runtime.api;
 
 import java.nio.channels.SelectionKey;
-
 import edu.uiowa.csense.runtime.api.concurrent.IState;
 
 /**
@@ -14,6 +13,11 @@ import edu.uiowa.csense.runtime.api.concurrent.IState;
  * API v 2.0 -- new version after RTSS paper submission.
  * 
  * 
+ * 
+ * Feedback system (registerFeedback, feedback, onFeedback)
+ *  - a component may publish its feedback to a list of annoymous (or unknown) subscribers using feedback
+ *  - a component may register to receive such changes using registerFeedback
+ *  - a component receives feedback through the onFeedback function
  * 
  * @author ochipara
  * 
@@ -48,6 +52,7 @@ public interface IComponent {
     public IState getState();
     
     // component life-cycle events
+    // note: the developer must call the super on each one of these methods
     public void onCreate() throws CSenseException;
     public void onStart() throws CSenseException;
     public void onStop() throws CSenseException;
@@ -87,9 +92,11 @@ public interface IComponent {
      * @param t
      * @throws CSenseException
      */
-    public void doEvent(Task t) throws CSenseException;
-    public Task asTask();
+    public void onEvent(Event t) throws CSenseException;
+    public Event asTask();
     
+    public void feedback(int category, Feedback<?> feedback) throws CSenseException;
+    public void registerFeedback(int category, IComponent source);
     
     public void setMultiplier(int m);
     

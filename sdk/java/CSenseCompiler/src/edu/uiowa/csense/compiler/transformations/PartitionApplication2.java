@@ -241,10 +241,9 @@ public class PartitionApplication2 {
 	// fixAndroidSources(graph, manager);
     }
 
-    public static void fixTransitions(ComponentGraph graph,
-	    DomainManager manager) throws CompilerException {
-	List<IComponentC> componentList = new LinkedList<IComponentC>(
-		graph.components());
+    public static void fixTransitions(ComponentGraph graph, DomainManager manager) throws CompilerException {
+	List<IComponentC> componentList = new LinkedList<IComponentC>(graph.components());
+	
 	for (IComponentC component : componentList) {
 	    Domain componentDomain = component.getDomain();
 

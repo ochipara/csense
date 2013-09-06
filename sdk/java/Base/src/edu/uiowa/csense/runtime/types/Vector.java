@@ -7,9 +7,9 @@ public abstract class Vector<T> extends RawFrame {
     /**
      * 
      */
-    private TypeInfo<? extends Vector<T>> vectorType;
+    private TypeInfo vectorType;
 
-    public Vector(FramePool pool, TypeInfo<? extends Vector<T>> type) throws CSenseException {
+    public Vector(FramePool pool, TypeInfo type) throws CSenseException {
 	super(pool, type);
 	vectorType = type;
     }
@@ -27,5 +27,7 @@ public abstract class Vector<T> extends RawFrame {
      * @return
      * @return the type information associated with this type
      */
-    public abstract TypeInfo<? extends Vector<T>> getTypeInfo();
+    public TypeInfo getTypeInfo() {
+	return vectorType;
+    }
 }

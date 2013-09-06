@@ -39,9 +39,9 @@ public class ComponentGraph implements IComponentGraph {
     }
 
     public IComponentC getComponent(String name) throws CompilerException {
-	if (_components.containsKey(name) == false)
-	    throw new CompilerException("Could not find component [" + name
-		    + "]");
+	if (_components.containsKey(name) == false) {
+	    throw new CompilerException("Could not find component [" + name + "]");
+	}
 	return _components.get(name);
     }
 

@@ -6,6 +6,8 @@ import edu.uiowa.csense.compiler.CompilerException;
 import edu.uiowa.csense.compiler.model.ArgumentC;
 import edu.uiowa.csense.compiler.types.JavaTypeC;
 import edu.uiowa.csense.compiler.types.TypeInfoC;
+import edu.uiowa.csense.components.android.monitors.BatteryMonitor;
+import edu.uiowa.csense.components.android.monitors.BatteryMonitorMessage;
 
 public class BatteryMonitorC extends CSenseSourceC {
     public static final JavaTypeC batteryT = TypeInfoC.newJavaMessage(BatteryMonitorMessage.class); 

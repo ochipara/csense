@@ -296,6 +296,7 @@ public class CSenseComponentC implements IComponentC {
 	return _threading;
     }
 
+    @Override
     public void setThreadingOption(ThreadingOption threading) {
 	_threading = threading;
     }
@@ -386,4 +387,12 @@ public class CSenseComponentC implements IComponentC {
     public void addResource(String cls) throws CompilerException {
   	Project.getProject().getResourceManager().addClass(cls);
       }
+
+    @Override
+    public void instantiate() throws CompilerException {	
+    }
+
+    @Override
+    public void validate() throws CompilerException {	
+    }
 }

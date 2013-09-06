@@ -3,12 +3,13 @@ package edu.uiowa.csense.runtime.api.bindings;
 import java.nio.channels.SelectionKey;
 
 import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.Feedback;
 import edu.uiowa.csense.runtime.api.Frame;
 import edu.uiowa.csense.runtime.api.IComponent;
 import edu.uiowa.csense.runtime.api.IScheduler;
 import edu.uiowa.csense.runtime.api.InputPort;
 import edu.uiowa.csense.runtime.api.OutputPort;
-import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.api.Event;
 import edu.uiowa.csense.runtime.api.concurrent.IState;
 import edu.uiowa.csense.runtime.v4.CSenseComponent;
 
@@ -100,12 +101,12 @@ public class Component implements IComponent {
     }
 
     @Override
-    public void doEvent(Task t) throws CSenseException {
-	component.doEvent(t);
+    public void onEvent(Event t) throws CSenseException {
+	component.onEvent(t);
     }
 
     @Override
-    public Task asTask() {
+    public Event asTask() {
 	return component.asTask();
     }
 
@@ -183,5 +184,17 @@ public class Component implements IComponent {
     @Override
     public void setMultiplier(int m) {
 	component.setMultiplier(m);
+    }
+
+    @Override
+    public void feedback(int category, Feedback<?> feedback) {
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
+    public void registerFeedback(int category, IComponent source) {
+	// TODO Auto-generated method stub
+	
     }
 }

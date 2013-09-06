@@ -54,9 +54,19 @@ public class CSenseError {
     public static final CSenseError MISSING_QUEUE = new CSenseError(9);
     
     /**
-     * The toolkit implementatio is improperly configured
+     * The toolkit implementation is improperly configured
      */
     public static final CSenseError FACTORY_ERROR = new CSenseError(10);
+    
+    /**
+     * There was an error that occurred during the initialization of the component
+     */
+    public static final CSenseError INITIALIZATION_ERROR = new CSenseError(11);
+
+    /**
+     * Task already scheduled
+     */
+    public static final CSenseError TASK_ALREADY_SCHEDULED = new CSenseError(12);
     
     /**
      * Generic error condition
@@ -99,6 +109,10 @@ public class CSenseError {
 	    return "A component received a frame before completing processing the previous one. You may want to add queue.";
 	} else if (_error == CSenseError.FACTORY_ERROR.error()) {
 	    return "The toolkit is improperly configured. Check csense.xml";
+	} else if (_error == CSenseError.INITIALIZATION_ERROR.error()) {
+	    return "Initialization error";
+	} else if (_error == CSenseError.TASK_ALREADY_SCHEDULED.error()) {
+	    return "Task already scheduled";
 	}
 
 	return "code (" + _error + ")";

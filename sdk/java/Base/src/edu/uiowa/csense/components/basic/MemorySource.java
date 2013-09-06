@@ -17,7 +17,7 @@ import edu.uiowa.csense.runtime.types.TypeInfo;
 public class MemorySource<T extends Frame> extends Source<T> {
     public OutputPort<T> out = newOutputPort(this, "out");
 
-    public MemorySource(TypeInfo<T> type) throws CSenseException {
+    public MemorySource(TypeInfo type) throws CSenseException {
 	super(type);
 	out.setSupportPull(true);
     }

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
@@ -17,16 +16,14 @@ import edu.uiowa.csense.profiler.Utility;
 import edu.uiowa.csense.runtime.api.CSenseError;
 import edu.uiowa.csense.runtime.api.CSenseException;
 import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
-import edu.uiowa.csense.runtime.api.Command;
-import edu.uiowa.csense.runtime.api.ICommandHandler;
 import edu.uiowa.csense.runtime.api.IComponent;
 import edu.uiowa.csense.runtime.api.IScheduler;
-import edu.uiowa.csense.runtime.api.Task;
+import edu.uiowa.csense.runtime.api.Event;
 import edu.uiowa.csense.runtime.api.TimerEvent;
-import edu.uiowa.csense.runtime.api.concurrent.IState;
 import edu.uiowa.csense.runtime.api.concurrent.IEventManager;
+import edu.uiowa.csense.runtime.api.concurrent.IState;
+import edu.uiowa.csense.runtime.api.concurrent.ITimerEventManager;
 import edu.uiowa.csense.runtime.api.concurrent.IIdleLock;
-import edu.uiowa.csense.runtime.api.concurrent.ITaskManager;
 import edu.uiowa.csense.runtime.compatibility.Log;
 import edu.uiowa.csense.runtime.compatibility.ThreadCPUUsage;
 /**
@@ -47,14 +44,14 @@ public class CSenseScheduler implements IScheduler {
 
     // concurrent state for the scheduler
     private final IIdleLock _idleLock;
-    private final ITaskManager _pending;
-    private final IEventManager _timerTasks;
+    private final IEventManager _events;
+    private final ITimerEventManager _timerTasks;
 
     // listeners watching for the state changes of the scheduler
-    private final List<ICommandHandler> _listners = new LinkedList<ICommandHandler>(); 
+    //private final List<ICommandHandler> _listners = new LinkedList<ICommandHandler>(); 
 
     // performance metrics
-    protected long _events, _timerEvents;
+    protected long _eventCount, _timerEvents;
     protected long _startTime, _endTime;
     private   long _timerTasksTime;
     private   long _scheduledTasksTime;
@@ -138,7 +135,7 @@ public class CSenseScheduler implements IScheduler {
 		    TimerEvent task = _timerTasks.poll();
 		    task.setScheduled(false);
 		    Debug.logScheduledTimerEventExec(task.getOwner());
-		    task.getOwner().doEvent(task);
+		    task.getOwner().onEvent(task);
 		    Debug.logScheduledTimerEventReturn(task.getOwner());		    
 		    _timerEvents += 1;
 		    _timerTasksTime += System.nanoTime() - now;
@@ -165,7 +162,7 @@ public class CSenseScheduler implements IScheduler {
 	 */
 	protected void eventLoop() {
 	    _startTime = System.nanoTime();
-	    _events = _timerEvents = 0;
+	    _eventCount = _timerEvents = 0;
 	    ThreadCPUUsage usage = ThreadCPUUsage.getCPUUsage();
 	    long threadTime = usage.getThreadTime();
 	    long utime = usage.getThreadUserTime();
@@ -173,17 +170,19 @@ public class CSenseScheduler implements IScheduler {
 	    try {
 		while (_active) {		    
 		    long time = System.nanoTime();
-		    IComponent pending = _pending.nextTask();
-//		    Log.d(_name, "no pending task");
+		    
+		    // execute the pending components
+		    Event pending = _events.nextEvent();		    
 		    while (_active && pending != null) {
-			_events = _events + 1;
-			Debug.logScheduledTaskExec(pending);
-			pending.doEvent(null);
-			Debug.logScheduledTaskReturn(pending);
-			pending = _pending.nextTask();
+			IComponent owner = pending.getOwner();
+			_eventCount = _eventCount + 1;
+			Debug.logScheduledTaskExec(owner);
+			owner.onEvent(pending);
+			Debug.logScheduledTaskReturn(owner);
+			pending = _events.nextEvent();
 		    }
+		    		    
 		    _scheduledTasksTime += System.nanoTime() - time;
-
 		    if (_active) {
 			long timeout = doTimerTasks();
 
@@ -200,7 +199,7 @@ public class CSenseScheduler implements IScheduler {
 			 *  	component will be waiting for an external event to wake it up.
 			 * 
 			 */
-			if ((timeout > 0 && _pending.hasTask() == false) || (_pending.hasTask() == false && _timerTasks.isEmpty())) {			   
+			if ((timeout > 0 && _events.hasEvent() == false) || (_events.hasEvent() == false && _timerTasks.isEmpty())) {			   
 			    time = System.nanoTime();
 			    Debug.logThreadSleep();
 			    _idleLock.sleep(timeout);
@@ -218,19 +217,26 @@ public class CSenseScheduler implements IScheduler {
 	    }
 	    
 	    if(Thread.interrupted()) Log.i(_name, "interrupted to stop");
-	    _timerTasks.clear();
-	    _pending.clear();
+	    
+	    // consume the timer events and set them to be processed
+	    while (true) {
+		TimerEvent event = _timerTasks.poll();
+		if (event != null) {
+		    event.setScheduled(false);
+		} else break;		
+	    }
+	    _events.clear();
 	    _endTime = System.nanoTime();
 	    Log.i(getName(), "=============== scheduler statistics report ===============");
 	    double durationInNs = _endTime - _startTime;
 	    double durationInSecs = durationInNs / 1000000000.0;
-	    double rate = (_events + _timerEvents) / durationInSecs;
+	    double rate = (_eventCount + _timerEvents) / durationInSecs;
 	    usage = ThreadCPUUsage.getCPUUsage();
 	    threadTime = usage.getThreadTime() - threadTime;
 	    utime = usage.getThreadUserTime() - utime;
 	    stime = usage.getThreadSystemTime() - stime;
 	    
-	    Log.i(getName(), String.format("%.2f loops/s, %d/%d events  in %.2fs", rate, _events, _timerEvents, durationInSecs));
+	    Log.i(getName(), String.format("%.2f loops/s, %d/%d events  in %.2fs", rate, _eventCount, _timerEvents, durationInSecs));
 	    Log.i(getName(), String.format("timer tasks time: %.2fms, %.2f%%", _timerTasksTime / 1000000.0, _timerTasksTime / durationInNs * 100)); 
 	    Log.i(getName(), String.format("scheduled tasks time: %.2fms, %.2f%%", _scheduledTasksTime / 1000000.0, _scheduledTasksTime / durationInNs * 100));
 	    Log.i(getName(), String.format("idle time: %.2fms, %.2f%%", _idleTime / 1000000.0, _idleTime / durationInNs * 100));
@@ -240,12 +246,15 @@ public class CSenseScheduler implements IScheduler {
 	}
     }
 
-    public CSenseScheduler(String threadName, IIdleLock idleLock, ITaskManager pending, IEventManager eventQueue) throws CSenseException {
+    public CSenseScheduler(String threadName, 
+	    IIdleLock idleLock, 
+	    IEventManager events,
+	    ITimerEventManager timerTasks) throws CSenseException {
 	_components = new ArrayList<IComponent>();
-	_timerTasks = eventQueue;
+	_timerTasks = timerTasks;
 	_name = threadName;
+	_events = events;
 	_idleLock = idleLock;
-	_pending = pending;	
 	setupLogger();
     }
 
@@ -306,10 +315,10 @@ public class CSenseScheduler implements IScheduler {
 	    return true;
 	}
 
-	for (int i = 0; i < _listners.size(); i++) {
-	    ICommandHandler handler = _listners.get(i);
-	    handler.command(new Command(null, "scheduler::start"));
-	}
+//	for (int i = 0; i < _listners.size(); i++) {
+//	    ICommandHandler handler = _listners.get(i);
+//	    handler.command(new Command(null, "scheduler::start"));
+//	}
 	return false;
     }
 
@@ -335,10 +344,10 @@ public class CSenseScheduler implements IScheduler {
     }
 
     @Override
-    public boolean schedule(IComponent owner, Task task) {
+    public boolean schedule(IComponent owner, Event task) {
 	try {
 	    task.setOwner(owner);
-	    _pending.scheduleTask(owner);
+	    _events.scheduleEvent(task);
 	    owner.getState().setHasEvent(true);
 	    _idleLock.wakeup();
 	} catch (CSenseException e) {
@@ -391,7 +400,7 @@ public class CSenseScheduler implements IScheduler {
 
 	task.scheduledExecutionTime(System.nanoTime() + delay);
 	if (task.isScheduled()) {
-	    throw new CSenseRuntimeException();
+	    throw new CSenseRuntimeException(CSenseError.TASK_ALREADY_SCHEDULED);
 	}
 
 
@@ -416,7 +425,7 @@ public class CSenseScheduler implements IScheduler {
     }
 
     @Override
-    public final boolean cancel(Task task) {
+    public final boolean cancel(Event task) {
 	throw new UnsupportedOperationException();
     }
 
@@ -449,11 +458,11 @@ public class CSenseScheduler implements IScheduler {
 	return _schedulerThread;
     }
 
-    @Override
-    public int registerStateListener(ICommandHandler handler) {
-	_listners.add(handler);
-	return 0;
-    }
+//    @Override
+//    public int registerStateListener(ICommandHandler handler) {
+//	_listners.add(handler);
+//	return 0;
+//    }
 
     @Override
     public IIdleLock getIdleLock() {

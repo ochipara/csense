@@ -81,7 +81,7 @@ public interface IScheduler {
      *            a component which owns the task.
      * @return true on success, false on failure.
      */
-    public boolean schedule(IComponent owner, Task _task);
+    public boolean schedule(IComponent owner, Event _task);
 
     /**
      * Cancels a previously scheduled task. If a task is scheduled several
@@ -91,7 +91,7 @@ public interface IScheduler {
      *            the task to cancel
      * @return true on success, false on failure
      */
-    public boolean cancel(Task task);
+    public boolean cancel(Event task);
 
    /**
     * Schedules a component to run after delay milliseconds
@@ -154,8 +154,5 @@ public interface IScheduler {
      */
     public Thread getThread();
     
-    
-    public int registerStateListener(ICommandHandler handler);
-
     public IIdleLock getIdleLock();
 }

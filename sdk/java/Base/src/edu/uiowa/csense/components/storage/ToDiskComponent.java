@@ -15,7 +15,7 @@ import java.util.List;
 
 import edu.uiowa.csense.runtime.api.CSenseError;
 import edu.uiowa.csense.runtime.api.CSenseException;
-import edu.uiowa.csense.runtime.api.Command;
+import edu.uiowa.csense.runtime.api.Feedback;
 import edu.uiowa.csense.runtime.api.Frame;
 import edu.uiowa.csense.runtime.api.ICommandHandler;
 import edu.uiowa.csense.runtime.api.InputPort;
@@ -24,11 +24,10 @@ import edu.uiowa.csense.runtime.compatibility.Environment;
 import edu.uiowa.csense.runtime.types.FilenameType;
 import edu.uiowa.csense.runtime.types.RawFrame;
 import edu.uiowa.csense.runtime.types.TypeInfo;
-import edu.uiowa.csense.runtime.v4.CSenseSource;
 import edu.uiowa.csense.runtime.workspace.Variable;
 import edu.uiowa.csense.runtime.workspace.Workspace;
 
-public class ToDiskComponent<T extends Frame> extends CSenseSource<FilenameType> {
+public class ToDiskComponent<T extends Frame> extends edu.uiowa.csense.runtime.v4.CSenseSource<FilenameType> {
     public final static int SPLIT_NEVER = 0;
     public final static int SPLIT_BY_FILESIZE = 1;
     public final static int SPLIT_BY_INVOCATION_COUNT = 2;
@@ -66,6 +65,7 @@ public class ToDiskComponent<T extends Frame> extends CSenseSource<FilenameType>
     public final static String CMD_CLOSE_FILE = "file";
     public final static String CMD_REGISTER = "register";
     private static final String TAG = "todisk";
+    public static final int CLOSE_FILE = 0;
 
     protected List<ICommandHandler> handlers = new LinkedList<ICommandHandler>();
     //protected final Command closeCmd = new Command(this, CMD_CLOSE);
@@ -75,7 +75,7 @@ public class ToDiskComponent<T extends Frame> extends CSenseSource<FilenameType>
     private final boolean _append;
 
     public ToDiskComponent(String path, String filename, String extension, int splitType, long splitSize) throws CSenseException {
-	super(TypeInfo.newFilenameType());
+	super(FilenameType.type);
 	// check for exceptions
 	if (filename.equals(""))
 	    throw new IllegalArgumentException(
@@ -108,7 +108,7 @@ public class ToDiskComponent<T extends Frame> extends CSenseSource<FilenameType>
     }
 
     public ToDiskComponent(String filename, boolean append) throws CSenseException {
-	super(TypeInfo.newFilenameType());
+	super(FilenameType.type);
 
 	_fileName = filename;
 	_fileExtension = null;
@@ -118,7 +118,7 @@ public class ToDiskComponent<T extends Frame> extends CSenseSource<FilenameType>
     }
 
     public ToDiskComponent(Variable fileVar) throws CSenseException {
-	super(TypeInfo.newFilenameType());
+	super(TypeInfo.newJavaMessage(FilenameType.class));
 
 	_fileVar = fileVar;
 	_fileName = null;
@@ -127,19 +127,6 @@ public class ToDiskComponent<T extends Frame> extends CSenseSource<FilenameType>
 	_splitType = SPLIT_NEVER;
 	_append = false;
     }
-
-//    @Override
-//    public int command(Command cmd) {
-//	if (CMD_REGISTER.equals(cmd.getName())) {
-//	    if (handlers.contains(cmd.getSource()) == false) {
-//		handlers.add(cmd.getSource());
-//		return 0;
-//	    }
-//	}
-//
-//	return -1;
-//    }
-
 
     @Override
     public void onInput() throws CSenseException {
@@ -167,8 +154,8 @@ public class ToDiskComponent<T extends Frame> extends CSenseSource<FilenameType>
 	    closeStream();
 	    if (fileOutput.isConnected()) {
 		FilenameType f = getNextMessageToWriteInto();
-		f.put(_theFile.getAbsolutePath());
-		f.flip();
+		f.setValue(_theFile.getAbsolutePath());
+		
 		fileOutput.push(f);
 	    }
 	}
@@ -279,8 +266,7 @@ public class ToDiskComponent<T extends Frame> extends CSenseSource<FilenameType>
 		//
 		if (fileOutput.isConnected()) {
 		    FilenameType f = getNextMessageToWriteInto();
-		    f.put(_theFile.getAbsolutePath());
-		    f.flip();
+		    f.setValue(_theFile.getAbsolutePath());
 		    fileOutput.push(f);
 		}
 
@@ -295,11 +281,9 @@ public class ToDiskComponent<T extends Frame> extends CSenseSource<FilenameType>
 		//
 		if (fileOutput.isConnected()) {
 		    FilenameType f = getNextMessageToWriteInto();
-		    f.put(_theFile.getAbsolutePath());
-		    f.flip();
+		    f.setValue(_theFile.getAbsolutePath());
 		    fileOutput.push(f);
 		}
-
 
 		closeStream();
 		createFile();
@@ -331,8 +315,9 @@ public class ToDiskComponent<T extends Frame> extends CSenseSource<FilenameType>
 
     /**
      * Close the file we're writing data to.
+     * @throws CSenseException 
      */
-    private void closeStream() {
+    private void closeStream() throws CSenseException {
 	try {
 	    if (null != _file) {
 		_file.close();
@@ -341,11 +326,7 @@ public class ToDiskComponent<T extends Frame> extends CSenseSource<FilenameType>
 		    _theFile.delete();
 		    warn("delete empty file", _theFile.getName());
 		} else {
-//		    for (int i = 0; i < handlers.size(); i++) {
-//			ICommandHandler handler = handlers.get(i);
-//			closeCmd.put(CMD_CLOSE_FILE, _theFile.getAbsolutePath());
-//			handler.command(closeCmd);
-//		    }
+		    feedback(ToDiskComponent.CLOSE_FILE, new Feedback<String>(null, _theFile.getAbsolutePath()));
 		}
 		_file = null;
 	    }			

@@ -210,14 +210,14 @@ public class AndroidTargetProcessor extends CompileTargetProcessor {
 
 	String packageName = target.getPackage();
 	String serviceName = "edu.uiowa.csense.CSenseService";
-	if (serviceName.subSequence(0, packageName.length()).equals(packageName)) {
-	    // always starts with . (??)
-	    String shortServiceName = serviceName.substring(packageName.length(), serviceName.length()); 
-	    manifest.newService(shortServiceName);
-	} else {
+//	if (serviceName.subSequence(0, packageName.length()).equals(packageName)) {
+//	    // always starts with . (??)
+//	    String shortServiceName = serviceName.substring(packageName.length(), serviceName.length()); 
+//	    manifest.newService(shortServiceName);
+//	} else {
 	    manifest.newService("edu.uiowa.csense.CSenseService");
 	    //throw new CompilerException("Failed to add service");
-	}
+//	}
 	manifest.addPermission("android.permission.WAKE_LOCK");
 
 	// set the sdk versions
