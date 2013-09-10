@@ -25,15 +25,15 @@ public class DefaultTypeConverter implements MatlabTypeConverter {
 	String msg_var = port.getName() + "Msg";
 	String argName = arg.getName() + "Buf";
 	if ("java.nio.DoubleBuffer".compareTo(type) == 0) {
-	    sb.append("DoubleBuffer " + argName + " =  " + msg_var + ".getBuffer();");
+	    sb.append("DoubleBuffer " + argName + " =  " + msg_var + ".getDoubleBuffer();");
 
 	    return sb.toString();
 	} else if ("java.nio.FloatBuffer".compareTo(type) == 0) {
-	    sb.append("FloatBuffer " + argName + " =  " + msg_var + ".getBuffer();");
+	    sb.append("FloatBuffer " + argName + " =  " + msg_var + ".getFloatBuffer();");
 
 	    return sb.toString();
 	} else if ("java.nio.ShortBuffer".compareTo(type) == 0) {
-	    sb.append("ShortBuffer " + argName + " =  " + msg_var + ".getBuffer();");
+	    sb.append("ShortBuffer " + argName + " =  " + msg_var + ".getShortBuffer();");
 
 	    return sb.toString();	    
 	}

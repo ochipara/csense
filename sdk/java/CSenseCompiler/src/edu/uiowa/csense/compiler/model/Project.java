@@ -327,7 +327,7 @@ public class Project {
     }
 
     public String getName() {
-	return config.getName();
+	return target.getName();
     }
 
     public CSenseGroupC getMainGroup() {
@@ -344,11 +344,11 @@ public class Project {
     
     public void build(boolean release) throws CompilerException {
 	// build to install the resulting application
-	KeyTool keyTool = (KeyTool)project.getSdkConfig().getTool("keytool");
-	ProjectBuilder builder = new AntBuilder(project, keyTool.getKeystore(), keyTool.getKeystorePassword(), keyTool.getAlias(), keyTool.getAliasPassword());
-	builder.uninstall();
-	builder.build();
-	builder.install();
+//	KeyTool keyTool = (KeyTool)project.getSdkConfig().getTool("keytool");
+//	ProjectBuilder builder = new AntBuilder(project, keyTool.getKeystore(), keyTool.getKeystorePassword(), keyTool.getAlias(), keyTool.getAliasPassword());
+//	builder.uninstall();
+//	builder.build();
+//	builder.install();
     }
     
     public void run() throws CompilerException {

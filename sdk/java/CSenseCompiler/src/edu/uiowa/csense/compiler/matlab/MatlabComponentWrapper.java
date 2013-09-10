@@ -51,7 +51,7 @@ public class MatlabComponentWrapper {
 	generatePortDeclarations(component, coder);
 	generateConstructor(component, coder);
 	generateInitialize(component, coder);
-	generateDoInput(component, coder);
+	generateOnInput(component, coder);
 	generateDeInitialize(component, coder);
 
 	// end of class
@@ -68,7 +68,7 @@ public class MatlabComponentWrapper {
 	// generate the class declaration
 	coder.code("public class " + component.getName());
 	// componentCoder.genericSignature(component, coder);
-	coder.code(" extends CSenseComponent {");
+	coder.code(" extends Component {");
     }
 
     /**
@@ -80,10 +80,7 @@ public class MatlabComponentWrapper {
 	HashSet<String> set = new HashSet<String>();
 
 	coder.code("import java.nio.*;");
-	coder.code("import components.basic.MemoryInitialize;");
-	// TODO: add only when necessary
-	coder.code("import api.*;");
-	// coder.code("import messages.Message;");
+	coder.code("import edu.uiowa.csense.runtime.api.*;");
 	coder.code("import " + component.getPackage() + "."
 		+ component._swigWrapperFile + ";");
 
@@ -169,11 +166,11 @@ public class MatlabComponentWrapper {
      * @param coder
      * @throws CompilerException
      */
-    private static void generateDoInput(MatlabComponentC component,
+    private static void generateOnInput(MatlabComponentC component,
 	    JavaCoder coder) throws CompilerException {
 	MatlabTypeConverter converter = component.getMatlabTypeCovertert();
 	coder.code("\r@Override\r");
-	coder.code("public void doInput() throws CSenseException {");
+	coder.code("public void onInput() throws CSenseException {");
 
 	// make sure that all input ports have data
 	coder.comment("check if all inputs have data available");
@@ -182,7 +179,7 @@ public class MatlabComponentWrapper {
 		// do nothing
 	    } else {
 		coder.code("if (" + input.getName()
-			+ ".hasMessage() == false) return;");
+			+ ".hasFrame() == false) return;");
 	    }
 	}
 	coder.newline();
@@ -193,7 +190,7 @@ public class MatlabComponentWrapper {
 
 	    String msg_var = input.getName() + "Msg";
 	    coder.code(input.getSimpleTypeName() + " " + msg_var + " = "
-		    + input.getName() + ".getMessage();");
+		    + input.getName() + ".getFrame();");
 	    coder.code(msg_var + ".position(0);");
 	    if (MatlabOptions.generateAssertions)
 		coder.code("assert(" + msg_var + ".capacity() > 0);");
@@ -339,13 +336,13 @@ public class MatlabComponentWrapper {
     private static void generatePortDeclarations(MatlabComponentC component,
 	    JavaCoder coder) throws CompilerException {
 	for (InputPortC input : component.getInputPorts()) {
-	    coder.code("public IInPort<" + input.getSimpleTypeName() + "> "
+	    coder.code("public InputPort<" + input.getSimpleTypeName() + "> "
 		    + input.getName() + " = newInputPort(this, \""
 		    + input.getName() + "\");");
 	}
 
 	for (OutputPortC output : component.getOutputPorts()) {
-	    coder.code("public IOutPort<" + output.getSimpleTypeName() + "> "
+	    coder.code("public OutputPort<" + output.getSimpleTypeName() + "> "
 		    + output.getName() + " = newOutputPort(this, \""
 		    + output.getName() + "\");");
 	}

@@ -75,7 +75,7 @@ public class MatlabComponentC extends CSenseComponentC {
     
     @Override
     public void setComponent(String matlabFunctionName) {
-	_packageName = "base.matlab";
+	_packageName = "edu.uiowa.csense.matlab";
 	_matlabFunctionName = matlabFunctionName;
 	if (matlabFunctionName.endsWith("M")) {
 	    _componentName = matlabFunctionName.substring(0, matlabFunctionName.length() - 1);
