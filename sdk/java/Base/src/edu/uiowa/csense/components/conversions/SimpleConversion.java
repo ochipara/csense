@@ -21,7 +21,7 @@ public class SimpleConversion<Tsrc extends Vector, Tdst extends Vector> extends 
     protected Tdst destMsg = null;
     protected ByteBuffer destBuf = null;
     
-    public SimpleConversion(TypeInfo<Tdst> dst, TypeInfo<Tsrc> src) throws CSenseException {
+    public SimpleConversion(TypeInfo dst, TypeInfo src) throws CSenseException {
 	super(dst);
 	
 	if ((src.getJavaType() == ShortVector.class) && (dst.getJavaType() == DoubleVector.class)) {

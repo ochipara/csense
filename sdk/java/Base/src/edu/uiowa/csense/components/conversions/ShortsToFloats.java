@@ -21,7 +21,7 @@ public class ShortsToFloats extends CSenseSource<FloatVector> {
     private final boolean useNative;
 
 
-    public ShortsToFloats(TypeInfo<FloatVector> type, boolean useNative) throws CSenseException{
+    public ShortsToFloats(TypeInfo type, boolean useNative) throws CSenseException{
 	super(type);
 	this.useNative = useNative;
     }

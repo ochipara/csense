@@ -1,5 +1,7 @@
 package edu.uiowa.csense.runtime.types;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.HashMap;
@@ -7,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import edu.uiowa.csense.profiler.Route;
+import edu.uiowa.csense.runtime.api.CSenseError;
 import edu.uiowa.csense.runtime.api.CSenseException;
+import edu.uiowa.csense.runtime.api.CSenseRuntimeException;
 import edu.uiowa.csense.runtime.api.Frame;
 import edu.uiowa.csense.runtime.api.FramePool;
 import edu.uiowa.csense.runtime.api.profile.IRoute;
@@ -29,8 +33,8 @@ public class RawFrame implements Frame {
     protected final TypeInfo type;
 
     protected final ByteBuffer buffer;
-    protected final Map<Integer, List<Frame>> viewMap = new HashMap<Integer, List<Frame>>();
-    
+    protected final Map<Integer, Frame[]> viewMap = new HashMap<Integer, Frame[]>();
+
     // fields whose access must be synchronized
     // these fields are shared across potentially multiple threads
     protected int refs = 1;    
@@ -49,7 +53,7 @@ public class RawFrame implements Frame {
 	buffer = type.isDirect() ? ByteBuffer.allocateDirect(type.getNumBytes()) : ByteBuffer.allocate(type.getNumBytes());
 	buffer.order(ByteOrder.LITTLE_ENDIAN);
     }
-    
+
     public RawFrame(FramePool pool, TypeInfo type) {
 	this(pool, type, null);
     }
@@ -96,7 +100,7 @@ public class RawFrame implements Frame {
 		throw new IllegalStateException();
 	    }
 	    if (refs == 0) free();
-	   
+
 	} else {
 	    parent.decrementReference();
 	}
@@ -148,26 +152,115 @@ public class RawFrame implements Frame {
 	if (this.id == -1) this.id = id;
 	else throw new CSenseException("Pool id cannot be modified once they are set");
     }
-    
+
     @Override
     public int getPoolId() {
 	return this.id;
 
     }
-    
+
     @Override
     public int getId() {
 	return hashCode();
     }
-    
-    @Override
-    public Frame[] split(int numFrames) {
-	throw new UnsupportedOperationException();
-    }
-    
+
+
     @Override
     public String toString() {
 	return "C: " + buffer.capacity() + " P:" + buffer.position() + " L:" + buffer.limit() + " R:" + refs;
+    }
+
+    @Override
+    public Frame[] window(int splits, int increment) {
+	if (increment == 1) return window(splits);
+	throw new UnsupportedOperationException();	
+    }
+
+    @Override
+    public Frame[] window(int splits) {
+	if (parent != null) {
+	    return parent.window(splits);
+	}
+
+	Frame[] frames = null; 
+	try {
+	    frames = viewMap.get(splits);
+	    if (frames == null) {
+		frames = new Frame[splits];
+
+		int start = 0;
+		int step = buffer.capacity() / splits;
+		for (int i = 0; i < splits; i++) {
+		    buffer.position(start);
+		    buffer.limit(start + step);                
+		    ByteBuffer bb = buffer.slice();
+
+		    Constructor c = type.getJavaType().getDeclaredConstructor(FramePool.class, TypeInfo.class, Frame.class, ByteBuffer.class);
+		    Frame frame = (Frame) c.newInstance(pool, type, this, bb);
+
+		    frames[i] = frame;
+		    start = start + step;
+		}
+
+		viewMap.put(splits, frames);
+	    }
+
+	} catch (SecurityException e) {
+	    e.printStackTrace();
+	    throw new CSenseRuntimeException(CSenseError.CONFIGURATION_ERROR);
+	} catch (NoSuchMethodException e) {
+	    e.printStackTrace();
+	    throw new CSenseRuntimeException(CSenseError.CONFIGURATION_ERROR);
+	} catch (IllegalArgumentException e) {
+	    e.printStackTrace();
+	    throw new CSenseRuntimeException(CSenseError.CONFIGURATION_ERROR);
+	} catch (InstantiationException e) {
+	    e.printStackTrace();
+	    throw new CSenseRuntimeException(CSenseError.CONFIGURATION_ERROR);
+	} catch (IllegalAccessException e) {
+	    e.printStackTrace();
+	    throw new CSenseRuntimeException(CSenseError.CONFIGURATION_ERROR);
+	} catch (InvocationTargetException e) {
+	    e.printStackTrace();
+	    throw new CSenseRuntimeException(CSenseError.CONFIGURATION_ERROR);
+	}
+
+
+	return frames;    		
+    }
+
+
+    @Override
+    public Frame slice(int start, int end) {
+	buffer.position(start);
+	buffer.limit(end);
+	ByteBuffer newBuffer = buffer.slice();
+	
+	Frame frame = null;
+	try {
+	    Constructor c = type.getJavaType().getDeclaredConstructor(FramePool.class, TypeInfo.class, Frame.class, ByteBuffer.class);
+	    frame = (Frame) c.newInstance(pool, type, this, newBuffer);
+	} catch (SecurityException e) {
+	    e.printStackTrace();
+	    throw new CSenseRuntimeException(CSenseError.CONFIGURATION_ERROR);
+	} catch (NoSuchMethodException e) {
+	    e.printStackTrace();
+	    throw new CSenseRuntimeException(CSenseError.CONFIGURATION_ERROR);
+	} catch (IllegalArgumentException e) {
+	    e.printStackTrace();
+	    throw new CSenseRuntimeException(CSenseError.CONFIGURATION_ERROR);
+	} catch (InstantiationException e) {
+	    e.printStackTrace();
+	    throw new CSenseRuntimeException(CSenseError.CONFIGURATION_ERROR);
+	} catch (IllegalAccessException e) {
+	    e.printStackTrace();
+	    throw new CSenseRuntimeException(CSenseError.CONFIGURATION_ERROR);
+	} catch (InvocationTargetException e) {
+	    e.printStackTrace();
+	    throw new CSenseRuntimeException(CSenseError.CONFIGURATION_ERROR);
+	}
+
+	return frame;
     }
 
 }

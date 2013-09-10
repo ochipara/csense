@@ -20,7 +20,7 @@ public class ShortsToDoubles extends CSenseSource<DoubleVector> {
     public final OutputPort<DoubleVector> doublesOut = newOutputPort(this, "doubleOut");
     private final boolean useNative;
 
-    public ShortsToDoubles(TypeInfo<DoubleVector> type, boolean useNative) throws CSenseException{
+    public ShortsToDoubles(TypeInfo type, boolean useNative) throws CSenseException{
 	super(type);
 	this.useNative = useNative;
     }

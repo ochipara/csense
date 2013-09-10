@@ -60,7 +60,14 @@ public interface Frame {
     public int getPoolId();
     public int getId();
     
-    public Frame[] split(int window);
+    
+    // view management
+    public Frame[] window(int splits);    
+    public Frame[] window(int splits, int increment);
+    public Frame slice(int start, int end);
+    public Frame getParent();
+        
+    
 
     // view management    
    //public List<Frame<T>> split(CSenseComponent component, int numFrames) throws CSenseException; 

@@ -1,5 +1,7 @@
 package edu.uiowa.csense.runtime.types;
 
+import java.nio.DoubleBuffer;
+
 import edu.uiowa.csense.runtime.api.CSenseException;
 import edu.uiowa.csense.runtime.api.FramePool;
 
@@ -29,5 +31,5 @@ public abstract class Vector<T> extends RawFrame {
      */
     public TypeInfo getTypeInfo() {
 	return vectorType;
-    }
+    }    
 }

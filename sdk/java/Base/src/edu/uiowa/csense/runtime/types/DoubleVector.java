@@ -1,5 +1,7 @@
 package edu.uiowa.csense.runtime.types;
 
+import java.nio.Buffer;
+import java.nio.ByteOrder;
 import java.nio.DoubleBuffer;
 import java.text.NumberFormat;
 
@@ -33,6 +35,139 @@ public class DoubleVector extends Vector<Double> {
 
     protected NumberFormat _format = null;
     protected NumberFormat _small = null;
+
+    public final double[] array() {
+	return _doubleBuffer.array();
+    }
+
+    public final int arrayOffset() {
+	return _doubleBuffer.arrayOffset();
+    }
+
+    public DoubleBuffer asReadOnlyBuffer() {
+	return _doubleBuffer.asReadOnlyBuffer();
+    }
+
+    public final int capacity() {
+	return _doubleBuffer.capacity();
+    }
+
+    public final Buffer clear() {
+	return _doubleBuffer.clear();
+    }
+
+    public DoubleBuffer compact() {
+	return _doubleBuffer.compact();
+    }
+
+    public int compareTo(DoubleBuffer arg0) {
+	return _doubleBuffer.compareTo(arg0);
+    }
+
+    public DoubleBuffer duplicate() {
+	return _doubleBuffer.duplicate();
+    }
+
+    public boolean equals(Object arg0) {
+	return _doubleBuffer.equals(arg0);
+    }
+
+    public final Buffer flip() {
+	return _doubleBuffer.flip();
+    }
+
+    public double get() {
+	return _doubleBuffer.get();
+    }
+
+    public DoubleBuffer get(double[] arg0, int arg1, int arg2) {
+	return _doubleBuffer.get(arg0, arg1, arg2);
+    }
+
+    public DoubleBuffer get(double[] arg0) {
+	return _doubleBuffer.get(arg0);
+    }
+
+    public double get(int arg0) {
+	return _doubleBuffer.get(arg0);
+    }
+
+    public final boolean hasArray() {
+	return _doubleBuffer.hasArray();
+    }
+
+    public final boolean hasRemaining() {
+	return _doubleBuffer.hasRemaining();
+    }
+
+    public int hashCode() {
+	return _doubleBuffer.hashCode();
+    }
+
+    public boolean isDirect() {
+	return _doubleBuffer.isDirect();
+    }
+
+    public boolean isReadOnly() {
+	return _doubleBuffer.isReadOnly();
+    }
+
+    public final int limit() {
+	return _doubleBuffer.limit();
+    }
+
+    public final Buffer limit(int arg0) {
+	return _doubleBuffer.limit(arg0);
+    }
+
+    public final Buffer mark() {
+	return _doubleBuffer.mark();
+    }
+
+    public ByteOrder order() {
+	return _doubleBuffer.order();
+    }
+
+    public final int position() {
+	return _doubleBuffer.position();
+    }
+
+    public final Buffer position(int arg0) {
+	return _doubleBuffer.position(arg0);
+    }
+
+    public DoubleBuffer put(double arg0) {
+	return _doubleBuffer.put(arg0);
+    }
+
+    public DoubleBuffer put(double[] arg0, int arg1, int arg2) {
+	return _doubleBuffer.put(arg0, arg1, arg2);
+    }
+
+    public final DoubleBuffer put(double[] arg0) {
+	return _doubleBuffer.put(arg0);
+    }
+
+    public DoubleBuffer put(DoubleBuffer arg0) {
+	return _doubleBuffer.put(arg0);
+    }
+
+    public DoubleBuffer put(int arg0, double arg1) {
+	return _doubleBuffer.put(arg0, arg1);
+    }
+
+    public final int remaining() {
+	return _doubleBuffer.remaining();
+    }
+
+    public final Buffer reset() {
+	return _doubleBuffer.reset();
+    }
+
+    public final Buffer rewind() {
+	return _doubleBuffer.rewind();
+    }
+    
 
 //    @Override
 //    public String displayValues() {
